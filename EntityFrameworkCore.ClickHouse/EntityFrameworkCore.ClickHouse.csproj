@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <RootNamespace>ClickHouse.EntityFrameworkCore</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Scaffolding\Internal" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ClickHouse.Client" Version="2.2.1.285" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.8" />
+    </ItemGroup>
+
+</Project>
