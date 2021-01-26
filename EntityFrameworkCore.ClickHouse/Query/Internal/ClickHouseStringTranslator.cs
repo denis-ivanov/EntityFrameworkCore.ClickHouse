@@ -12,17 +12,30 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
 {
     public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslator
     {
-        private static readonly MethodInfo ToUpperMethodInfo =
-            typeof(string).GetTypeInfo().GetRuntimeMethod(nameof(string.ToUpper), Array.Empty<Type>());
+        private static readonly MethodInfo ToUpper = typeof(string)
+            .GetTypeInfo()
+            .GetRuntimeMethod(nameof(string.ToUpper), Array.Empty<Type>());
 
-        private static readonly MethodInfo ToLowerMethodInfo =
-            typeof(string).GetTypeInfo().GetRuntimeMethod(nameof(string.ToLower), Array.Empty<Type>());
+        private static readonly MethodInfo ToLower = typeof(string)
+            .GetTypeInfo()
+            .GetRuntimeMethod(nameof(string.ToLower), Array.Empty<Type>());
 
-        private static readonly MethodInfo IsNullOrEmptyMethodInfo =
-            typeof(string).GetTypeInfo().GetRuntimeMethod(nameof(string.IsNullOrEmpty), new [] { typeof(string) });
+        private static readonly MethodInfo IsNullOrEmpty = typeof(string)
+            .GetTypeInfo()
+            .GetRuntimeMethod(nameof(string.IsNullOrEmpty), new [] { typeof(string) });
 
-        private static readonly PropertyInfo LengthPropertyInfo =
-            typeof(string).GetTypeInfo().GetRuntimeProperty(nameof(string.Length));
+        private static readonly PropertyInfo Length = typeof(string)
+            .GetTypeInfo()
+            .GetRuntimeProperty(nameof(string.Length));
+
+        private static readonly MethodInfo TrimStart = typeof(string)
+            .GetRuntimeMethod(nameof(string.TrimStart), Array.Empty<Type>());
+
+        private static readonly MethodInfo TrimEnd = typeof(string)
+            .GetRuntimeMethod(nameof(string.TrimEnd), Array.Empty<Type>());
+
+        private static readonly MethodInfo Trim = typeof(string)
+            .GetRuntimeMethod(nameof(string.Trim), Array.Empty<Type>());
 
         private readonly ISqlExpressionFactory _sqlExpressionFactory;
         
@@ -33,7 +46,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
 
         public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
         {
-            if (ToLowerMethodInfo.Equals(method))
+            if (ToLower.Equals(method))
             {
                 return _sqlExpressionFactory.Function(
                     "lowerUTF8",
@@ -44,7 +57,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                     instance.TypeMapping);
             }
             
-            if (ToUpperMethodInfo.Equals(method))
+            if (ToUpper.Equals(method))
             {
                 return _sqlExpressionFactory.Function(
                     "upperUTF8",
@@ -55,7 +68,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                     instance.TypeMapping);
             }
 
-            if (IsNullOrEmptyMethodInfo.Equals(method))
+            if (IsNullOrEmpty.Equals(method))
             {
                 return _sqlExpressionFactory.Function(
                     "empty",
@@ -66,12 +79,42 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                     arguments[0].TypeMapping);
             }
 
+            if (TrimStart.Equals(method))
+            {
+                return _sqlExpressionFactory.Function(
+                    name: "trimLeft",
+                    arguments: new [] { instance },
+                    nullable: true,
+                    argumentsPropagateNullability: new [] { true },
+                    returnType: method.ReturnType);
+            }
+            
+            if (TrimEnd.Equals(method))
+            {
+                return _sqlExpressionFactory.Function(
+                    name: "trimRight",
+                    arguments: new [] { instance },
+                    nullable: true,
+                    argumentsPropagateNullability: new [] { true },
+                    returnType: method.ReturnType);
+            }
+            
+            if (Trim.Equals(method))
+            {
+                return _sqlExpressionFactory.Function(
+                    name: "trim",
+                    arguments: new [] { instance },
+                    nullable: true,
+                    argumentsPropagateNullability: new [] { true },
+                    returnType: method.ReturnType);
+            }
+            
             return null;
         }
 
         public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
         {
-            if (member.Equals(LengthPropertyInfo))
+            if (member.Equals(Length))
             {
                 return _sqlExpressionFactory.Function(
                     "char_length",
