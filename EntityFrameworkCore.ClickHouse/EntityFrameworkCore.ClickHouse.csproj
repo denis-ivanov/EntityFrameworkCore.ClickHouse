@@ -9,6 +9,7 @@
     <Description>ClickHouse provider for Entity Framework Core.</Description>
     <PackageTags>ClickHouse; Entity Framework Core</PackageTags>
     <PackageIconUrl>https://clickhouse.tech/images/logo.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
