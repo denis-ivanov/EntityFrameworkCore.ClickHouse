@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ClickHouse.EntityFrameworkCore.Extensions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -197,6 +198,46 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Tutorial
             item.Title.Should().NotBeEmpty();
         }
 
+        [Test]
+        public void EmptyArrays()
+        {
+            // Arrange
+            var context = CreateContext();
+
+            // Act
+            var item = context.Hits
+                .Select(e => new
+                {
+                    UInt8Array = Array.Empty<byte>(),
+                    UInt16Array = Array.Empty<ushort>(),
+                    UInt32Array = Array.Empty<uint>(),
+                    UInt64Array = Array.Empty<ulong>(),
+                    Int8Array = Array.Empty<sbyte>(),
+                    Int16Array = Array.Empty<short>(),
+                    Int32Array = Array.Empty<int>(),
+                    Int64Array = Array.Empty<long>(),
+                    Float32Array = Array.Empty<float>(),
+                    Float64Array = Array.Empty<double>(),
+                    DateTimeArray = Array.Empty<DateTime>(),
+                    StringArray = Array.Empty<string>()
+                })
+                .First();
+
+            // Assert
+            item.UInt8Array.Should().BeEmpty();
+            item.UInt16Array.Should().BeEmpty();
+            item.UInt32Array.Should().BeEmpty();
+            item.UInt64Array.Should().BeEmpty();
+            item.Int8Array.Should().BeEmpty();
+            item.Int16Array.Should().BeEmpty();
+            item.Int32Array.Should().BeEmpty();
+            item.Int64Array.Should().BeEmpty();
+            item.Float32Array.Should().BeEmpty();
+            item.Float64Array.Should().BeEmpty();
+            item.DateTimeArray.Should().BeEmpty();
+            item.StringArray.Should().BeEmpty();
+        }
+        
         private bool IsLower(string s)
         {
             return s == null || s.All(c => !char.IsLetter(c) || char.IsLower(c));
