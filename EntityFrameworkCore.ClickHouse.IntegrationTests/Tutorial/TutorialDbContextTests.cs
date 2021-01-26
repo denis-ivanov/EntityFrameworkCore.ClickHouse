@@ -14,6 +14,7 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Tutorial
         {
             var optionsBuilder = new DbContextOptionsBuilder<TutorialDbContext>();
             optionsBuilder.UseClickHouse("Host=localhost;Protocol=http;Port=8123;Database=tutorial");
+            optionsBuilder.LogTo(TestContext.WriteLine);
             return new TutorialDbContext(optionsBuilder.Options);
         }
 
@@ -236,6 +237,29 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Tutorial
             item.Float64Array.Should().BeEmpty();
             item.DateTimeArray.Should().BeEmpty();
             item.StringArray.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Trim()
+        {
+            // Arrange
+            const string s = "     Hello, world!     ";
+            var context = CreateContext();
+
+            // Act
+            var item = context.Hits
+                .Select(e => new
+                {
+                    TrimStart = s.TrimStart(),
+                    TrimEnd = s.TrimEnd(),
+                    Trim = s.Trim()
+                })
+                .First();
+
+            // Assert
+            item.TrimStart.Should().Be(s.TrimStart());
+            item.TrimEnd.Should().Be(s.TrimEnd());
+            item.Trim.Should().Be(s.Trim());
         }
         
         private bool IsLower(string s)

@@ -65,17 +65,6 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
                 _connection.CreateMasterConnection());
         }
 
-        public override void CreateTables()
-        {
-            base.CreateTables();
-        }
-/*
-        protected override IReadOnlyList<MigrationCommand> GetCreateTablesCommands()
-        {
-            var commands = base.GetCreateTablesCommands();
-            return commands;
-        }
-*/
         public override void Delete()
         {
             throw new System.NotImplementedException();
