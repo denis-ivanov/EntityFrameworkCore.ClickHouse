@@ -1,14 +1,14 @@
-﻿using System;
+﻿using ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 {
     public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     {
-        private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new Dictionary<Type, RelationalTypeMapping>
+        private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new()
         {
             { typeof(string), new StringTypeMapping("String", DbType.String) },
             { typeof(byte[]), new ByteArrayTypeMapping("Array(UInt8)") },
@@ -45,7 +45,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
             {
                 return map;
             }
-            
+
             return null;
         }
 

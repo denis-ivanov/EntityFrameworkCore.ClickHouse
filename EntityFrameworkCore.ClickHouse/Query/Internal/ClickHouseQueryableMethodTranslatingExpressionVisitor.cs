@@ -10,35 +10,17 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
         : RelationalQueryableMethodTranslatingExpressionVisitor
     {
         private readonly RelationalSqlTranslatingExpressionVisitor _sqlTranslator;
-        
-        public ClickHouseQueryableMethodTranslatingExpressionVisitor(
-            QueryableMethodTranslatingExpressionVisitorDependencies dependencies,
-            RelationalQueryableMethodTranslatingExpressionVisitorDependencies relationalDependencies,
-            IModel model)
-            : base(dependencies, relationalDependencies, model)
-        {
-            _sqlTranslator = relationalDependencies.RelationalSqlTranslatingExpressionVisitorFactory.Create(model, this);
-        }
 
-        protected ClickHouseQueryableMethodTranslatingExpressionVisitor(RelationalQueryableMethodTranslatingExpressionVisitor parentVisitor)
-            : base(parentVisitor)
+        public ClickHouseQueryableMethodTranslatingExpressionVisitor(QueryableMethodTranslatingExpressionVisitorDependencies dependencies, RelationalQueryableMethodTranslatingExpressionVisitorDependencies relationalDependencies, QueryCompilationContext queryCompilationContext) : base(dependencies, relationalDependencies, queryCompilationContext)
         {
-        }
-
-        protected override ShapedQueryExpression TranslateFirstOrDefault(ShapedQueryExpression source, LambdaExpression predicate, Type returnType,
-            bool returnDefault)
-        {
-            return base.TranslateFirstOrDefault(source, predicate, returnType, returnDefault);
+            _sqlTranslator =
+                relationalDependencies.RelationalSqlTranslatingExpressionVisitorFactory.Create(queryCompilationContext,
+                    this);
         }
 
         protected override Expression VisitConstant(ConstantExpression constantExpression)
         {
             return base.VisitConstant(constantExpression);
-        }
-
-        public override Expression Visit(Expression node)
-        {
-            return base.Visit(node);
         }
 
         protected override ShapedQueryExpression TranslateTake(ShapedQueryExpression source, Expression count)
@@ -64,11 +46,6 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             }
 
             return null;
-        }
-
-        protected override ShapedQueryExpression TranslateAny(ShapedQueryExpression source, LambdaExpression predicate)
-        {
-            return base.TranslateAny(source, predicate);
         }
     }
 }

@@ -3,6 +3,7 @@ using ClickHouse.EntityFrameworkCore.Diagnostics.Internal;
 using ClickHouse.EntityFrameworkCore.Infrastructure.Internal;
 using ClickHouse.EntityFrameworkCore.Internal;
 using ClickHouse.EntityFrameworkCore.Metadata.Conventions;
+using ClickHouse.EntityFrameworkCore.Metadata.Internal;
 using ClickHouse.EntityFrameworkCore.Migrations;
 using ClickHouse.EntityFrameworkCore.Migrations.Internal;
 using ClickHouse.EntityFrameworkCore.Query.Internal;
@@ -11,6 +12,7 @@ using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using ClickHouse.EntityFrameworkCore.Update.Internal;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Query;
@@ -31,6 +33,7 @@ namespace ClickHouse.EntityFrameworkCore.Extensions
                 .TryAdd<IDatabaseProvider, DatabaseProvider<ClickHouseOptionsExtension>>()
                 .TryAdd<IRelationalTypeMappingSource, ClickHouseTypeMappingSource>()
                 .TryAdd<ISqlGenerationHelper, ClickHouseSqlGenerationHelper>()
+                .TryAdd<IRelationalAnnotationProvider, ClickHouseAnnotationProvider>()
                 .TryAdd<IMigrationsAnnotationProvider, ClickHouseMigrationsAnnotationProvider>()
                 .TryAdd<IModelValidator, ClickHouseModelValidator>()
                 .TryAdd<IProviderConventionSetBuilder, ClickHouseConventionSetBuilder>()

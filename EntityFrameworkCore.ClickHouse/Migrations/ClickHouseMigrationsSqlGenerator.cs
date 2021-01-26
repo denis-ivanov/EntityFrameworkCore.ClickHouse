@@ -1,7 +1,7 @@
 ﻿using System;
 using ClickHouse.EntityFrameworkCore.Metadata;
 using ClickHouse.EntityFrameworkCore.Migrations.Operations;
-using Microsoft.EntityFrameworkCore;
+using ClickHouse.EntityFrameworkCore.Storage.Engines;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
@@ -21,7 +21,7 @@ namespace ClickHouse.EntityFrameworkCore.Migrations
             builder
                 .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
                 .Append(" ")
-                .Append(operation.IsNullable ? $" Nullable({columnType})" : columnType);
+                .Append(operation.IsNullable && !operation.ClrType.IsArray ? $" Nullable({columnType})" : columnType);
         }
         
         protected override void Generate(MigrationOperation operation, IModel model, MigrationCommandListBuilder builder)
@@ -47,22 +47,15 @@ namespace ClickHouse.EntityFrameworkCore.Migrations
         protected override void Generate(CreateTableOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
         {
             base.Generate(operation, model, builder, false);
-            
-            var engine = operation.FindAnnotation(ClickHouseAnnotationNames.Engine);
 
-            if (engine?.Value == null)
+            if (!(operation[ClickHouseAnnotationNames.Engine] is ClickHouseEngine engine))
             {
-                throw new InvalidOperationException("Specify engine in table configuration.");
+                throw new InvalidOperationException("Specify table engine in configuration.");
             }
 
-            if (engine.Value is string engineValue)
-            {
-                builder.AppendLine("ENGINE = " + engineValue);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            engine.SpecifyEngine(builder, model);
+            builder.AppendLine(Dependencies.SqlGenerationHelper.StatementTerminator);
+            EndStatement(builder);
         }
     }
 }

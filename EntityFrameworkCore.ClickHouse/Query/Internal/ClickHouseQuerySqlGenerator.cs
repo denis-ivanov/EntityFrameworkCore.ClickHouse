@@ -20,13 +20,18 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 Sql.AppendLine().Append("LIMIT ");
 
-                Visit(
-                    selectExpression.Offset
-                    ?? new SqlConstantExpression(Expression.Constant(-1), selectExpression.Offset.TypeMapping));
-
-                if (selectExpression.Limit != null)
+                if (selectExpression.Offset != null && selectExpression.Limit != null)
                 {
+                    Visit(selectExpression.Offset);
                     Sql.Append(", ");
+                    Visit(selectExpression.Limit);
+                }
+                else if (selectExpression.Offset != null)
+                {
+                    Visit(selectExpression.Offset);
+                }
+                else if (selectExpression.Limit != null)
+                {
                     Visit(selectExpression.Limit);
                 }
             }
@@ -111,7 +116,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
         }
 
         private bool IsNonComposedSetOperation(SelectExpression selectExpression)
-            => selectExpression.Offset == null
+            =>    selectExpression.Offset == null
                && selectExpression.Limit == null
                && !selectExpression.IsDistinct
                && selectExpression.Predicate == null

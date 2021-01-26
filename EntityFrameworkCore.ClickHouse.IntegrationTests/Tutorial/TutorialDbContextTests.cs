@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ClickHouse.EntityFrameworkCore.Extensions;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
@@ -135,6 +136,75 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Tutorial
             // Assert
             var hits = context.Hits.Skip(3).Take(takeCount).ToArray();
             Assert.AreEqual(takeCount, hits.Length);
+        }
+
+        [Test]
+        public void CreateDatabase()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<TutorialDbContext>();
+            optionsBuilder.UseClickHouse("Host=localhost;Protocol=http;Port=8123;Database=tutorial_created");
+            var context = new TutorialDbContext(optionsBuilder.Options);
+            context.Database.EnsureCreated();
+        }
+
+        [Test]
+        public void ToLowerToUpper()
+        {
+            // Arrange
+            var context = CreateContext();
+
+            // Act
+            var result = context.Hits
+                .Take(10)
+                .Select(e => new
+                {
+                    Upper = e.Title.ToUpper(),
+                    Lower = e.Title.ToLower()
+                })
+                .ToArray();
+
+            // Assert
+            foreach (var item in result)
+            {
+                Assert.IsTrue(IsLower(item.Lower));
+                Assert.IsTrue(IsUpper(item.Upper));
+            }
+        }
+
+        [Test]
+        public void IsNullOrEmpty()
+        {
+            // Arrange
+            var context = CreateContext();
+
+            // Act
+            var item = context.Hits.First(e => string.IsNullOrEmpty(e.Title));
+
+            // Assert
+            item.Title.Should().BeEmpty();
+        }
+
+        [Test]
+        public void StringLength()
+        {
+            // Arrange
+            var context = CreateContext();
+
+            // Act
+            var item = context.Hits.First(e => e.Title.Length > 0);
+
+            // Assert
+            item.Title.Should().NotBeEmpty();
+        }
+
+        private bool IsLower(string s)
+        {
+            return s == null || s.All(c => !char.IsLetter(c) || char.IsLower(c));
+        }
+        
+        private bool IsUpper(string s)
+        {
+            return s == null || s.All(c => !char.IsLetter(c) || char.IsUpper(c));
         }
     }
 }

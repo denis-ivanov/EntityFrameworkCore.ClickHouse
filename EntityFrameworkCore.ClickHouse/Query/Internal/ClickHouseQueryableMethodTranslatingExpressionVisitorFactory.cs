@@ -16,14 +16,12 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             _relationalDependencies = relationalDependencies;
         }
 
-        public QueryableMethodTranslatingExpressionVisitor Create(IModel model)
+        public QueryableMethodTranslatingExpressionVisitor Create(QueryCompilationContext queryCompilationContext)
         {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-            
-            return new ClickHouseQueryableMethodTranslatingExpressionVisitor(_dependencies, _relationalDependencies, model);
+            return new ClickHouseQueryableMethodTranslatingExpressionVisitor(
+                _dependencies,
+                _relationalDependencies,
+                queryCompilationContext);
         }
     }
 }

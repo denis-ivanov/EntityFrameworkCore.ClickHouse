@@ -13,6 +13,7 @@ namespace ClickHouse.EntityFrameworkCore.Migrations.Internal
         {
         }
 
+        /*
         public override IEnumerable<IAnnotation> For(IEntityType entityType)
         {
             foreach (var annotation in entityType.GetAnnotations())
@@ -23,5 +24,6 @@ namespace ClickHouse.EntityFrameworkCore.Migrations.Internal
                 }
             }
         }
+        */
     }
 }
