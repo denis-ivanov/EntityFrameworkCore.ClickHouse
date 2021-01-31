@@ -31,6 +31,12 @@ namespace ClickHouse.EntityFrameworkCore.Migrations
                 Generate(cdo, model, builder);
                 return;
             }
+
+            if (operation is ClickHouseDropDatabaseOperation ddo)
+            {
+                Generate(ddo, model, builder);
+                return;
+            }
             
             base.Generate(operation, model, builder);
         }
@@ -42,6 +48,19 @@ namespace ClickHouse.EntityFrameworkCore.Migrations
                 .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
                 .AppendLine(";");
             EndStatement(builder, true);
+        }
+
+        protected virtual void Generate(ClickHouseDropDatabaseOperation operation, IModel model, MigrationCommandListBuilder builder)
+        {
+            builder.Append("DROP DATABASE ")
+                .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+                .AppendLine(";");
+            EndStatement(builder, true);
+        }
+        
+        protected override void CreateTableConstraints(CreateTableOperation operation, IModel model, MigrationCommandListBuilder builder)
+        {
+            CreateTableCheckConstraints(operation, model, builder);
         }
 
         protected override void Generate(CreateTableOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)

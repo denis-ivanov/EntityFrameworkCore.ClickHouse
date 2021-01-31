@@ -1,6 +1,9 @@
 ﻿using System.Data;
 using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 using ClickHouse.Client.ADO;
+using ClickHouse.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -25,14 +28,15 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 
         public IClickHouseRelationalConnection CreateMasterConnection()
         {
+            var systemDb = Dependencies.ContextOptions.FindExtension<ClickHouseOptionsExtension>()?.SystemDataBase ?? "system";
+
             var csb = new ClickHouseConnectionStringBuilder(ConnectionString)
             {
-                Database = ""
+                Database = systemDb
             };
 
             var relationalOptions = RelationalOptionsExtension.Extract(Dependencies.ContextOptions);
             var connectionString = csb.ToString();
-
             relationalOptions = relationalOptions.WithConnectionString(connectionString);
             var optionsBuilder = new DbContextOptionsBuilder();
             ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(relationalOptions);
@@ -41,6 +45,22 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
         }
 
         public override IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
+        {
+            return new ClickHouseTransaction();
+        }
+
+        public override IDbContextTransaction BeginTransaction()
+        {
+            return BeginTransaction(IsolationLevel.Unspecified);
+        }
+
+        public override async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            return await BeginTransactionAsync(IsolationLevel.Unspecified, cancellationToken);
+        }
+
+        public override async Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel,
+            CancellationToken cancellationToken = new CancellationToken())
         {
             return new ClickHouseTransaction();
         }

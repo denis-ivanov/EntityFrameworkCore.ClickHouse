@@ -10,7 +10,8 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             AddTranslators(new IMethodCallTranslator[]
             {
                 new ClickHouseArrayTranslator(dependencies.SqlExpressionFactory),
-                new ClickHouseStringTranslator(dependencies.SqlExpressionFactory)
+                new ClickHouseStringTranslator(dependencies.SqlExpressionFactory),
+                new ClickHouseMathTranslator(dependencies.SqlExpressionFactory)
             });
         }
     }
