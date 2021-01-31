@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using ClickHouse.Client;
 using ClickHouse.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 {
@@ -67,18 +70,41 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 
         public override void Delete()
         {
-            throw new System.NotImplementedException();
+            using var masterConnection = _connection.CreateMasterConnection();
+            Dependencies.MigrationCommandExecutor.ExecuteNonQuery(CreateDropCommands(), masterConnection);
+        }
+
+        public override async Task DeleteAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            await using var masterConnection = _connection.CreateMasterConnection();
+            await Dependencies.MigrationCommandExecutor.ExecuteNonQueryAsync(CreateDropCommands(), masterConnection, cancellationToken);
         }
 
         IReadOnlyList<MigrationCommand> CreateCreateOperations()
-            => Dependencies.MigrationsSqlGenerator.Generate(new[]
+        {
+            var operations = new[]
             {
                 new ClickHouseCreateDatabaseOperation
                 {
                     Name = _connection.DbConnection.Database
                 }
-            });
+            };
+            return Dependencies.MigrationsSqlGenerator.Generate(operations);
+        }
 
+        IReadOnlyList<MigrationCommand> CreateDropCommands()
+        {
+            var operations = new MigrationOperation[]
+            {
+                new ClickHouseDropDatabaseOperation
+                {
+                    Name = _connection.DbConnection.Database
+                }
+            };
+
+            return Dependencies.MigrationsSqlGenerator.Generate(operations);
+        }
+        
         IRelationalCommand CreateHasTablesCommand()
         {
             var sql = $@"

@@ -27,6 +27,8 @@ namespace ClickHouse.EntityFrameworkCore.Infrastructure.Internal
             services.AddEntityFrameworkClickHouse();
         }
 
+        public virtual string SystemDataBase { get; set; } = "system";
+        
         public override DbContextOptionsExtensionInfo Info => _info ??= new ExtensionInfo(this);
         
         private sealed class ExtensionInfo : RelationalExtensionInfo
