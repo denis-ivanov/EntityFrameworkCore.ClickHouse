@@ -11,7 +11,8 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 new ClickHouseStringTranslator(dependencies.SqlExpressionFactory),
                 new ClickHouseArrayTranslator(dependencies.SqlExpressionFactory),
-                new ClickHouseMathTranslator(dependencies.SqlExpressionFactory)
+                new ClickHouseMathTranslator(dependencies.SqlExpressionFactory),
+                new ClickHouseConvertTranslator(dependencies.SqlExpressionFactory)
             });
         }
     }

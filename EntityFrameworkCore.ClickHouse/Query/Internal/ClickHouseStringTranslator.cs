@@ -37,6 +37,12 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
         private static readonly MethodInfo Trim = typeof(string)
             .GetRuntimeMethod(nameof(string.Trim), Array.Empty<Type>());
 
+        private static readonly MethodInfo StartsWith = typeof(string)
+            .GetRuntimeMethod(nameof(string.StartsWith), new[] { typeof(string) });
+
+        private static readonly MethodInfo EndsWith = typeof(string)
+            .GetRuntimeMethod(nameof(string.EndsWith), new[] { typeof(string) });
+        
         private readonly ISqlExpressionFactory _sqlExpressionFactory;
         
         public ClickHouseStringTranslator([NotNull]ISqlExpressionFactory sqlExpressionFactory)
@@ -56,7 +62,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                     method.ReturnType,
                     instance.TypeMapping);
             }
-            
+
             if (ToUpper.Equals(method))
             {
                 return _sqlExpressionFactory.Function(
@@ -88,7 +94,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                     argumentsPropagateNullability: new [] { true },
                     returnType: method.ReturnType);
             }
-            
+
             if (TrimEnd.Equals(method))
             {
                 return _sqlExpressionFactory.Function(
@@ -98,7 +104,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                     argumentsPropagateNullability: new [] { true },
                     returnType: method.ReturnType);
             }
-            
+
             if (Trim.Equals(method))
             {
                 return _sqlExpressionFactory.Function(
@@ -108,7 +114,27 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                     argumentsPropagateNullability: new [] { true },
                     returnType: method.ReturnType);
             }
-            
+
+            if (StartsWith.Equals(method))
+            {
+                return _sqlExpressionFactory.Function(
+                    name: "startsWith",
+                    arguments: arguments.Prepend(instance),
+                    nullable: true,
+                    argumentsPropagateNullability: new[] { true },
+                    returnType: method.ReturnType);
+            }
+
+            if (EndsWith.Equals(method))
+            {
+                return _sqlExpressionFactory.Function(
+                    name: "endsWith",
+                    arguments: arguments.Prepend(instance),
+                    nullable: true,
+                    argumentsPropagateNullability: new[] { true },
+                    returnType: method.ReturnType);
+            }
+
             return null;
         }
 
