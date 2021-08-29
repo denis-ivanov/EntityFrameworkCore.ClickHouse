@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClickHouse.Client" Version="3.2.0.421" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.9" />
   </ItemGroup>
 
 </Project>
