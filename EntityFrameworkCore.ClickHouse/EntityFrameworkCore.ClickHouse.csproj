@@ -4,7 +4,7 @@
     <RootNamespace>ClickHouse.EntityFrameworkCore</RootNamespace>
     <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
     <LangVersion>9</LangVersion>
-    <PackageVersion>0.0.5</PackageVersion>
+    <PackageVersion>0.0.6</PackageVersion>
     <Authors>Denis Ivanov</Authors>
     <Description>ClickHouse provider for Entity Framework Core.</Description>
     <PackageTags>ClickHouse; Entity Framework Core</PackageTags>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClickHouse.Client" Version="3.0.0.357" />
+    <PackageReference Include="ClickHouse.Client" Version="3.2.0.421" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.2" />
   </ItemGroup>
 
