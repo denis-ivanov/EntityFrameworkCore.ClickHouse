@@ -33,9 +33,47 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
             commandStringBuilder.Append(" DELETE");
         }
 
-        protected override void AppendWhereClause(StringBuilder commandStringBuilder, IReadOnlyList<ColumnModification> operations)
+        protected override void AppendUpdateCommandHeader(
+            StringBuilder commandStringBuilder,
+            string name,
+            string schema,
+            IReadOnlyList<ColumnModification> operations)
         {
-            base.AppendWhereClause(commandStringBuilder, operations);
+            if (commandStringBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(commandStringBuilder));
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (operations == null)
+            {
+                throw new ArgumentNullException(nameof(operations));
+            }
+            
+            commandStringBuilder.Append("ALTER TABLE ");
+            SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, name, schema);
+            commandStringBuilder.Append(" UPDATE ")
+                .AppendJoin(
+                    operations,
+                    (this, name, schema),
+                    (sb, o, p) =>
+                    {
+                        var (g, n, s) = p;
+                        g.SqlGenerationHelper.DelimitIdentifier(sb, o.ColumnName);
+                        sb.Append(" = ");
+                        if (!o.UseCurrentValueParameter)
+                        {
+                            g.AppendSqlLiteral(sb, o, n, s);
+                        }
+                        else
+                        {
+                            g.SqlGenerationHelper.GenerateParameterNamePlaceholder(sb, o.ParameterName, o.ColumnType);
+                        }
+                    });
         }
 
         protected override void AppendWhereCondition(
@@ -73,9 +111,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
                 }
                 else
                 {
-                    var clickHouseHelper = SqlGenerationHelper as ClickHouseSqlGenerationHelper;
-                    
-                    clickHouseHelper.GenerateParameterNamePlaceholder(
+                    SqlGenerationHelper.GenerateParameterNamePlaceholder(
                         commandStringBuilder, useOriginalValue
                             ? columnModification.OriginalParameterName
                             : columnModification.ParameterName,
