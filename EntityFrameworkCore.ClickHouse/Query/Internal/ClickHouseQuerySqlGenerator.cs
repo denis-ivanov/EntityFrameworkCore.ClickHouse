@@ -114,7 +114,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
 
             return existsExpression;
         }
-
+        
         private bool IsNonComposedSetOperation(SelectExpression selectExpression)
             =>    selectExpression.Offset == null
                && selectExpression.Limit == null

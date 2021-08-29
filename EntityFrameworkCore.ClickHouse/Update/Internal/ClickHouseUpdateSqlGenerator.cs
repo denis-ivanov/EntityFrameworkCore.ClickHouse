@@ -13,6 +13,77 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
         {
         }
 
+        protected override void AppendDeleteCommandHeader(
+            StringBuilder commandStringBuilder,
+            string name, 
+            string schema)
+        {
+            if (commandStringBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(commandStringBuilder));
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            commandStringBuilder.Append("ALTER TABLE ");
+            SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, name, schema);
+            commandStringBuilder.Append(" DELETE");
+        }
+
+        protected override void AppendWhereClause(StringBuilder commandStringBuilder, IReadOnlyList<ColumnModification> operations)
+        {
+            base.AppendWhereClause(commandStringBuilder, operations);
+        }
+
+        protected override void AppendWhereCondition(
+            StringBuilder commandStringBuilder,
+            ColumnModification columnModification,
+            bool useOriginalValue)
+        {
+            if (commandStringBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(commandStringBuilder));
+            }
+
+            if (columnModification == null)
+            {
+                throw new ArgumentNullException(nameof(columnModification));
+            }
+
+            SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, columnModification.ColumnName);
+
+            var parameterValue = useOriginalValue
+                ? columnModification.OriginalValue
+                : columnModification.Value;
+
+            if (parameterValue == null)
+            {
+                commandStringBuilder.Append(" IS NULL");
+            }
+            else
+            {
+                commandStringBuilder.Append(" = ");
+                if (!columnModification.UseCurrentValueParameter
+                    && !columnModification.UseOriginalValueParameter)
+                {
+                    AppendSqlLiteral(commandStringBuilder, columnModification, null, null);
+                }
+                else
+                {
+                    var clickHouseHelper = SqlGenerationHelper as ClickHouseSqlGenerationHelper;
+                    
+                    clickHouseHelper.GenerateParameterNamePlaceholder(
+                        commandStringBuilder, useOriginalValue
+                            ? columnModification.OriginalParameterName
+                            : columnModification.ParameterName,
+                        columnModification.ColumnType);
+                }
+            }
+        }
+
         protected override void AppendRowsAffectedWhereCondition(StringBuilder commandStringBuilder, int expectedRowsAffected)
         {
             throw new System.NotImplementedException();
