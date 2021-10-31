@@ -35,97 +35,98 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
 
         protected override Expression VisitSqlParameter(SqlParameterExpression sqlParameterExpression)
         {
+            var parameterNameInCommand = _sqlGenerationHelper.GenerateParameterName(sqlParameterExpression.Name);
             if (Sql.Parameters
                 .All(p => p.InvariantName != sqlParameterExpression.Name))
             {
                 Sql.AddParameter(
                     sqlParameterExpression.Name,
-                    sqlParameterExpression.Name,
+                    parameterNameInCommand,
                     sqlParameterExpression.TypeMapping,
                     sqlParameterExpression.IsNullable);
             }
 
-            // see https://github.com/DarkWanderer/ClickHouse.Client/wiki/SQL-Parameters
-            Sql.Append(_sqlGenerationHelper.GenerateParameterNamePlaceholder(sqlParameterExpression.Name, sqlParameterExpression.TypeMapping.StoreType));
+            Sql.Append(_sqlGenerationHelper.GenerateParameterNamePlaceholder(sqlParameterExpression.Name,
+                sqlParameterExpression.TypeMapping.StoreType));
 
             return sqlParameterExpression;
         }
-        
+
         protected override Expression VisitExists(ExistsExpression existsExpression)
         {
             if (existsExpression.IsNegated)
             {
                 Sql.Append("NOT ");
             }
-
+        
             Sql.Append(" if (count() > 0, 1, 0) ");
-
+        
             using (Sql.Indent())
             {
                 if (IsNonComposedSetOperation(existsExpression.Subquery))
                 {
                     // Naked set operation
                     GenerateSetOperation((SetOperationBase)existsExpression.Subquery.Tables[0]);
-
+        
                     return existsExpression.Subquery;
                 }
-
+        
                 IDisposable subQueryIndent = null;
-
+        
                 if (existsExpression.Subquery.Alias != null)
                 {
                     Sql.AppendLine("(");
                     subQueryIndent = Sql.Indent();
                 }
-
+        
                 if (existsExpression.Subquery.IsDistinct)
                 {
                     Sql.Append("DISTINCT ");
                 }
-
+        
                 GenerateTop(existsExpression.Subquery);
-
+        
                 if (existsExpression.Subquery.Tables.Any())
                 {
                     Sql.AppendLine().Append("FROM ");
-
+        
                     GenerateList(existsExpression.Subquery.Tables, e => Visit(e), sql => sql.AppendLine());
                 }
-
+        
                 if (existsExpression.Subquery.Predicate != null)
                 {
                     Sql.AppendLine().Append("WHERE ");
-
+        
                     Visit(existsExpression.Subquery.Predicate);
                 }
-
+        
                 if (existsExpression.Subquery.GroupBy.Count > 0)
                 {
                     Sql.AppendLine().Append("GROUP BY ");
-
+        
                     GenerateList(existsExpression.Subquery.GroupBy, e => Visit(e));
                 }
-
+        
                 if (existsExpression.Subquery.Having != null)
                 {
                     Sql.AppendLine().Append("HAVING ");
-
+        
                     Visit(existsExpression.Subquery.Having);
                 }
-
+        
                 GenerateOrderings(existsExpression.Subquery);
                 GenerateLimitOffset(existsExpression.Subquery);
-
+        
                 if (existsExpression.Subquery.Alias != null)
                 {
                     subQueryIndent.Dispose();
-
+        
                     // TODO
                     //Sql.AppendLine()
                     //    .Append(")" + AliasSeparator + Sql.DelimitIdentifier(existsExpression.Subquery.Alias));
                 }
             }
-
+        
             return existsExpression;
         }
         

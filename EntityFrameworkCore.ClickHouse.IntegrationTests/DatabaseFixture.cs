@@ -22,7 +22,7 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests
             var command = connection.CreateCommand();
             command.CommandText = @"INSERT INTO ""SimpleEntities"" (""Id"", ""Text"") VALUES ({p0:Int32}, {p1:String});";
             command.AddParameter("p0", 1);
-            command.AddParameter("p1", "Loremsdasipsum");
+            command.AddParameter("p1", "Lorem ipsum");
             connection.Open();
             command.ExecuteNonQuery();
 

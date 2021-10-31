@@ -43,7 +43,7 @@ namespace ClickHouse.EntityFrameworkCore.Extensions
                 .TryAdd<IMigrationsSqlGenerator, ClickHouseMigrationsSqlGenerator>()
                 .TryAdd<IRelationalDatabaseCreator, ClickHouseDatabaseCreator>()
                 .TryAdd<IHistoryRepository, ClickHouseHistoryRepository>()
-                .TryAdd<IQueryCompiler, ClickHouseQueryCompiler>()
+                // .TryAdd<IQueryCompiler, ClickHouseQueryCompiler>()
                 //.TryAdd<IRelationalQueryStringFactory, ClickHouseQueryStringFactory>()
 
                 // New Query Pipeline
