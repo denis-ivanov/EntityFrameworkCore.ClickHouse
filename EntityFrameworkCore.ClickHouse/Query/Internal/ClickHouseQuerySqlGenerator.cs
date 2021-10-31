@@ -17,7 +17,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
         {
             if (selectExpression.Limit != null)
             {
-                Sql.AppendLine("LIMIT ");
+                Sql.AppendLine().Append("LIMIT");
                 Visit(selectExpression.Limit);
             }
 
