@@ -21,7 +21,8 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             var suffix = "ipsum";
             Context.SimpleEntities.Any(e => e.Text.EndsWith(suffix)).Should().BeTrue();
         }
-    
+   
+        [Test]
         public void LimitOffset()
         {
             (Context.SimpleEntities.OrderBy(x => x.Id).Skip(0).Take(1).ToList().Count == 1).Should().BeTrue();
