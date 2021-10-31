@@ -122,12 +122,27 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
 
         protected override void AppendRowsAffectedWhereCondition(StringBuilder commandStringBuilder, int expectedRowsAffected)
         {
-            throw new System.NotImplementedException();
         }
 
         protected override void AppendIdentityWhereCondition(StringBuilder commandStringBuilder, ColumnModification columnModification)
         {
-            throw new System.NotImplementedException();
+
+        }
+
+        protected override void AppendWhereAffectedClause(StringBuilder commandStringBuilder, IReadOnlyList<ColumnModification> operations)
+        {
+           
+        }
+
+        protected override ResultSetMapping AppendSelectAffectedCommand(
+            StringBuilder commandStringBuilder,
+            string name,
+            string schema,
+            IReadOnlyList<ColumnModification> readOperations,
+            IReadOnlyList<ColumnModification> conditionOperations,
+            int commandPosition)
+        {
+            return ResultSetMapping.NoResultSet;
         }
 
         private void AppendSqlLiteral(StringBuilder commandStringBuilder, ColumnModification modification, string tableName, string schema)

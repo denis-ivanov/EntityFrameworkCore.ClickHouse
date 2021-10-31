@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 using ClickHouse.EntityFrameworkCore.Metadata;
 using ClickHouse.EntityFrameworkCore.Storage.Engines;
 using Microsoft.EntityFrameworkCore;
@@ -11,50 +10,59 @@ namespace ClickHouse.EntityFrameworkCore.Extensions
     public static class EntityTypeBuilderExtensions
     {
         public static EntityTypeBuilder<T> HasMergeTreeEngine<T>(
-            this EntityTypeBuilder<T> builder,
-            [NotNull]Expression<Func<T, object>>[] orderBy,
-            Expression<Func<T, object>>[] primaryKey = null,
-            Expression<Func<T, object>>[] sampleBy = null,
-            Action<MergeTreeSettings> settingsConfiguration = null) where T : class
+            [NotNull] this EntityTypeBuilder<T> builder,
+            [NotNull] string orderBy) where T : class
         {
-            var mergeTree = new MergeTreeEngine<T>
+            if (builder == null)
             {
-                OrderBy = orderBy,
-                PrimaryKey = primaryKey,
-                SampleBy = sampleBy
-            };
-
-            if (settingsConfiguration != null)
-            {
-                mergeTree.Settings = new MergeTreeSettings();
-                settingsConfiguration(mergeTree.Settings);
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.Metadata.SetOrRemoveAnnotation(ClickHouseAnnotationNames.Engine, mergeTree);
-            return builder;
+            if (orderBy == null)
+            {
+                throw new ArgumentNullException(nameof(orderBy));
+            }
+
+            return builder.HasMergeTreeEngine(orderBy, e => { });
         }
 
         public static EntityTypeBuilder<T> HasMergeTreeEngine<T>(
-            this EntityTypeBuilder<T> builder,
-            string[] orderBy,
-            string[] primaryKey = null,
-            string[] sampleBy = null,
-            Action<MergeTreeSettings> settingsConfiguration = null) where T : class
+            [NotNull] this EntityTypeBuilder<T> builder,
+            [NotNull] string orderBy,
+            [NotNull] Action<MergeTreeEngine<T>> configure) where T : class
         {
-            var mergeTree = new MergeTreeEngine<T>
+            if (builder == null)
             {
-                OrderBy = orderBy,
-                PrimaryKey = primaryKey,
-                SampleBy = sampleBy
-            };
-
-            if (settingsConfiguration != null)
-            {
-                mergeTree.Settings = new MergeTreeSettings();
-                settingsConfiguration(mergeTree.Settings);
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.Metadata.SetOrRemoveAnnotation(ClickHouseAnnotationNames.Engine, mergeTree);
+            if (orderBy == null)
+            {
+                throw new ArgumentNullException(nameof(orderBy));
+            }
+
+            if (configure == null)
+            {
+                throw new ArgumentNullException(nameof(configure));
+            }
+
+            var engine = new MergeTreeEngine<T>(orderBy);
+            configure(engine);
+
+            builder.Metadata.SetOrRemoveAnnotation(ClickHouseAnnotationNames.Engine, engine);
+            return builder;
+        }
+
+        public static EntityTypeBuilder<T> HasStripeLogEngine<T>([NotNull] this EntityTypeBuilder<T> builder)
+            where T : class
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            var engine = new StripeLogEngine();
+            builder.Metadata.SetOrRemoveAnnotation(ClickHouseAnnotationNames.Engine, engine);
             return builder;
         }
     }

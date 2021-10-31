@@ -1,8 +1,6 @@
 ﻿using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using System;
-using System.Linq.Expressions;
 
 namespace EntityFrameworkCore.ClickHouse.IntegrationTests
 {
@@ -20,12 +18,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SimpleEntity>().HasKey(e => e.Id);
+            modelBuilder.Entity<SimpleEntity>().Property(e => e.Id).ValueGeneratedNever();
 
             modelBuilder.Entity<SimpleEntity>()
-                .HasMergeTreeEngine(new Expression<Func<SimpleEntity, object>>[]
-                {
-                    e => e.Id
-                });
+                .HasMergeTreeEngine("Id");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -59,10 +59,10 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
             return await BeginTransactionAsync(IsolationLevel.Unspecified, cancellationToken);
         }
 
-        public override async Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel,
+        public override Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            return new ClickHouseTransaction();
+            return Task.FromResult<IDbContextTransaction>(new ClickHouseTransaction());
         }
     }
 }
