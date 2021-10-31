@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Update;
 using System;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal
@@ -12,11 +11,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
         {
         }
 
-        public void GenerateParameterNamePlaceholder(StringBuilder builder, ColumnModification column) =>
-            this.GenerateParameterNamePlaceholder(builder, column.ParameterName, column.ColumnType);
-
-        public void GenerateParameterNamePlaceholder(StringBuilder builder, string name, string type) =>
-            builder.Append('{').Append($"{name}:{type}").Append('}');
+        public string GenerateParameterNamePlaceholder(string name, string type) => $"{{{name}:{type}}}";
 
         public override void GenerateParameterName(StringBuilder builder, string name)
         {

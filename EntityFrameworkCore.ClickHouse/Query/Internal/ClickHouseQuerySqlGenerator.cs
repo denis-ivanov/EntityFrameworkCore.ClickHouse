@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Linq.Expressions;
+using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -8,9 +9,11 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
 {
     public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
     {
-        
+        private readonly ISqlGenerationHelper _sqlGenerationHelper;
+
         public ClickHouseQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies) : base(dependencies)
         {
+            _sqlGenerationHelper = dependencies.SqlGenerationHelper;
         }
 
         protected override void GenerateLimitOffset(SelectExpression selectExpression)
@@ -41,7 +44,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             }
 
             // see https://github.com/DarkWanderer/ClickHouse.Client/wiki/SQL-Parameters
-            Sql.Append("{").Append($"{sqlParameterExpression.Name}:{sqlParameterExpression.TypeMapping.StoreType}").Append("}");
+            Sql.Append(_sqlGenerationHelper.GenerateParameterNamePlaceholder(sqlParameterExpression.Name, sqlParameterExpression.TypeMapping.StoreType));
 
             return sqlParameterExpression;
         }

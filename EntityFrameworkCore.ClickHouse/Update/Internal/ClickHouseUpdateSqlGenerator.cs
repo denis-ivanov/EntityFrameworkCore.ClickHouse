@@ -71,7 +71,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
                         }
                         else
                         {
-                            g.SqlGenerationHelper.GenerateParameterNamePlaceholder(sb, o.ParameterName, o.ColumnType);
+                            sb.Append(g.SqlGenerationHelper.GenerateParameterNamePlaceholder(o.ParameterName, o.ColumnType));
                         }
                     });
         }
@@ -111,11 +111,11 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
                 }
                 else
                 {
-                    SqlGenerationHelper.GenerateParameterNamePlaceholder(
-                        commandStringBuilder, useOriginalValue
+                    commandStringBuilder.Append(SqlGenerationHelper.GenerateParameterNamePlaceholder(
+                        useOriginalValue
                             ? columnModification.OriginalParameterName
                             : columnModification.ParameterName,
-                        columnModification.ColumnType);
+                        columnModification.ColumnType));
                 }
             }
         }
@@ -171,8 +171,8 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
                                 }
                                 else
                                 {
-                                    var clickHouseSqlHelper = (ClickHouseSqlGenerationHelper)g.SqlGenerationHelper;
-                                    clickHouseSqlHelper.GenerateParameterNamePlaceholder(sb, o);
+                                    sb.Append(g.SqlGenerationHelper.GenerateParameterNamePlaceholder(o.ColumnName,
+                                        o.ColumnType));
                                 }
                             }
                             else
