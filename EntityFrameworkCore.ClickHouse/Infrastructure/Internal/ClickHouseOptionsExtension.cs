@@ -28,7 +28,9 @@ namespace ClickHouse.EntityFrameworkCore.Infrastructure.Internal
         }
 
         public virtual string SystemDataBase { get; set; } = "system";
-        
+
+        public override int? MaxBatchSize => 1;
+
         public override DbContextOptionsExtensionInfo Info => _info ??= new ExtensionInfo(this);
         
         private sealed class ExtensionInfo : RelationalExtensionInfo
@@ -47,7 +49,6 @@ namespace ClickHouse.EntityFrameworkCore.Infrastructure.Internal
 
             public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)
             {
-                
             }
         }
     }

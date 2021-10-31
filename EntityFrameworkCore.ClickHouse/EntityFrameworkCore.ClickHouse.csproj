@@ -8,13 +8,21 @@
     <Authors>Denis Ivanov</Authors>
     <Description>ClickHouse provider for Entity Framework Core.</Description>
     <PackageTags>ClickHouse; Entity Framework Core</PackageTags>
-    <PackageIconUrl>https://clickhouse.tech/images/logo.png</PackageIconUrl>
+    <PackageIcon>Logo.webp</PackageIcon>
     <RepositoryUrl>https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClickHouse.Client" Version="3.2.0.421" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.9" />
+    <PackageReference Include="ClickHouse.Client" Version="4.0.1.462" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.10" PrivateAssets="none" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.10" PrivateAssets="none" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\Logo.webp" Pack="true" PackagePath=""/>
+    <None Include="..\README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
 </Project>

@@ -1,5 +1,4 @@
-﻿using System;
-using ClickHouse.EntityFrameworkCore.Metadata;
+﻿using ClickHouse.EntityFrameworkCore.Metadata;
 using ClickHouse.EntityFrameworkCore.Migrations.Operations;
 using ClickHouse.EntityFrameworkCore.Storage.Engines;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -57,7 +56,7 @@ namespace ClickHouse.EntityFrameworkCore.Migrations
                 .AppendLine(";");
             EndStatement(builder, true);
         }
-        
+
         protected override void CreateTableConstraints(CreateTableOperation operation, IModel model, MigrationCommandListBuilder builder)
         {
             CreateTableCheckConstraints(operation, model, builder);
@@ -66,11 +65,10 @@ namespace ClickHouse.EntityFrameworkCore.Migrations
         protected override void Generate(CreateTableOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
         {
             base.Generate(operation, model, builder, false);
-
-            if (!(operation[ClickHouseAnnotationNames.Engine] is ClickHouseEngine engine))
-            {
-                throw new InvalidOperationException("Specify table engine in configuration.");
-            }
+            var engineAnnotation = operation.FindAnnotation(ClickHouseAnnotationNames.Engine);
+            var engine = engineAnnotation != null && engineAnnotation.Value != null
+                ? (ClickHouseEngine)engineAnnotation.Value
+                : new StripeLogEngine();
 
             engine.SpecifyEngine(builder, model);
             builder.AppendLine(Dependencies.SqlGenerationHelper.StatementTerminator);

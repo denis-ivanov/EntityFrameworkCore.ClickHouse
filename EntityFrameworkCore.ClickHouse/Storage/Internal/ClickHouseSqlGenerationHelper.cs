@@ -7,6 +7,8 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 {
     public class ClickHouseSqlGenerationHelper : RelationalSqlGenerationHelper
     {
+        private const string ParameterFormat = "{{{0}:{1}}}";
+        
         public ClickHouseSqlGenerationHelper(RelationalSqlGenerationHelperDependencies dependencies)
             : base(dependencies)
         {
@@ -16,7 +18,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
             this.GenerateParameterNamePlaceholder(builder, column.ParameterName, column.ColumnType);
 
         public void GenerateParameterNamePlaceholder(StringBuilder builder, string name, string type) =>
-            builder.Append('{').Append($"{name}:{type}").Append('}');
+            builder.AppendFormat(ParameterFormat, name, type);
 
         public override void GenerateParameterName(StringBuilder builder, string name)
         {

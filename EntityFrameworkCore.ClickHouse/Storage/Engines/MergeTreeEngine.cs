@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -9,40 +7,102 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Engines
 {
     public class MergeTreeEngine<T> : ClickHouseEngine
     {
-        public override string Name => "MergeTree";
+        public MergeTreeEngine([NotNull] string orderBy)
+        {
+            if (orderBy == null)
+            {
+                throw new ArgumentNullException(nameof(orderBy));
+            }
 
-        [NotNull]public object[] OrderBy { get; set; }
+            OrderBy = orderBy;
+        }
 
-        [AllowNull]public object[] PartitionBy { get; set; }
+        [NotNull]
+        public string OrderBy { get; set; }
 
-        [AllowNull]public object[] PrimaryKey { get; set; }
+        [AllowNull]
+        public string PartitionBy { get; set; }
 
-        [AllowNull]public object[] SampleBy { get; set; }
+        [AllowNull]
+        public string PrimaryKey { get; set; }
 
-        [AllowNull]public MergeTreeSettings Settings { get; set; }
+        [AllowNull]
+        public string SampleBy { get; set; }
+
+        [AllowNull]
+        public MergeTreeSettings Settings { get; set; }
+
+        public MergeTreeEngine<T> WithPartitionBy([NotNull] string partitionBy)
+        {
+            if (partitionBy == null)
+            {
+                throw new ArgumentNullException(nameof(partitionBy));
+            }
+
+            PartitionBy = partitionBy;
+            return this;
+        }
+
+        public MergeTreeEngine<T> WithPrimaryKey([NotNull] string primaryKey)
+        {
+            if (primaryKey == null)
+            {
+                throw new ArgumentNullException(nameof(primaryKey));
+            }
+
+            PrimaryKey = primaryKey;
+            return this;
+        }
+
+        public MergeTreeEngine<T> WithSampleBy([NotNull] string sampleBy)
+        {
+            if (sampleBy == null)
+            {
+                throw new ArgumentNullException(nameof(sampleBy));
+            }
+
+            SampleBy = sampleBy;
+            return this;
+        }
+
+        public MergeTreeEngine<T> WithSettings([NotNull] Action<MergeTreeSettings> configure)
+        {
+            if (configure == null)
+            {
+                throw new ArgumentNullException(nameof(configure));
+            }
+
+            if (Settings == null)
+            {
+                Settings = new MergeTreeSettings();
+            }
+
+            configure(Settings);
+            return this;
+        }
 
         public override void SpecifyEngine(MigrationCommandListBuilder builder, IModel model)
         {
-            builder.Append(" ENGINE = " + Name + "()").AppendLine();
+            builder.Append(" ENGINE = MergeTree()").AppendLine();
 
-            if (OrderBy != null && OrderBy.Length > 0)
+            if (OrderBy != null)
             {
-                builder.AppendLine($"ORDER BY ({string.Join(", ", GetFields(OrderBy, model))})");
+                builder.AppendLine($"ORDER BY ({OrderBy})");
             }
 
-            if (PartitionBy != null && PartitionBy.Length > 0)
+            if (PartitionBy != null)
             {
-                builder.AppendLine($"$PARTITION BY ({string.Join(", ", GetFields(PartitionBy, model))})");
+                builder.AppendLine($"$PARTITION BY ({PartitionBy})");
             }
 
-            if (PrimaryKey != null && PrimaryKey.Length > 0)
+            if (PrimaryKey != null)
             {
-                builder.AppendLine($"PRIMARY KEY ({string.Join(", ", GetFields(PrimaryKey, model))})");
+                builder.AppendLine($"PRIMARY KEY ({PrimaryKey})");
             }
 
-            if (SampleBy != null && SampleBy.Length > 0)
+            if (SampleBy != null)
             {
-                builder.AppendLine($"SAMPLE BY ({string.Join(", ", GetFields(SampleBy, model))})");
+                builder.AppendLine($"SAMPLE BY ({SampleBy})");
             }
 
             if (Settings != null && !Settings.IsDefault)
@@ -128,34 +188,6 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Engines
                     }
                 }
             }
-        }
-
-        private string[] GetFields(object[] args, IModel model)
-        {
-            var result = new string[args.Length];
-
-            for (var i = 0; i < args.Length; i++)
-            {
-                var arg = args[i];
-
-                switch (arg)
-                {
-                    case string argString:
-                        result[i] = argString;
-                        break;
-
-                    case Expression<Func<T, object>> argExpression:
-                    {
-                        var entity = model.FindEntityType(argExpression.Parameters[0].Type);
-                        var member = ((MemberExpression)((UnaryExpression)argExpression.Body).Operand).Member;
-                        var property = entity.FindProperty(member);
-                        result[i] = property.GetColumnName();
-                        break;
-                    }
-                }
-            }
-
-            return result;
         }
     }
 }

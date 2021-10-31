@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ClickHouse.Client.ADO.Readers;
+using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -13,7 +14,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
 {
     public class ClickHouseModificationCommandBatch : ReaderModificationCommandBatch
     {
-        private const int DefaultBatchSize = 1000;
+        private const int DefaultBatchSize = 1;
         
         private int _maxBatchSize;
 
@@ -37,8 +38,6 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
             return true;
         }
 
-        
-        
         protected override bool IsCommandTextValid() => true;
 
         protected override void Consume(RelationalDataReader reader)
@@ -166,7 +165,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
                     {
                         commandBuilder.AddParameter(
                             columnModification.ParameterName,
-                            Dependencies.SqlGenerationHelper.GenerateParameterName(columnModification.ParameterName),
+                            columnModification.ParameterName,
                             columnModification.TypeMapping,
                             columnModification.IsNullable);
 
@@ -177,7 +176,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
                     {
                         commandBuilder.AddParameter(
                             columnModification.OriginalParameterName,
-                            Dependencies.SqlGenerationHelper.GenerateParameterName(columnModification.OriginalParameterName),
+                            columnModification.OriginalParameterName,
                             columnModification.TypeMapping,
                             columnModification.IsNullable);
 
