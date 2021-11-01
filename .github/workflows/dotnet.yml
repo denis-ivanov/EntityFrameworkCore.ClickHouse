@@ -11,6 +11,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      clickhouse:
+        image: 'yandex/clickhouse-server'
+        ports:
+          - 8123:8123
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
