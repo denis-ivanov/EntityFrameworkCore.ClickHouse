@@ -13,12 +13,6 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
     [TestFixture, ExcludeFromCodeCoverage]
     public class ClickHouseConvertTranslatorTests : DatabaseFixture
     {
-        private const int Value = 1;
-
-        private const string ValueAsString = "1";
-
-        private static readonly string TodayAsString = DateTime.Now.ToString("yyyy-MM-dd");
-
         #region Convert.ToXX()
         
         [Test]
@@ -27,10 +21,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToSByte(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToSByte(e.Int8AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.Int8Value);
         }
         
         [Test]
@@ -39,10 +33,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToInt16(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToInt16(e.Int16AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.Int16Value);
         }
         
         [Test]
@@ -51,10 +45,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToInt32(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToInt32(e.Int32AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.Int32Value);
         }
         
         [Test]
@@ -63,10 +57,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToInt64(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToInt64(e.Int64AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.Int64Value);
         }
         
         [Test]
@@ -75,10 +69,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToByte(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToByte(e.UInt8AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.UInt8Value);
         }
         
         [Test]
@@ -87,22 +81,22 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToUInt16(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToUInt16(e.UInt16AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.UInt16Value);
         }
         
         [Test]
         public void ToUInt32()
         {
             // Arrange
-            
+
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToUInt32(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToUInt32(e.UInt32AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.UInt32Value);
         }
         
         [Test]
@@ -111,10 +105,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToUInt64(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToUInt64(e.UInt64AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.UInt64Value);
         }
         
         [Test]
@@ -123,10 +117,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
 
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToSingle(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToSingle(e.FloatAsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.FloatValue);
         }
 
         [Test]
@@ -135,10 +129,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
 
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToDouble(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToDouble(e.DoubleAsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.DoubleValue);
         }
 
         [Test]
@@ -147,10 +141,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
 
             // Act
-            var v = Context.SimpleEntities.Select(e => Convert.ToDateTime(TodayAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => Convert.ToDateTime(e.DateTimeAsString)).Single();
 
             // Assert
-            v.Should().Be(DateTime.Today);
+            v.Should().Be(SimpleEntity.DateTimeValue);
         }
 
         #endregion
@@ -163,10 +157,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => sbyte.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => sbyte.Parse(e.Int8AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.Int8Value);
         }
         
         [Test]
@@ -175,22 +169,22 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
 
             // Act
-            var v = Context.SimpleEntities.Select(e => short.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => short.Parse(e.Int16AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.Int16Value);
         }
-        
+
         [Test]
         public void Int32Parse()
         {
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => int.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => int.Parse(e.Int32AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.Int32Value);
         }
         
         [Test]
@@ -199,10 +193,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => long.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => long.Parse(e.Int64AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.Int64Value);
         }
         
         [Test]
@@ -211,10 +205,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => byte.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => byte.Parse(e.UInt8AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.UInt8Value);
         }
         
         [Test]
@@ -223,10 +217,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
 
             // Act
-            var v = Context.SimpleEntities.Select(e => ushort.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => ushort.Parse(e.UInt16AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.UInt16Value);
         }
         
         [Test]
@@ -235,10 +229,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => uint.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => uint.Parse(e.UInt32AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.UInt32Value);
         }
         
         [Test]
@@ -247,10 +241,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => ulong.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => ulong.Parse(e.UInt64AsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.UInt64Value);
         }
         
         [Test]
@@ -259,10 +253,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => float.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => float.Parse(e.FloatAsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.FloatValue);
         }
 
         [Test]
@@ -271,10 +265,10 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
             
             // Act
-            var v = Context.SimpleEntities.Select(e => double.Parse(ValueAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => double.Parse(e.DoubleAsString)).Single();
 
             // Assert
-            v.Should().Be(Value);
+            v.Should().Be(SimpleEntity.DoubleValue);
         }
 
         [Test]
@@ -283,12 +277,12 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Arrange
 
             // Act
-            var v = Context.SimpleEntities.Select(e => DateTime.Parse(TodayAsString)).Single();
+            var v = Context.SimpleEntities.Select(e => DateTime.Parse(e.DateTimeAsString)).Single();
 
             // Assert
-            v.Should().Be(DateTime.Today);
+            v.Should().Be(SimpleEntity.DateTimeValue);
         }
-        
+
         #endregion
     }
 }

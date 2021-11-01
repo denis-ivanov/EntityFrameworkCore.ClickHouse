@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClickHouse.EntityFrameworkCore.Storage.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -35,6 +36,24 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                     Visit(selectExpression.Limit);
                 }
             }
+        }
+
+        protected override Expression VisitSqlParameter(SqlParameterExpression sqlParameterExpression)
+        {
+            var parameterNameInCommand = Dependencies.SqlGenerationHelper.GenerateParameterName(sqlParameterExpression.Name);
+
+            if (Sql.Parameters
+                .All(p => p.InvariantName != sqlParameterExpression.Name))
+            {
+                Sql.AddParameter(
+                    sqlParameterExpression.Name,
+                    parameterNameInCommand,
+                    sqlParameterExpression.TypeMapping!,
+                    sqlParameterExpression.IsNullable);
+            }
+
+            Sql.Append(Dependencies.SqlGenerationHelper.GenerateParameterName(sqlParameterExpression.Name, sqlParameterExpression.TypeMapping.StoreType));
+            return sqlParameterExpression;
         }
 
         protected override Expression VisitExists(ExistsExpression existsExpression)

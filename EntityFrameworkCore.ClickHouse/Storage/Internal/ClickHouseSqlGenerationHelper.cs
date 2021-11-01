@@ -20,6 +20,9 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
         public void GenerateParameterNamePlaceholder(StringBuilder builder, string name, string type) =>
             builder.AppendFormat(ParameterFormat, name, type);
 
+        public string GenerateParameterName(string name, string type) =>
+            string.Format(ParameterFormat, name, type);
+        
         public override void GenerateParameterName(StringBuilder builder, string name)
         {
             throw new NotImplementedException();

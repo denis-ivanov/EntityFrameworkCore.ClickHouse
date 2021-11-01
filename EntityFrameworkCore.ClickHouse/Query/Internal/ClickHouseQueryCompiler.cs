@@ -31,11 +31,5 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                 model)
         {
         }
-
-        public override Expression ExtractParameters(Expression query, IParameterValues parameterValues, IDiagnosticsLogger<DbLoggerCategory.Query> logger,
-            bool parameterize = true, bool generateContextAccessors = false)
-        {
-            return query;
-        }
     }
 }

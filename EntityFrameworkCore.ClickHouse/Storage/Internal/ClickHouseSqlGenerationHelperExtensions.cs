@@ -9,9 +9,10 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
             this ISqlGenerationHelper helper,
             StringBuilder stringBuilder,
             string name,
-            string type)
-        {
+            string type) =>
             ((ClickHouseSqlGenerationHelper)helper).GenerateParameterNamePlaceholder(stringBuilder, name, type);
-        }
+
+        internal static string GenerateParameterName(this ISqlGenerationHelper helper, string name, string type) =>
+            ((ClickHouseSqlGenerationHelper)helper).GenerateParameterName(name, type);
     }
 }
