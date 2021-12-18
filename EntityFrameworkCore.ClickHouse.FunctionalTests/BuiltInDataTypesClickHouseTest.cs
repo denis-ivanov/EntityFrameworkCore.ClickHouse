@@ -62,7 +62,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                 Assert.Equal(-1234567890123456789L, dt.TestInt64);
                 // https://clickhouse.com/docs/en/sql-reference/data-types/float/
                 Assert.Equal(-1.23456789, dt.TestDouble, 8);
-                Assert.Equal(-1234567890.01M, dt.TestDecimal, 1);
+                Assert.Equal(-1234567890.01M, dt.TestDecimal);
                 Assert.Equal(DateTime.Parse("01/01/2000 12:34:56"), dt.TestDateTime);
                 Assert.Equal(new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)), dt.TestDateTimeOffset);
                 Assert.Equal(new TimeSpan(0, 10, 9, 8, 7), dt.TestTimeSpan);
@@ -138,7 +138,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                 Assert.Equal(-1234567890123456789L, dt.TestNullableInt64);
                 // https://clickhouse.com/docs/en/sql-reference/data-types/float/
                 Assert.Equal(-1.23456789, dt.TestNullableDouble!.Value, 8);
-                Assert.Equal(-1234567890.01M, dt.TestNullableDecimal!.Value, 1);
+                Assert.Equal(-1234567890.01M, dt.TestNullableDecimal);
                 Assert.Equal(DateTime.Parse("01/01/2000 12:34:56"), dt.TestNullableDateTime);
                 Assert.Equal(new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)), dt.TestNullableDateTimeOffset);
                 Assert.Equal(new TimeSpan(0, 10, 9, 8, 7), dt.TestNullableTimeSpan);
@@ -164,278 +164,13 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
         [ConditionalFact]
         public override void Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_null()
         {
-            using (var context = CreateContext())
+            try
             {
-                context.Set<BuiltInNullableDataTypes>().Add(
-                    new BuiltInNullableDataTypes { Id = 100, PartitionId = 100 });
-
-                Assert.Equal(1, context.SaveChanges());
+                base.Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_null();
             }
-
-            using (var context = CreateContext())
+            catch (Exception e)
             {
-                var dt = context.Set<BuiltInNullableDataTypes>().Where(ndt => ndt.Id == 100).ToList().Single();
-
-                Assert.Null(dt.TestString);
-                Assert.Empty(dt.TestByteArray); // nullable arrays are not supported
-                Assert.Null(dt.TestNullableInt16);
-                Assert.Null(dt.TestNullableInt32);
-                Assert.Null(dt.TestNullableInt64);
-                Assert.Null(dt.TestNullableDouble);
-                Assert.Null(dt.TestNullableDecimal);
-                Assert.Null(dt.TestNullableDateTime);
-                Assert.Null(dt.TestNullableDateTimeOffset);
-                Assert.Null(dt.TestNullableTimeSpan);
-                Assert.Null(dt.TestNullableSingle);
-                Assert.Null(dt.TestNullableBoolean);
-                Assert.Null(dt.TestNullableByte);
-                Assert.Null(dt.TestNullableUnsignedInt16);
-                Assert.Null(dt.TestNullableUnsignedInt32);
-                Assert.Null(dt.TestNullableUnsignedInt64);
-                Assert.Null(dt.TestNullableCharacter);
-                Assert.Null(dt.TestNullableSignedByte);
-                Assert.Null(dt.Enum64);
-                Assert.Null(dt.Enum32);
-                Assert.Null(dt.Enum16);
-                Assert.Null(dt.Enum8);
-                Assert.Null(dt.EnumU64);
-                Assert.Null(dt.EnumU32);
-                Assert.Null(dt.EnumU16);
-                Assert.Null(dt.EnumS8);
-            }
-        }
-        
-        [ConditionalFact]
-        public override void Can_insert_and_read_back_non_nullable_backed_data_types()
-        {
-            using (var context = CreateContext())
-            {
-                context.Set<NonNullableBackedDataTypes>().Add(
-                    new NonNullableBackedDataTypes
-                    {
-                        Id = 101,
-                        PartitionId = 101,
-                        Int16 = -1234,
-                        Int32 = -123456789,
-                        Int64 = -1234567890123456789L,
-                        Double = -1.23456789,
-                        Decimal = -1234567890.01M,
-                        DateTime = DateTime.Parse("01/01/2000 12:34:56"),
-                        DateTimeOffset = new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)),
-                        TimeSpan = new TimeSpan(0, 10, 9, 8, 7),
-                        Single = -1.234F,
-                        Boolean = true,
-                        Byte = 255,
-                        UnsignedInt16 = 1234,
-                        UnsignedInt32 = 1234565789U,
-                        UnsignedInt64 = 1234567890123456789UL,
-                        Character = 'a',
-                        SignedByte = -128,
-                        Enum64 = Enum64.SomeValue,
-                        Enum32 = Enum32.SomeValue,
-                        Enum16 = Enum16.SomeValue,
-                        Enum8 = Enum8.SomeValue,
-                        EnumU64 = EnumU64.SomeValue,
-                        EnumU32 = EnumU32.SomeValue,
-                        EnumU16 = EnumU16.SomeValue,
-                        EnumS8 = EnumS8.SomeValue
-                    });
-
-                Assert.Equal(1, context.SaveChanges());
-            }
-
-            using (var context = CreateContext())
-            {
-                var dt = context.Set<NonNullableBackedDataTypes>().Where(ndt => ndt.Id == 101).ToList().Single();
-
-                Assert.Equal((short)-1234, dt.Int16);
-                Assert.Equal(-123456789, dt.Int32);
-                Assert.Equal(-1234567890123456789L, dt.Int64);
-                Assert.Equal(-1234567890123456789L, dt.Int64);
-                Assert.Equal(-1.23456789, dt.Double!.Value, 8);
-                Assert.Equal(-1234567890.01M, dt.Decimal!.Value, 1);
-                Assert.Equal(DateTime.Parse("01/01/2000 12:34:56"), dt.DateTime);
-                Assert.Equal(new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)), dt.DateTimeOffset);
-                Assert.Equal(new TimeSpan(0, 10, 9, 8, 7), dt.TimeSpan);
-                Assert.Equal(-1.234F, dt.Single);
-                Assert.Equal(true, dt.Boolean);
-                Assert.Equal((byte)255, dt.Byte);
-                Assert.Equal(Enum64.SomeValue, dt.Enum64);
-                Assert.Equal(Enum32.SomeValue, dt.Enum32);
-                Assert.Equal(Enum16.SomeValue, dt.Enum16);
-                Assert.Equal(Enum8.SomeValue, dt.Enum8);
-                Assert.Equal((ushort)1234, dt.UnsignedInt16);
-                Assert.Equal(1234565789U, dt.UnsignedInt32);
-                Assert.Equal(1234567890123456789UL, dt.UnsignedInt64);
-                Assert.Equal('a', dt.Character);
-                Assert.Equal((sbyte)-128, dt.SignedByte);
-                Assert.Equal(EnumU64.SomeValue, dt.EnumU64);
-                Assert.Equal(EnumU32.SomeValue, dt.EnumU32);
-                Assert.Equal(EnumU16.SomeValue, dt.EnumU16);
-                Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
-            }
-        }
-        
-        [ConditionalFact]
-        public override void Can_insert_and_read_back_nullable_backed_data_types()
-        {
-            using (var context = CreateContext())
-            {
-                context.Set<NullableBackedDataTypes>().Add(
-                    new NullableBackedDataTypes
-                    {
-                        Id = 101,
-                        PartitionId = 101,
-                        Int16 = -1234,
-                        Int32 = -123456789,
-                        Int64 = -1234567890123456789L,
-                        Double = -1.23456789,
-                        Decimal = -1234567890.01M,
-                        DateTime = DateTime.Parse("01/01/2000 12:34:56"),
-                        DateTimeOffset = new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)),
-                        TimeSpan = new TimeSpan(0, 10, 9, 8, 7),
-                        Single = -1.234F,
-                        Boolean = false,
-                        Byte = 255,
-                        UnsignedInt16 = 1234,
-                        UnsignedInt32 = 1234565789U,
-                        UnsignedInt64 = 1234567890123456789UL,
-                        Character = 'a',
-                        SignedByte = -128,
-                        Enum64 = Enum64.SomeValue,
-                        Enum32 = Enum32.SomeValue,
-                        Enum16 = Enum16.SomeValue,
-                        Enum8 = Enum8.SomeValue,
-                        EnumU64 = EnumU64.SomeValue,
-                        EnumU32 = EnumU32.SomeValue,
-                        EnumU16 = EnumU16.SomeValue,
-                        EnumS8 = EnumS8.SomeValue
-                    });
-
-                Assert.Equal(1, context.SaveChanges());
-            }
-
-            using (var context = CreateContext())
-            {
-                var dt = context.Set<NullableBackedDataTypes>().Where(ndt => ndt.Id == 101).ToList().Single();
-
-                Assert.Equal((short)-1234, dt.Int16);
-                Assert.Equal(-123456789, dt.Int32);
-                Assert.Equal(-1234567890123456789L, dt.Int64);
-                Assert.Equal(-1.23456789, dt.Double, 8);
-                Assert.Equal(-1234567890.01M, dt.Decimal, 1);
-                Assert.Equal(DateTime.Parse("01/01/2000 12:34:56"), dt.DateTime);
-                Assert.Equal(new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)), dt.DateTimeOffset);
-                Assert.Equal(new TimeSpan(0, 10, 9, 8, 7), dt.TimeSpan);
-                Assert.Equal(-1.234F, dt.Single);
-                Assert.Equal(false, dt.Boolean);
-                Assert.Equal((byte)255, dt.Byte);
-                Assert.Equal(Enum64.SomeValue, dt.Enum64);
-                Assert.Equal(Enum32.SomeValue, dt.Enum32);
-                Assert.Equal(Enum16.SomeValue, dt.Enum16);
-                Assert.Equal(Enum8.SomeValue, dt.Enum8);
-                Assert.Equal((ushort)1234, dt.UnsignedInt16);
-                Assert.Equal(1234565789U, dt.UnsignedInt32);
-                Assert.Equal(1234567890123456789UL, dt.UnsignedInt64);
-                Assert.Equal('a', dt.Character);
-                Assert.Equal((sbyte)-128, dt.SignedByte);
-                Assert.Equal(EnumU64.SomeValue, dt.EnumU64);
-                Assert.Equal(EnumU32.SomeValue, dt.EnumU32);
-                Assert.Equal(EnumU16.SomeValue, dt.EnumU16);
-                Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
-            }
-        }
-        
-        [ConditionalFact]
-        public override void Can_insert_and_read_back_object_backed_data_types()
-        {
-            using (var context = CreateContext())
-            {
-                context.Set<ObjectBackedDataTypes>().Add(
-                    new ObjectBackedDataTypes
-                    {
-                        Id = 101,
-                        PartitionId = 101,
-                        String = "TestString",
-                        Bytes = new byte[] { 10, 9, 8, 7, 6 },
-                        Int16 = -1234,
-                        Int32 = -123456789,
-                        Int64 = -1234567890123456789L,
-                        Double = -1.23456789,
-                        Decimal = -1234567890.01M,
-                        DateTime = DateTime.Parse("01/01/2000 12:34:56"),
-                        DateTimeOffset = new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)),
-                        TimeSpan = new TimeSpan(0, 10, 9, 8, 7),
-                        Single = -1.234F,
-                        Boolean = false,
-                        Byte = 255,
-                        UnsignedInt16 = 1234,
-                        UnsignedInt32 = 1234565789U,
-                        UnsignedInt64 = 1234567890123456789UL,
-                        Character = 'a',
-                        SignedByte = -128,
-                        Enum64 = Enum64.SomeValue,
-                        Enum32 = Enum32.SomeValue,
-                        Enum16 = Enum16.SomeValue,
-                        Enum8 = Enum8.SomeValue,
-                        EnumU64 = EnumU64.SomeValue,
-                        EnumU32 = EnumU32.SomeValue,
-                        EnumU16 = EnumU16.SomeValue,
-                        EnumS8 = EnumS8.SomeValue
-                    });
-
-                Assert.Equal(1, context.SaveChanges());
-            }
-
-            using (var context = CreateContext())
-            {
-                var dt = context.Set<ObjectBackedDataTypes>().Where(ndt => ndt.Id == 101).ToList().Single();
-
-                Assert.Equal("TestString", dt.String);
-                Assert.Equal(new byte[] { 10, 9, 8, 7, 6 }, dt.Bytes);
-                Assert.Equal((short)-1234, dt.Int16);
-                Assert.Equal(-123456789, dt.Int32);
-                Assert.Equal(-1234567890123456789L, dt.Int64);
-                Assert.Equal(-1.23456789, dt.Double, 8);
-                Assert.Equal(-1234567890.01M, dt.Decimal, 1);
-                Assert.Equal(DateTime.Parse("01/01/2000 12:34:56"), dt.DateTime);
-                Assert.Equal(new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)), dt.DateTimeOffset);
-                Assert.Equal(new TimeSpan(0, 10, 9, 8, 7), dt.TimeSpan);
-                Assert.Equal(-1.234F, dt.Single);
-                Assert.Equal(false, dt.Boolean);
-                Assert.Equal((byte)255, dt.Byte);
-                Assert.Equal(Enum64.SomeValue, dt.Enum64);
-                Assert.Equal(Enum32.SomeValue, dt.Enum32);
-                Assert.Equal(Enum16.SomeValue, dt.Enum16);
-                Assert.Equal(Enum8.SomeValue, dt.Enum8);
-                Assert.Equal((ushort)1234, dt.UnsignedInt16);
-                Assert.Equal(1234565789U, dt.UnsignedInt32);
-                Assert.Equal(1234567890123456789UL, dt.UnsignedInt64);
-                Assert.Equal('a', dt.Character);
-                Assert.Equal((sbyte)-128, dt.SignedByte);
-                Assert.Equal(EnumU64.SomeValue, dt.EnumU64);
-                Assert.Equal(EnumU32.SomeValue, dt.EnumU32);
-                Assert.Equal(EnumU16.SomeValue, dt.EnumU16);
-                Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
-            }
-        }
-        
-        [ConditionalFact]
-        public override void Can_insert_and_read_back_with_null_binary_foreign_key()
-        {
-            using (var context = CreateContext())
-            {
-                context.Set<BinaryForeignKeyDataType>().Add(
-                    new BinaryForeignKeyDataType { Id = 78 });
-
-                Assert.Equal(1, context.SaveChanges());
-            }
-
-            using (var context = CreateContext())
-            {
-                var entity = context.Set<BinaryForeignKeyDataType>().Where(e => e.Id == 78).ToList().Single();
-                // nullable arrays are not supported
-                Assert.Empty(entity.BinaryKeyDataTypeId);
+                throw e;
             }
         }
         
@@ -447,7 +182,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
 
             public override bool SupportsAnsi => true;
 
-            public override bool SupportsUnicodeToAnsiConversion => false;
+            public override bool SupportsUnicodeToAnsiConversion => true;
 
             public override bool SupportsLargeStringComparisons => false;
 
@@ -455,7 +190,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
 
             public override bool SupportsDecimalComparisons => true;
 
-            public override DateTime DefaultDateTime => DateTime.UnixEpoch;
+            public override DateTime DefaultDateTime => new ();
 
             public override DbContextOptionsBuilder AddOptions(DbContextOptionsBuilder builder)
             {

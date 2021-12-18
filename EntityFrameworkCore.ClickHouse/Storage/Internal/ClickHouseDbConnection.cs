@@ -1,5 +1,4 @@
 using ClickHouse.Client.ADO;
-using System.Data.Common;
 using System.Net.Http;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal
