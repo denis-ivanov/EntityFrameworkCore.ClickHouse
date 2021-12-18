@@ -8,9 +8,6 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 {
     public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     {
-        private const int DefaultDecimalPrecision = 38;
-        private const int DefaultDecimalScale = 16;
-        
         private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new()
         {
             { typeof(string), new StringTypeMapping("String", DbType.String) },
@@ -67,11 +64,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
         {
             if (mappingInfo.ClrType == typeof(decimal))
             {
-                return new DecimalTypeMapping(
-                    $"Decimal({mappingInfo.Precision ?? DefaultDecimalPrecision}, {mappingInfo.Scale ?? DefaultDecimalScale})",
-                    DbType.Decimal,
-                    mappingInfo.Precision ?? DefaultDecimalPrecision,
-                    mappingInfo.Scale ?? DefaultDecimalScale);
+                return new ClickHouseDecimalTypeMapping(mappingInfo.Precision, mappingInfo.Scale, mappingInfo.Size);
             }
 
             return null;
