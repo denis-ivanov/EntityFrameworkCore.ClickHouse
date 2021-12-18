@@ -8,13 +8,15 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 {
     public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     {
+        private const int DefaultDecimalPrecision = 38;
+        private const int DefaultDecimalScale = 16;
+        
         private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new()
         {
             { typeof(string), new StringTypeMapping("String", DbType.String) },
-            { typeof(byte[]), new ByteArrayTypeMapping("Array(UInt8)") },
-            { typeof(bool), new BoolTypeMapping("UInt8", DbType.Byte) },
+            { typeof(bool), new ClickHouseBoolTypeMapping() },
             { typeof(byte), new ByteTypeMapping("UInt8") },
-            { typeof(char), new CharTypeMapping("FixedString(1)") },
+            { typeof(char), new ClickHouseCharTypeMapping() },
             { typeof(int), new IntTypeMapping("Int32") },
             { typeof(ulong), new ULongTypeMapping("UInt64") },
             { typeof(long), new LongTypeMapping("Int64") },
@@ -23,7 +25,6 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
             { typeof(uint), new UIntTypeMapping("UInt32") },
             { typeof(ushort), new UShortTypeMapping("UInt16") },
             { typeof(DateTime), new DateTimeTypeMapping("DateTime") },
-            { typeof(decimal), new DecimalTypeMapping("Decimal32", DbType.Decimal) },
             { typeof(double), new DoubleTypeMapping("Float64") },
             { typeof(float), new FloatTypeMapping("Float32") },
             { typeof(Guid), new GuidTypeMapping("UUID") }
@@ -34,10 +35,11 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
         {
         }
 
-        protected override RelationalTypeMapping FindMapping(in RelationalTypeMappingInfo mappingInfo)
-        {
-            return FindExistingMapping(mappingInfo) ?? FindArrayMapping(mappingInfo) ?? base.FindMapping(in mappingInfo);
-        }
+        protected override RelationalTypeMapping FindMapping(in RelationalTypeMappingInfo mappingInfo) =>
+            FindExistingMapping(mappingInfo) ??
+            FindArrayMapping(mappingInfo) ??
+            GetDecimalMapping(mappingInfo) ??
+            base.FindMapping(in mappingInfo);
 
         private RelationalTypeMapping FindExistingMapping(in RelationalTypeMappingInfo mappingInfo)
         {
@@ -59,6 +61,20 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
             var elementType = mappingInfo.ClrType.GetElementType();
             var elementTypeMapping = ClrTypeMappings[elementType];
             return new ClickHouseArrayTypeMapping($"Array({elementTypeMapping.StoreType})", elementTypeMapping);
+        }
+
+        private RelationalTypeMapping GetDecimalMapping(in RelationalTypeMappingInfo mappingInfo)
+        {
+            if (mappingInfo.ClrType == typeof(decimal))
+            {
+                return new DecimalTypeMapping(
+                    $"Decimal({mappingInfo.Precision ?? DefaultDecimalPrecision}, {mappingInfo.Scale ?? DefaultDecimalScale})",
+                    DbType.Decimal,
+                    mappingInfo.Precision ?? DefaultDecimalPrecision,
+                    mappingInfo.Scale ?? DefaultDecimalScale);
+            }
+
+            return null;
         }
     }
 }

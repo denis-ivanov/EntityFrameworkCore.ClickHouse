@@ -18,7 +18,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 
         protected override DbConnection CreateDbConnection()
         {
-            return new ClickHouseConnection(ConnectionString);
+            return new ClickHouseDbConnection(ConnectionString);
         }
 
         public IClickHouseRelationalConnection CreateReadOnlyConnection()

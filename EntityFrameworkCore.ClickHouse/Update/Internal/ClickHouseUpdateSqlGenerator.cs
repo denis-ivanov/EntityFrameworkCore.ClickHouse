@@ -126,12 +126,10 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
 
         protected override void AppendIdentityWhereCondition(StringBuilder commandStringBuilder, ColumnModification columnModification)
         {
-
         }
 
         protected override void AppendWhereAffectedClause(StringBuilder commandStringBuilder, IReadOnlyList<ColumnModification> operations)
         {
-           
         }
 
         protected override ResultSetMapping AppendSelectAffectedCommand(

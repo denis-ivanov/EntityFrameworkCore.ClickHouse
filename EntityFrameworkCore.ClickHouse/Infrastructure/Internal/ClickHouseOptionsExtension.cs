@@ -32,7 +32,7 @@ namespace ClickHouse.EntityFrameworkCore.Infrastructure.Internal
         public override int? MaxBatchSize => 1;
 
         public override DbContextOptionsExtensionInfo Info => _info ??= new ExtensionInfo(this);
-        
+
         private sealed class ExtensionInfo : RelationalExtensionInfo
         {
             public ExtensionInfo(IDbContextOptionsExtension extension)
