@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Data;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq.Expressions;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
 {
@@ -29,6 +29,16 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
         protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
             => new ClickHouseArrayTypeMapping(parameters, ElementMapping);
 
+        public override string GenerateSqlLiteral(object value)
+        {
+            return base.GenerateSqlLiteral(value);
+        }
+
+        public override Expression GenerateCodeLiteral(object value)
+        {
+            return base.GenerateCodeLiteral(value);
+        }
+
         protected override string GenerateNonNullSqlLiteral(object value)
         {
             var arr = (Array)value;
@@ -37,7 +47,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
                 throw new NotSupportedException("Multidimensional array literals aren't supported");
 
             var sb = new StringBuilder();
-            sb.Append("ARRAY[");
+            sb.Append("[");
             for (var i = 0; i < arr.Length; i++)
             {
                 sb.Append(ElementMapping.GenerateSqlLiteral(arr.GetValue(i)));
@@ -45,9 +55,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
                     sb.Append(",");
             }
 
-            sb.Append("]::");
-            sb.Append(ElementMapping.StoreType);
-            sb.Append("[]");
+            sb.Append("]");
             return sb.ToString();
         }
 

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using ClickHouse.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ClickHouse.EntityFrameworkCore.Migrations.Internal
 {
@@ -12,18 +8,5 @@ namespace ClickHouse.EntityFrameworkCore.Migrations.Internal
             : base(dependencies)
         {
         }
-
-        /*
-        public override IEnumerable<IAnnotation> For(IEntityType entityType)
-        {
-            foreach (var annotation in entityType.GetAnnotations())
-            {
-                if (annotation.Name.StartsWith(ClickHouseAnnotationNames.Prefix))
-                {
-                    yield return annotation;
-                }
-            }
-        }
-        */
     }
 }
