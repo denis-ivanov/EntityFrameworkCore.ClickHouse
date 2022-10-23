@@ -29,16 +29,6 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
         protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
             => new ClickHouseArrayTypeMapping(parameters, ElementMapping);
 
-        public override string GenerateSqlLiteral(object value)
-        {
-            return base.GenerateSqlLiteral(value);
-        }
-
-        public override Expression GenerateCodeLiteral(object value)
-        {
-            return base.GenerateCodeLiteral(value);
-        }
-
         protected override string GenerateNonNullSqlLiteral(object value)
         {
             var arr = (Array)value;

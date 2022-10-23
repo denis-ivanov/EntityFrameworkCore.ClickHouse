@@ -11,12 +11,12 @@ namespace ClickHouse.EntityFrameworkCore.Metadata.Internal
         {
         }
 
-        public override IEnumerable<IAnnotation> For(ITable table)
+        public override IEnumerable<IAnnotation> For(ITable table, bool designTime)
         {
             var entityType = table.EntityTypeMappings.First().EntityType;
 
             foreach (var annotation in entityType.GetAnnotations()
-                .Where(e => e.Name.StartsWith(ClickHouseAnnotationNames.Prefix)))
+                         .Where(e => e.Name.StartsWith(ClickHouseAnnotationNames.Prefix)))
             {
                 yield return annotation;
             }

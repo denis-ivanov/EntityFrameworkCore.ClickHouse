@@ -1,6 +1,6 @@
+using ClickHouse.EntityFrameworkCore.Extensions;
 using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
 using System.Data.Common;
 using System.Reflection;
 
@@ -24,9 +24,23 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
         {
         }
 
+        protected ClickHouseCharTypeMapping(RelationalTypeMappingParameters parameters) : base(parameters)
+        {
+        }
+
+        protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
+        {
+            return new ClickHouseCharTypeMapping(parameters);
+        }
+
         public override MethodInfo GetDataReaderMethod()
         {
             return typeof(DbDataReader).GetRuntimeMethod(nameof(DbDataReader.GetString), new[] { typeof(int) });
+        }
+
+        protected override void ConfigureParameter(DbParameter parameter)
+        {
+            parameter.SetStoreType(StoreType);
         }
     }
 }

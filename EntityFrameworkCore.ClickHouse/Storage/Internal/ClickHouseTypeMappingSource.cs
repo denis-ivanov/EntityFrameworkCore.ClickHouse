@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal
 {
@@ -10,21 +9,21 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal
     {
         private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new()
         {
-            { typeof(string), new StringTypeMapping("String", DbType.String) },
+            { typeof(string), new ClickHouseStringTypeMapping() },
             { typeof(bool), new ClickHouseBoolTypeMapping() },
-            { typeof(byte), new ByteTypeMapping("UInt8") },
+            { typeof(byte), new ClickHouseByteTypeMapping() },
             { typeof(char), new ClickHouseCharTypeMapping() },
-            { typeof(int), new IntTypeMapping("Int32") },
-            { typeof(ulong), new ULongTypeMapping("UInt64") },
-            { typeof(long), new LongTypeMapping("Int64") },
-            { typeof(sbyte), new SByteTypeMapping("Int8") },
-            { typeof(short), new ShortTypeMapping("Int16") },
-            { typeof(uint), new UIntTypeMapping("UInt32") },
-            { typeof(ushort), new UShortTypeMapping("UInt16") },
-            { typeof(DateTime), new DateTimeTypeMapping("DateTime") },
-            { typeof(double), new DoubleTypeMapping("Float64") },
-            { typeof(float), new FloatTypeMapping("Float32") },
-            { typeof(Guid), new GuidTypeMapping("UUID") }
+            { typeof(int), new ClickHouseInt32TypeMapping() },
+            { typeof(ulong), new ClickHouseUInt64TypeMapping() },
+            { typeof(long), new ClickHouseInt64TypeMapping() },
+            { typeof(sbyte), new ClickHouseInt8TypeMapping() },
+            { typeof(short), new ClickHouseInt16TypeMapping() },
+            { typeof(uint), new ClickHouseUInt32TypeMapping() },
+            { typeof(ushort), new ClickHouseUInt16TypeMapping() },
+            { typeof(DateTime), new ClickHouseDateTimeTypeMapping() },
+            { typeof(double), new ClickHouseFloat64TypeMapping() },
+            { typeof(float), new ClickHouseFloat32TypeMapping() },
+            { typeof(Guid), new ClickHouseUuidTypeMapping() }
         };
 
         public ClickHouseTypeMappingSource(TypeMappingSourceDependencies dependencies, RelationalTypeMappingSourceDependencies relationalDependencies)
