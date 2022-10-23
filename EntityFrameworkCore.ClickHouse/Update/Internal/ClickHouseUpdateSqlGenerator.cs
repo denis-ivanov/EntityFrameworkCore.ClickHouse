@@ -15,7 +15,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
 
         protected override void AppendDeleteCommandHeader(
             StringBuilder commandStringBuilder,
-            string name, 
+            string name,
             string schema)
         {
             if (commandStringBuilder == null)
@@ -37,7 +37,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
             StringBuilder commandStringBuilder,
             string name,
             string schema,
-            IReadOnlyList<ColumnModification> operations)
+            IReadOnlyList<IColumnModification> operations)
         {
             if (commandStringBuilder == null)
             {
@@ -53,7 +53,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
             {
                 throw new ArgumentNullException(nameof(operations));
             }
-            
+
             commandStringBuilder.Append("ALTER TABLE ");
             SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, name, schema);
             commandStringBuilder.Append(" UPDATE ")
@@ -67,6 +67,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
                         sb.Append(" = ");
                         if (!o.UseCurrentValueParameter)
                         {
+
                             g.AppendSqlLiteral(sb, o, n, s);
                         }
                         else
@@ -76,10 +77,7 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
                     });
         }
 
-        protected override void AppendWhereCondition(
-            StringBuilder commandStringBuilder,
-            ColumnModification columnModification,
-            bool useOriginalValue)
+        protected override void AppendWhereCondition(StringBuilder commandStringBuilder, IColumnModification columnModification, bool useOriginalValue)
         {
             if (commandStringBuilder == null)
             {
@@ -124,11 +122,11 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
         {
         }
 
-        protected override void AppendIdentityWhereCondition(StringBuilder commandStringBuilder, ColumnModification columnModification)
+        protected override void AppendIdentityWhereCondition(StringBuilder commandStringBuilder, IColumnModification columnModification)
         {
         }
 
-        protected override void AppendWhereAffectedClause(StringBuilder commandStringBuilder, IReadOnlyList<ColumnModification> operations)
+        protected override void AppendWhereAffectedClause(StringBuilder commandStringBuilder, IReadOnlyList<IColumnModification> operations)
         {
         }
 
@@ -136,14 +134,14 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
             StringBuilder commandStringBuilder,
             string name,
             string schema,
-            IReadOnlyList<ColumnModification> readOperations,
-            IReadOnlyList<ColumnModification> conditionOperations,
+            IReadOnlyList<IColumnModification> readOperations,
+            IReadOnlyList<IColumnModification> conditionOperations,
             int commandPosition)
         {
             return ResultSetMapping.NoResultSet;
         }
 
-        private void AppendSqlLiteral(StringBuilder commandStringBuilder, ColumnModification modification, string tableName, string schema)
+        private void AppendSqlLiteral(StringBuilder commandStringBuilder, IColumnModification modification, string tableName, string schema)
         {
             if (modification.TypeMapping == null)
             {
@@ -163,8 +161,8 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
 
             commandStringBuilder.Append(modification.TypeMapping.GenerateProviderValueSqlLiteral(modification.Value));
         }
-        
-        protected override void AppendValues(StringBuilder commandStringBuilder, string name, string schema, IReadOnlyList<ColumnModification> operations)
+
+        protected override void AppendValues(StringBuilder commandStringBuilder, string name, string schema, IReadOnlyList<IColumnModification> operations)
         {
             if (operations.Count > 0)
             {

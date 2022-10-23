@@ -87,7 +87,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                 Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
             }
         }
-        
+
         [ConditionalFact]
         public override void Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_non_null()
         {
@@ -106,8 +106,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                         TestNullableDouble = -1.23456789,
                         TestNullableDecimal = -1234567890.01M,
                         TestNullableDateTime = DateTime.Parse("01/01/2000 12:34:56"),
-                        TestNullableDateTimeOffset =
-                            new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)),
+                        TestNullableDateTimeOffset = new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)),
                         TestNullableTimeSpan = new TimeSpan(0, 10, 9, 8, 7),
                         TestNullableSingle = -1.234F,
                         TestNullableBoolean = false,
@@ -207,7 +206,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                 Assert.Null(dt.EnumS8);
             }
         }
-        
+
         [ConditionalFact]
         public override void Can_insert_and_read_back_non_nullable_backed_data_types()
         {
@@ -278,7 +277,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                 Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
             }
         }
-        
+
         [ConditionalFact]
         public override void Can_insert_and_read_back_nullable_backed_data_types()
         {
@@ -348,7 +347,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                 Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
             }
         }
-        
+
         [ConditionalFact]
         public override void Can_insert_and_read_back_object_backed_data_types()
         {
@@ -422,7 +421,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                 Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
             }
         }
-        
+
         [ConditionalFact]
         public override void Can_insert_and_read_back_with_null_binary_foreign_key()
         {
@@ -441,7 +440,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
                 Assert.Empty(entity.BinaryKeyDataTypeId);
             }
         }
-        
+
         [ConditionalFact]
         public override void Can_query_using_any_data_type()
         {
@@ -452,7 +451,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
 
             QueryBuiltInDataTypesTest(source);
         }
-        
+
         [ConditionalFact]
         public override void Can_query_using_any_data_type_nullable_shadow()
         {
@@ -463,7 +462,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
 
             QueryBuiltInNullableDataTypesTest(source);
         }
-        
+
         [ConditionalFact]
         public override void Can_query_using_any_nullable_data_type()
         {
@@ -474,7 +473,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
 
             QueryBuiltInNullableDataTypesTest(source);
         }
-        
+
         [ConditionalFact]
         public override void Can_query_using_any_data_type_shadow()
         {
@@ -717,7 +716,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
         public override void Optional_datetime_reading_null_from_database()
         {
             base.Optional_datetime_reading_null_from_database();
-            
+
             using var context = CreateContext();
             var expected = context.Set<DateTimeEnclosure>().ToList()
                 .Select(e => new { DT = e.DateTimeOffset == null ? (DateTime?)null : e.DateTimeOffset.Value.DateTime.Date }).ToList();
@@ -735,7 +734,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
         public override void Can_read_back_mapped_enum_from_collection_first_or_default()
         {
         }
-        
+
         private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)
             where TEntity : BuiltInDataTypesBase
         {
@@ -1003,7 +1002,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
 
             AssertProperties(source, context, entity);
         }
-        
+
         private void QueryBuiltInNullableDataTypesTest<TEntity>(EntityEntry<TEntity> source)
             where TEntity : BuiltInNullableDataTypesBase
         {
@@ -1341,7 +1340,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
 
         private static Type UnwrapNullableType(Type type)
             => type == null ? null : Nullable.GetUnderlyingType(type) ?? type;
-        
+
         public class BuiltInDataTypesClickHouseFixture : BuiltInDataTypesFixtureBase
         {
             protected override ITestStoreFactory TestStoreFactory => ClickHouseTestStoreFactory.Instance;
@@ -1359,6 +1358,8 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
             public override bool SupportsDecimalComparisons => true;
 
             public override DateTime DefaultDateTime => DateTime.UnixEpoch;
+
+            public override bool PreservesDateTimeKind => true;
 
             public int DecimalPrecision { get; set; } = 1;
 

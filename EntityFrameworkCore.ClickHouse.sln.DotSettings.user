@@ -6,6 +6,10 @@
   &lt;Assembly Path="C:\Users\denis\.nuget\packages\clickhouse.client\3.2.0.421\lib\netcoreapp2.2\ClickHouse.Client.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\denis\.nuget\packages\clickhouse.client\4.0.1.462\lib\netcoreapp2.2\ClickHouse.Client.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:Boolean x:Key="/Default/Environment/Highlighting/HighlightingEnabled/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingMode/@EntryValue">MarkersAndFullLine</s:String>
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">C:\Users\denis\AppData\Local\JetBrains\Rider2022.2\resharper-host\temp\Rider\vAny\CoverageData\_EntityFrameworkCore.ClickHouse.1499762550\Snapshot\snapshot.utdcvr</s:String>
+	
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2ab088e7_002Ddbc9_002D4b8e_002Db006_002Db96144da48d2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;

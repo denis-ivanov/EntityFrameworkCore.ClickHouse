@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ClickHouse.Client.ADO.Readers;
-using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -15,17 +14,17 @@ namespace ClickHouse.EntityFrameworkCore.Update.Internal
     public class ClickHouseModificationCommandBatch : ReaderModificationCommandBatch
     {
         private const int DefaultBatchSize = 1;
-        
+
         private int _maxBatchSize;
 
         private int _parameterCount;
-        
+
         public ClickHouseModificationCommandBatch(ModificationCommandBatchFactoryDependencies dependencies, int? maxBatchSize) : base(dependencies)
         {
             _maxBatchSize = maxBatchSize ?? DefaultBatchSize;
         }
 
-        protected override bool CanAddCommand(ModificationCommand modificationCommand)
+        protected override bool CanAddCommand(IReadOnlyModificationCommand modificationCommand)
         {
             if (ModificationCommands.Count >= _maxBatchSize)
                 return false;
