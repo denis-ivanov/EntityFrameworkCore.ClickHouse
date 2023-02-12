@@ -198,7 +198,7 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Assert
             v.Should().Be(SimpleEntity.Int64Value);
         }
-        
+
         [Test]
         public void UInt8Parse()
         {
@@ -282,6 +282,25 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
             // Assert
             v.Should().Be(SimpleEntity.DateTimeValue);
         }
+        
+                        
+        [Test]
+        public void LongParseWithSelectSum()
+        {
+            // Act
+            var pow = Context
+                .SimpleEntities
+                .GroupBy(x => x.Id)
+                .Select(e => new
+                {
+                    Sum = e.Sum(y => long.Parse(y.Int64AsString))
+                })
+                .ToArray();
+
+            // Assert
+            pow.Should().HaveCount(1);
+        }
+
 
         #endregion
     }

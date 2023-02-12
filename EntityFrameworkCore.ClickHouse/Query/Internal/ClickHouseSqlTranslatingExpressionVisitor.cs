@@ -52,11 +52,11 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
                         new [] { sqlExpression },
                         false,
                         new[] { false },
-                        typeof(long)
+                        sqlExpression.Type
                     )
                 ),
-                typeof(int),
-                Dependencies.TypeMappingSource.FindMapping(typeof(int))
+                sqlExpression.Type,
+                Dependencies.TypeMappingSource.FindMapping(sqlExpression.Type)
             );
         }
     }
