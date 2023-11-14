@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 
-namespace ClickHouse.EntityFrameworkCore.Storage.ValueConversation
+namespace ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
+
+public class ClickHouseBoolValueConverter : ValueConverter<bool, byte>
 {
-    public class ClickHouseBoolValueConverter : ValueConverter<bool, byte>
+    public ClickHouseBoolValueConverter() : base(b => Convert.ToByte(b), b => Convert.ToBoolean(b))
     {
-        public ClickHouseBoolValueConverter() : base(b => Convert.ToByte(b), b => Convert.ToBoolean(b))
-        {
-        }
     }
 }

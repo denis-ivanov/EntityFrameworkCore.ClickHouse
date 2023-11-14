@@ -1,19 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 
-namespace ClickHouse.EntityFrameworkCore.Query.Internal
+namespace ClickHouse.EntityFrameworkCore.Query.Internal;
+
+public sealed class ClickHouseMemberTranslatorProvider : RelationalMemberTranslatorProvider
 {
-    public sealed class ClickHouseMemberTranslatorProvider : RelationalMemberTranslatorProvider
+    public ClickHouseMemberTranslatorProvider(RelationalMemberTranslatorProviderDependencies dependencies)
+        : base(dependencies)
     {
-        public ClickHouseMemberTranslatorProvider(RelationalMemberTranslatorProviderDependencies dependencies)
-            : base(dependencies)
+        AddTranslators(new IMemberTranslator[]
         {
-            AddTranslators(new IMemberTranslator[]
-            {
-                new ClickHouseStringTranslator(dependencies.SqlExpressionFactory),
-                new ClickHouseArrayTranslator(dependencies.SqlExpressionFactory),
-                new ClickHouseMathTranslator(dependencies.SqlExpressionFactory),
-                new ClickHouseConvertTranslator(dependencies.SqlExpressionFactory)
-            });
-        }
+            new ClickHouseStringTranslator(dependencies.SqlExpressionFactory),
+            new ClickHouseArrayTranslator(dependencies.SqlExpressionFactory),
+            new ClickHouseMathTranslator(dependencies.SqlExpressionFactory),
+            new ClickHouseConvertTranslator(dependencies.SqlExpressionFactory)
+        });
     }
 }

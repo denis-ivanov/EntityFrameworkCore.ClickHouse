@@ -2,27 +2,26 @@
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ClickHouse.EntityFrameworkCore.Extensions
+namespace ClickHouse.EntityFrameworkCore.Extensions;
+
+internal static class DbConnectionExtensions
 {
-    internal static class DbConnectionExtensions
+    internal static DbCommand CreateCommand(
+        [NotNull] this DbConnection connection,
+        [NotNull] string commandText)
     {
-        internal static DbCommand CreateCommand(
-            [NotNull] this DbConnection connection,
-            [NotNull] string commandText)
+        if (connection == null)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
-
-            if (commandText == null)
-            {
-                throw new ArgumentNullException(nameof(commandText));
-            }
-
-            var command = connection.CreateCommand();
-            command.CommandText = commandText;
-            return command;
+            throw new ArgumentNullException(nameof(connection));
         }
+
+        if (commandText == null)
+        {
+            throw new ArgumentNullException(nameof(commandText));
+        }
+
+        var command = connection.CreateCommand();
+        command.CommandText = commandText;
+        return command;
     }
 }

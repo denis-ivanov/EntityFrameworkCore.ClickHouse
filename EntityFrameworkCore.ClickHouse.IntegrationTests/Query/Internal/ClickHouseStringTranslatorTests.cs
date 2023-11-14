@@ -1,34 +1,33 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
+using System.Linq;
 
-namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal
+namespace EntityFrameworkCore.ClickHouse.IntegrationTests.Query.Internal;
+
+[TestFixture]
+public class ClickHouseStringTranslatorTests : DatabaseFixture
 {
-    [TestFixture]
-    public class ClickHouseStringTranslatorTests : DatabaseFixture
+    [Test]
+    public void StartsWith()
     {
-        [Test]
-        public void StartsWith()
-        {
-            // Arrange
-            var lorem = "Lorem";
+        // Arrange
+        var lorem = "Lorem";
 
-            // Act
+        // Act
 
-            // Assert
-            Context.SimpleEntities.Any(e => e.Text.StartsWith(lorem)).Should().BeTrue();
-        }
+        // Assert
+        Context.SimpleEntities.Any(e => e.Text.StartsWith(lorem)).Should().BeTrue();
+    }
 
-        [Test]
-        public void EndsWith()
-        {
-            // Arrange
-            var ipsum = "ipsum";
+    [Test]
+    public void EndsWith()
+    {
+        // Arrange
+        var ipsum = "ipsum";
 
-            // Act
+        // Act
 
-            // Assert
-            Context.SimpleEntities.Any(e => e.Text.EndsWith(ipsum)).Should().BeTrue();
-        }
+        // Assert
+        Context.SimpleEntities.Any(e => e.Text.EndsWith(ipsum)).Should().BeTrue();
     }
 }

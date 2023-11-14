@@ -1,10 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
+﻿using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using System.Diagnostics.CodeAnalysis;
 
-namespace ClickHouse.EntityFrameworkCore.Migrations.Operations
+namespace ClickHouse.EntityFrameworkCore.Migrations.Operations;
+
+public class ClickHouseDropDatabaseOperation : MigrationOperation
 {
-    public class ClickHouseDropDatabaseOperation : MigrationOperation
-    {
-        public string Name { get; [param: NotNull]set; }
-    }
+    public string Name { get; [param: NotNull]set; }
 }

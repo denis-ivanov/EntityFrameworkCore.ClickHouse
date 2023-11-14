@@ -3,11 +3,10 @@ using Microsoft.EntityFrameworkCore.Scaffolding;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using Microsoft.Extensions.Logging;
 
-namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities
+namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
+
+public class ClickHouseDatabaseCleaner : RelationalDatabaseCleaner
 {
-    public class ClickHouseDatabaseCleaner : RelationalDatabaseCleaner
-    {
-        protected override IDatabaseModelFactory CreateDatabaseModelFactory(ILoggerFactory loggerFactory) =>
-            new ClickHouseDatabaseModelFactory();
-    }
+    protected override IDatabaseModelFactory CreateDatabaseModelFactory(ILoggerFactory loggerFactory) =>
+        new ClickHouseDatabaseModelFactory();
 }
