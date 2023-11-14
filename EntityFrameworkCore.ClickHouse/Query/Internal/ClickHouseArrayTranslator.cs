@@ -67,7 +67,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
 
         public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
         {
-            return instance != null && instance.Type.IsArray &&
+            return instance is { Type: { IsArray: true } } &&
                    member.Name == nameof(Array.Length)
                 ? _sqlExpressionFactory.Function(
                     name: "length",
@@ -84,7 +84,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayUInt8",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(byte[]));
@@ -94,7 +94,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayUInt16",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(ushort[]));
@@ -104,7 +104,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayUInt32",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(uint[]));
@@ -114,7 +114,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayUInt64",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(ulong[]));
@@ -124,7 +124,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayInt8",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(sbyte[]));
@@ -134,7 +134,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayInt16",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(short[]));
@@ -144,7 +144,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayInt32",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(int[]));
@@ -154,7 +154,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayInt64",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(long[]));
@@ -164,7 +164,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayFloat32",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(float[]));
@@ -174,7 +174,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayFloat64",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(double[]));
@@ -184,7 +184,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayDateTime",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(DateTime[]));
@@ -194,7 +194,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal
             {
                 return _sqlExpressionFactory.Function(
                     name: "emptyArrayString",
-                    arguments: new SqlExpression[0],
+                    arguments: Array.Empty<SqlExpression>(),
                     nullable: false,
                     argumentsPropagateNullability: new[] { true },
                     returnType: typeof(string[]));
