@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
+using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Linq.Expressions;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
 {
@@ -28,7 +29,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
 
         protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
             => new ClickHouseArrayTypeMapping(parameters, ElementMapping);
-
+        
         protected override string GenerateNonNullSqlLiteral(object value)
         {
             var arr = (Array)value;
@@ -37,16 +38,21 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping
                 throw new NotSupportedException("Multidimensional array literals aren't supported");
 
             var sb = new StringBuilder();
-            sb.Append("[");
+            sb.Append('[');
             for (var i = 0; i < arr.Length; i++)
             {
                 sb.Append(ElementMapping.GenerateSqlLiteral(arr.GetValue(i)));
                 if (i < arr.Length - 1)
-                    sb.Append(",");
+                    sb.Append(',');
             }
 
-            sb.Append("]");
+            sb.Append(']');
             return sb.ToString();
+        }
+
+        protected override void ConfigureParameter(DbParameter parameter)
+        {
+            parameter.SetStoreType(StoreType);
         }
 
         #region Value Comparison

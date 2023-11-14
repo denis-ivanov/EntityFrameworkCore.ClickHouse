@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using ClickHouse.EntityFrameworkCore.Extensions;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
 

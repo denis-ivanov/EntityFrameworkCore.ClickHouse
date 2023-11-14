@@ -49,6 +49,9 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests
 
     public class ClickHouseContext : DbContext
     {
+        public const string ConnectionStringWithoutDatabase = "Host=localhost;Protocol=http;Port=8123;";
+        public const string ConnectionString = $"{ConnectionStringWithoutDatabase};Database=UnitTests";
+        
         public DbSet<SimpleEntity> SimpleEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -63,7 +66,7 @@ namespace EntityFrameworkCore.ClickHouse.IntegrationTests
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.LogTo(TestContext.WriteLine);
-            optionsBuilder.UseClickHouse("Host=localhost;Protocol=http;Port=8123;Database=" + TestContext.CurrentContext.Test.ClassName);
+            optionsBuilder.UseClickHouse(ConnectionString);
         }
     }
 }

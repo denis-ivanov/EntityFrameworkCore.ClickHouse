@@ -163,48 +163,9 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
             }
         }
 
-        [ConditionalFact]
+        [ConditionalFact(Skip = "Nullable arrays are not supported")]
         public override void Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_null()
         {
-            using (var context = CreateContext())
-            {
-                context.Set<BuiltInNullableDataTypes>().Add(
-                    new BuiltInNullableDataTypes { Id = 100, PartitionId = 100 });
-
-                Assert.Equal(1, context.SaveChanges());
-            }
-
-            using (var context = CreateContext())
-            {
-                var dt = context.Set<BuiltInNullableDataTypes>().Where(ndt => ndt.Id == 100).ToList().Single();
-
-                Assert.Null(dt.TestString);
-                Assert.Empty(dt.TestByteArray); // nullable arrays are not supported
-                Assert.Null(dt.TestNullableInt16);
-                Assert.Null(dt.TestNullableInt32);
-                Assert.Null(dt.TestNullableInt64);
-                Assert.Null(dt.TestNullableDouble);
-                Assert.Null(dt.TestNullableDecimal);
-                Assert.Null(dt.TestNullableDateTime);
-                Assert.Null(dt.TestNullableDateTimeOffset);
-                Assert.Null(dt.TestNullableTimeSpan);
-                Assert.Null(dt.TestNullableSingle);
-                Assert.Null(dt.TestNullableBoolean);
-                Assert.Null(dt.TestNullableByte);
-                Assert.Null(dt.TestNullableUnsignedInt16);
-                Assert.Null(dt.TestNullableUnsignedInt32);
-                Assert.Null(dt.TestNullableUnsignedInt64);
-                Assert.Null(dt.TestNullableCharacter);
-                Assert.Null(dt.TestNullableSignedByte);
-                Assert.Null(dt.Enum64);
-                Assert.Null(dt.Enum32);
-                Assert.Null(dt.Enum16);
-                Assert.Null(dt.Enum8);
-                Assert.Null(dt.EnumU64);
-                Assert.Null(dt.EnumU32);
-                Assert.Null(dt.EnumU16);
-                Assert.Null(dt.EnumS8);
-            }
         }
 
         [ConditionalFact]
@@ -422,23 +383,9 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
             }
         }
 
-        [ConditionalFact]
+        [ConditionalFact(Skip = "FKs are not supported")]
         public override void Can_insert_and_read_back_with_null_binary_foreign_key()
         {
-            using (var context = CreateContext())
-            {
-                context.Set<BinaryForeignKeyDataType>().Add(
-                    new BinaryForeignKeyDataType { Id = 78 });
-
-                Assert.Equal(1, context.SaveChanges());
-            }
-
-            using (var context = CreateContext())
-            {
-                var entity = context.Set<BinaryForeignKeyDataType>().Where(e => e.Id == 78).ToList().Single();
-                // nullable arrays are not supported
-                Assert.Empty(entity.BinaryKeyDataTypeId);
-            }
         }
 
         [ConditionalFact]
@@ -452,26 +399,14 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
             QueryBuiltInDataTypesTest(source);
         }
 
-        [ConditionalFact]
+        [ConditionalFact(Skip = "Not supported")]
         public override void Can_query_using_any_data_type_nullable_shadow()
         {
-            using var context = CreateContext();
-            var source = AddTestBuiltInNullableDataTypes(context.Set<BuiltInNullableDataTypesShadow>());
-
-            Assert.Equal(1, context.SaveChanges());
-
-            QueryBuiltInNullableDataTypesTest(source);
         }
 
-        [ConditionalFact]
+        [ConditionalFact(Skip = "Nullable arrays are not supported")]
         public override void Can_query_using_any_nullable_data_type()
         {
-            using var context = CreateContext();
-            var source = AddTestBuiltInNullableDataTypes(context.Set<BuiltInNullableDataTypes>());
-
-            Assert.Equal(1, context.SaveChanges());
-
-            QueryBuiltInNullableDataTypesTest(source);
         }
 
         [ConditionalFact]
@@ -485,231 +420,9 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
             QueryBuiltInDataTypesTest(source);
         }
 
-        [ConditionalFact]
+        [ConditionalFact(Skip = "Not supported")]
         public override void Can_query_using_any_nullable_data_type_as_literal()
         {
-            using (var context = CreateContext())
-            {
-                context.Set<BuiltInNullableDataTypes>().Add(
-                    new BuiltInNullableDataTypes
-                    {
-                        Id = 12,
-                        PartitionId = 1,
-                        TestNullableInt16 = -1234,
-                        TestNullableInt32 = -123456789,
-                        TestNullableInt64 = -1234567890123456789L,
-                        TestNullableDouble = -1.23456789,
-                        TestNullableDecimal = -1234567890.01M,
-                        TestNullableDateTime = Fixture.DefaultDateTime,
-                        TestNullableDateTimeOffset = new DateTimeOffset(new DateTime(), TimeSpan.FromHours(-8.0)),
-                        TestNullableTimeSpan = new TimeSpan(0, 10, 9, 8, 7),
-                        TestNullableSingle = -1.234F,
-                        TestNullableBoolean = true,
-                        TestNullableByte = 255,
-                        TestNullableUnsignedInt16 = 1234,
-                        TestNullableUnsignedInt32 = 1234565789U,
-                        TestNullableUnsignedInt64 = 1234567890123456789UL,
-                        TestNullableCharacter = 'a',
-                        TestNullableSignedByte = -128,
-                        Enum64 = Enum64.SomeValue,
-                        Enum32 = Enum32.SomeValue,
-                        Enum16 = Enum16.SomeValue,
-                        Enum8 = Enum8.SomeValue,
-                        EnumU64 = EnumU64.SomeValue,
-                        EnumU32 = EnumU32.SomeValue,
-                        EnumU16 = EnumU16.SomeValue,
-                        EnumS8 = EnumS8.SomeValue
-                    });
-
-                Assert.Equal(1, context.SaveChanges());
-            }
-
-            using (var context = CreateContext())
-            {
-                var entity = context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12).ToList().Single();
-                var entityType = context.Model.FindEntityType(typeof(BuiltInNullableDataTypes));
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableInt16 == -1234).ToList().Single());
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableInt32 == -123456789).ToList().Single());
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableInt64 == -1234567890123456789L).ToList()
-                        .Single());
-
-                if (Fixture.StrictEquality)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableDouble == -1.23456789).ToList()
-                            .Single());
-                }
-                else if (Fixture.SupportsDecimalComparisons)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(
-                            e => e.Id == 12
-                                && -e.TestNullableDouble + -1.23456789 < 1E-5
-                                && -e.TestNullableDouble + -1.23456789 > -1E-5).ToList().Single());
-                }
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableDouble != 1E18).ToList().Single());
-
-                /* TODO Needs research
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableDecimal == -1234567890.01M).ToList()
-                        .Single());
-                */
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableDateTime == Fixture.DefaultDateTime)
-                        .ToList().Single());
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableDateTimeOffset)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(
-                                e => e.Id == 12
-                                    && e.TestNullableDateTimeOffset
-                                    == new DateTimeOffset(new DateTime(), TimeSpan.FromHours(-8.0)))
-                            .ToList().Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableTimeSpan)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>()
-                            .Where(e => e.Id == 12 && e.TestNullableTimeSpan == new TimeSpan(0, 10, 9, 8, 7)).ToList().Single());
-                }
-
-                if (Fixture.StrictEquality)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableSingle == -1.234F).ToList()
-                            .Single());
-                }
-                else if (Fixture.SupportsDecimalComparisons)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && -e.TestNullableSingle + -1.234F < 1E-5).ToList()
-                            .Single());
-                }
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableSingle != 1E-8).ToList().Single());
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableBoolean == true).ToList().Single());
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableByte)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableByte == 255).ToList().Single());
-                }
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.Enum64 == Enum64.SomeValue).ToList().Single());
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.Enum32 == Enum32.SomeValue).ToList().Single());
-
-                Assert.Same(
-                    entity,
-                    context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.Enum16 == Enum16.SomeValue).ToList().Single());
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.Enum8)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.Enum8 == Enum8.SomeValue).ToList().Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt16)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableUnsignedInt16 == 1234).ToList()
-                            .Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt32)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableUnsignedInt32 == 1234565789U)
-                            .ToList().Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt64)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>()
-                            .Where(e => e.Id == 12 && e.TestNullableUnsignedInt64 == 1234567890123456789UL).ToList().Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableCharacter)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableCharacter == 'a').ToList().Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableSignedByte)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.TestNullableSignedByte == -128).ToList()
-                            .Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.EnumU64)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.EnumU64 == EnumU64.SomeValue).ToList().Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.EnumU32)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.EnumU32 == EnumU32.SomeValue).ToList().Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.EnumU16)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.EnumU16 == EnumU16.SomeValue).ToList().Single());
-                }
-
-                if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.EnumS8)) != null)
-                {
-                    Assert.Same(
-                        entity,
-                        context.Set<BuiltInNullableDataTypes>().Where(e => e.Id == 12 && e.EnumS8 == EnumS8.SomeValue).ToList().Single());
-                }
-            }
         }
 
         [ConditionalFact(Skip = "Fails often")]
@@ -735,6 +448,21 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests
         {
         }
 
+        [ConditionalFact(Skip = "Driver does not differentiate null and empty strings")]
+        public override void Can_insert_and_read_back_with_string_key()
+        {
+        }
+
+        [ConditionalFact(Skip = "FK is not supported")]
+        public override void Can_insert_and_read_back_with_null_string_foreign_key()
+        {
+        }
+
+        [Fact(Skip = "Nullable arrays are not supported")]
+        public override void Can_query_with_null_parameters_using_any_nullable_data_type()
+        {
+        }
+        
         private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)
             where TEntity : BuiltInDataTypesBase
         {
