@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ClickHouse.EntityFrameworkCore.Storage.Engines
+namespace ClickHouse.EntityFrameworkCore.Storage.Engines;
+
+public class StripeLogEngine : ClickHouseEngine
 {
-    public class StripeLogEngine : ClickHouseEngine
+    public override void SpecifyEngine(MigrationCommandListBuilder builder, IModel model)
     {
-        public override void SpecifyEngine(MigrationCommandListBuilder builder, IModel model)
-        {
-            builder.AppendLine(" ENGINE = StripeLog;");
-        }
+        builder.AppendLine(" ENGINE = StripeLog;");
     }
 }

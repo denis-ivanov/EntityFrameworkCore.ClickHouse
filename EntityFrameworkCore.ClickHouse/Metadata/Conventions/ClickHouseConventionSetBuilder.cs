@@ -2,40 +2,39 @@
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using System.Collections.Generic;
 
-namespace ClickHouse.EntityFrameworkCore.Metadata.Conventions
+namespace ClickHouse.EntityFrameworkCore.Metadata.Conventions;
+
+public class ClickHouseConventionSetBuilder : RelationalConventionSetBuilder
 {
-    public class ClickHouseConventionSetBuilder : RelationalConventionSetBuilder
+    public ClickHouseConventionSetBuilder(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
+        : base(dependencies, relationalDependencies)
     {
-        public ClickHouseConventionSetBuilder(ProviderConventionSetBuilderDependencies dependencies, RelationalConventionSetBuilderDependencies relationalDependencies)
-            : base(dependencies, relationalDependencies)
-        {
-        }
+    }
 
-        public override ConventionSet CreateConventionSet()
-        {
-            var convensionSet =  base.CreateConventionSet();
-            RemoveForeignKeyIndexConvension(convensionSet.EntityTypeBaseTypeChangedConventions);
-            convensionSet.ForeignKeyAddedConventions.Clear();
-            convensionSet.ForeignKeyAnnotationChangedConventions.Clear();
-            convensionSet.ForeignKeyDependentRequirednessChangedConventions.Clear();
-            convensionSet.ForeignKeyOwnershipChangedConventions.Clear();
-            convensionSet.ForeignKeyPrincipalEndChangedConventions.Clear();
-            convensionSet.ForeignKeyPropertiesChangedConventions.Clear();
-            convensionSet.ForeignKeyRemovedConventions.Clear();
-            convensionSet.ForeignKeyRequirednessChangedConventions.Clear();
-            convensionSet.ForeignKeyUniquenessChangedConventions.Clear();
-            convensionSet.SkipNavigationForeignKeyChangedConventions.Clear();
-            return convensionSet;
-        }
+    public override ConventionSet CreateConventionSet()
+    {
+        var conventionSet =  base.CreateConventionSet();
+        RemoveForeignKeyIndexConvention(conventionSet.EntityTypeBaseTypeChangedConventions);
+        conventionSet.ForeignKeyAddedConventions.Clear();
+        conventionSet.ForeignKeyAnnotationChangedConventions.Clear();
+        conventionSet.ForeignKeyDependentRequirednessChangedConventions.Clear();
+        conventionSet.ForeignKeyOwnershipChangedConventions.Clear();
+        conventionSet.ForeignKeyPrincipalEndChangedConventions.Clear();
+        conventionSet.ForeignKeyPropertiesChangedConventions.Clear();
+        conventionSet.ForeignKeyRemovedConventions.Clear();
+        conventionSet.ForeignKeyRequirednessChangedConventions.Clear();
+        conventionSet.ForeignKeyUniquenessChangedConventions.Clear();
+        conventionSet.SkipNavigationForeignKeyChangedConventions.Clear();
+        return conventionSet;
+    }
 
-        private void RemoveForeignKeyIndexConvension(IList<IEntityTypeBaseTypeChangedConvention> convensions)
+    private void RemoveForeignKeyIndexConvention(IList<IEntityTypeBaseTypeChangedConvention> convensions)
+    {
+        for (var i = convensions.Count - 1; i > -1; i--)
         {
-            for (var i = convensions.Count - 1; i > -1; i--)
+            if (convensions[i] is ForeignKeyIndexConvention)
             {
-                if (convensions[i] is ForeignKeyIndexConvention)
-                {
-                    convensions.RemoveAt(i);
-                }
+                convensions.RemoveAt(i);
             }
         }
     }

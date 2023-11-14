@@ -1,68 +1,67 @@
-﻿using System.Data;
-using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
-using ClickHouse.Client.ADO;
+﻿using ClickHouse.Client.ADO;
 using ClickHouse.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
+using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace ClickHouse.EntityFrameworkCore.Storage.Internal
+namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
+
+public class ClickHouseRelationalConnection : RelationalConnection, IClickHouseRelationalConnection
 {
-    public class ClickHouseRelationalConnection : RelationalConnection, IClickHouseRelationalConnection
+    public ClickHouseRelationalConnection(RelationalConnectionDependencies dependencies) : base(dependencies)
     {
-        public ClickHouseRelationalConnection(RelationalConnectionDependencies dependencies) : base(dependencies)
+    }
+
+    protected override DbConnection CreateDbConnection()
+    {
+        return new ClickHouseDbConnection(ConnectionString);
+    }
+
+    public IClickHouseRelationalConnection CreateReadOnlyConnection()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public IClickHouseRelationalConnection CreateMasterConnection()
+    {
+        var systemDb = Dependencies.ContextOptions.FindExtension<ClickHouseOptionsExtension>()?.SystemDataBase ?? "system";
+
+        var csb = new ClickHouseConnectionStringBuilder(ConnectionString)
         {
-        }
+            Database = systemDb
+        };
 
-        protected override DbConnection CreateDbConnection()
-        {
-            return new ClickHouseDbConnection(ConnectionString);
-        }
+        var relationalOptions = RelationalOptionsExtension.Extract(Dependencies.ContextOptions);
+        var connectionString = csb.ToString();
+        relationalOptions = relationalOptions.WithConnectionString(connectionString);
+        var optionsBuilder = new DbContextOptionsBuilder();
+        ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(relationalOptions);
 
-        public IClickHouseRelationalConnection CreateReadOnlyConnection()
-        {
-            throw new System.NotImplementedException();
-        }
+        return new ClickHouseRelationalConnection(Dependencies/*.With(optionsBuilder.Options)*/);
+    }
 
-        public IClickHouseRelationalConnection CreateMasterConnection()
-        {
-            var systemDb = Dependencies.ContextOptions.FindExtension<ClickHouseOptionsExtension>()?.SystemDataBase ?? "system";
+    public override IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
+    {
+        return new ClickHouseTransaction();
+    }
 
-            var csb = new ClickHouseConnectionStringBuilder(ConnectionString)
-            {
-                Database = systemDb
-            };
+    public override IDbContextTransaction BeginTransaction()
+    {
+        return BeginTransaction(IsolationLevel.Unspecified);
+    }
 
-            var relationalOptions = RelationalOptionsExtension.Extract(Dependencies.ContextOptions);
-            var connectionString = csb.ToString();
-            relationalOptions = relationalOptions.WithConnectionString(connectionString);
-            var optionsBuilder = new DbContextOptionsBuilder();
-            ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(relationalOptions);
+    public override async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        return await BeginTransactionAsync(IsolationLevel.Unspecified, cancellationToken);
+    }
 
-            return new ClickHouseRelationalConnection(Dependencies/*.With(optionsBuilder.Options)*/);
-        }
-
-        public override IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
-        {
-            return new ClickHouseTransaction();
-        }
-
-        public override IDbContextTransaction BeginTransaction()
-        {
-            return BeginTransaction(IsolationLevel.Unspecified);
-        }
-
-        public override async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = new CancellationToken())
-        {
-            return await BeginTransactionAsync(IsolationLevel.Unspecified, cancellationToken);
-        }
-
-        public override Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel,
-            CancellationToken cancellationToken = new CancellationToken())
-        {
-            return Task.FromResult<IDbContextTransaction>(new ClickHouseTransaction());
-        }
+    public override Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel,
+        CancellationToken cancellationToken = new CancellationToken())
+    {
+        return Task.FromResult<IDbContextTransaction>(new ClickHouseTransaction());
     }
 }
