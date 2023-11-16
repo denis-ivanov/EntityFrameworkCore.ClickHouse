@@ -1,6 +1,4 @@
-<p align="center" >
-    <img src="https://clickhouse.tech/images/logo.png">
-</p>
+![logo](https://raw.githubusercontent.com/denis-ivanov/EntityFrameworkCore.ClickHouse/master/Logo.png)
 
 # ClickHouse provider for Entity Framework Core
 
