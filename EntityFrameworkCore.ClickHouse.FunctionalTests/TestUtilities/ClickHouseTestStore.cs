@@ -3,6 +3,7 @@ using ClickHouse.EntityFrameworkCore.Extensions;
 using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.TestUtilities;
+using System.Diagnostics;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 
@@ -16,6 +17,7 @@ public class ClickHouseTestStore : RelationalTestStore
 
     public override DbContextOptionsBuilder AddProviderOptions(DbContextOptionsBuilder builder)
     {
+        builder.LogTo(s => Debug.WriteLine(s));
         return builder.UseClickHouse(Connection);
     }
 
@@ -24,6 +26,9 @@ public class ClickHouseTestStore : RelationalTestStore
         context.Database.EnsureClean();
     }
 
+    public static ClickHouseTestStore GetExisting(string name)
+        => new(name, false);
+    
     private static string CreateConnectionString(string dbName)
     {
         return new ClickHouseConnectionStringBuilder(TestEnvironment.DefaultConnection)

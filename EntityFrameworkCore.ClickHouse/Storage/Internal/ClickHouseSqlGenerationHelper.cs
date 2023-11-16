@@ -15,7 +15,7 @@ public class ClickHouseSqlGenerationHelper : RelationalSqlGenerationHelper
     }
 
     public void GenerateParameterNamePlaceholder(StringBuilder builder, IColumnModification column) =>
-        this.GenerateParameterNamePlaceholder(builder, column.ParameterName, column.ColumnType);
+        GenerateParameterNamePlaceholder(builder, column.ParameterName, column.IsNullable.GetValueOrDefault() ? $"Nullable({column.ColumnType})" : column.ColumnType);
 
     public void GenerateParameterNamePlaceholder(StringBuilder builder, string name, string type) =>
         builder.AppendFormat(ParameterFormat, name, type);

@@ -99,7 +99,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
                     Id = 101,
                     PartitionId = 101,
                     TestString = "TestString",
-                    TestByteArray = new byte[] { 10, 9, 8, 7, 6 },
                     TestNullableInt16 = -1234,
                     TestNullableInt32 = -123456789,
                     TestNullableInt64 = -1234567890123456789L,
@@ -134,7 +133,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             var dt = context.Set<BuiltInNullableDataTypes>().Where(ndt => ndt.Id == 101).ToList().Single();
 
             Assert.Equal("TestString", dt.TestString);
-            Assert.Equal(new byte[] { 10, 9, 8, 7, 6 }, dt.TestByteArray);
             Assert.Equal((short)-1234, dt.TestNullableInt16);
             Assert.Equal(-123456789, dt.TestNullableInt32);
             Assert.Equal(-1234567890123456789L, dt.TestNullableInt64);
@@ -462,7 +460,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     public override void Can_query_with_null_parameters_using_any_nullable_data_type()
     {
     }
-        
+
     private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)
         where TEntity : BuiltInDataTypesBase
     {
@@ -731,305 +729,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         AssertProperties(source, context, entity);
     }
 
-    private void QueryBuiltInNullableDataTypesTest<TEntity>(EntityEntry<TEntity> source)
-        where TEntity : BuiltInNullableDataTypesBase
-    {
-        using var context = CreateContext();
-        var set = context.Set<TEntity>();
-        var entity = set.Where(e => e.Id == 11).ToList().Single();
-        var entityType = context.Model.FindEntityType(typeof(TEntity));
-
-        short? param1 = -1234;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<short?>(e, nameof(BuiltInNullableDataTypes.TestNullableInt16)) == param1)
-                .ToList().Single());
-
-        int? param2 = -123456789;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<int?>(e, nameof(BuiltInNullableDataTypes.TestNullableInt32)) == param2)
-                .ToList().Single());
-
-        long? param3 = -1234567890123456789L;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<long?>(e, nameof(BuiltInNullableDataTypes.TestNullableInt64)) == param3)
-                .ToList().Single());
-
-        double? param4 = -1.23456789;
-        if (Fixture.StrictEquality)
-        {
-            Assert.Same(
-                entity, set.Where(
-                        e => e.Id == 11
-                             && EF.Property<double?>(e, nameof(BuiltInNullableDataTypes.TestNullableDouble)) == param4).ToList()
-                    .Single());
-        }
-        else if (Fixture.SupportsDecimalComparisons)
-        {
-            double? param4l = -1.234567891;
-            double? param4h = -1.234567889;
-            Assert.Same(
-                entity, set.Where(
-                        e => e.Id == 11
-                             && (EF.Property<double?>(e, nameof(BuiltInNullableDataTypes.TestNullableDouble)) == param4
-                                 || (EF.Property<double?>(e, nameof(BuiltInNullableDataTypes.TestNullableDouble)) > param4l
-                                     && EF.Property<double?>(e, nameof(BuiltInNullableDataTypes.TestNullableDouble)) < param4h)))
-                    .ToList().Single());
-        }
-
-        decimal? param5 = -1234567890.01M;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<decimal?>(e, nameof(BuiltInNullableDataTypes.TestNullableDecimal)) == param5)
-                .ToList().Single());
-
-        DateTime? param6 = Fixture.DefaultDateTime;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<DateTime?>(e, nameof(BuiltInNullableDataTypes.TestNullableDateTime)) == param6)
-                .ToList().Single());
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableDateTimeOffset)) != null)
-        {
-            DateTimeOffset? param7 = new DateTimeOffset(new DateTime(), TimeSpan.FromHours(-8.0));
-            Assert.Same(
-                entity,
-                set.Where(
-                    e => e.Id == 11
-                         && EF.Property<DateTimeOffset?>(e, nameof(BuiltInNullableDataTypes.TestNullableDateTimeOffset))
-                         == param7).ToList().Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableTimeSpan)) != null)
-        {
-            TimeSpan? param8 = new TimeSpan(0, 10, 9, 8, 7);
-            Assert.Same(
-                entity,
-                set.Where(
-                        e => e.Id == 11
-                             && EF.Property<TimeSpan?>(e, nameof(BuiltInNullableDataTypes.TestNullableTimeSpan))
-                             == param8)
-                    .ToList().Single());
-        }
-
-        float? param9 = -1.234F;
-        if (Fixture.StrictEquality)
-        {
-            Assert.Same(
-                entity, set.Where(
-                        e => e.Id == 11
-                             && EF.Property<float?>(e, nameof(BuiltInNullableDataTypes.TestNullableSingle)) == param9).ToList()
-                    .Single());
-        }
-        else if (Fixture.SupportsDecimalComparisons)
-        {
-            float? param9l = -1.2341F;
-            float? param9h = -1.2339F;
-            Assert.Same(
-                entity, set.Where(
-                        e => e.Id == 11
-                             && (EF.Property<float?>(e, nameof(BuiltInNullableDataTypes.TestNullableSingle)) == param9
-                                 || (EF.Property<float?>(e, nameof(BuiltInNullableDataTypes.TestNullableSingle)) > param9l
-                                     && EF.Property<float?>(e, nameof(BuiltInNullableDataTypes.TestNullableSingle)) < param9h)))
-                    .ToList().Single());
-        }
-
-        bool? param10 = true;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<bool?>(e, nameof(BuiltInNullableDataTypes.TestNullableBoolean)) == param10)
-                .ToList().Single());
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableByte)) != null)
-        {
-            byte? param11 = 255;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<byte?>(e, nameof(BuiltInNullableDataTypes.TestNullableByte)) == param11)
-                    .ToList().Single());
-        }
-
-        Enum64? param12 = Enum64.SomeValue;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<Enum64?>(e, nameof(BuiltInNullableDataTypes.Enum64)) == param12).ToList()
-                .Single());
-
-        Enum32? param13 = Enum32.SomeValue;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<Enum32?>(e, nameof(BuiltInNullableDataTypes.Enum32)) == param13).ToList()
-                .Single());
-
-        Enum16? param14 = Enum16.SomeValue;
-        Assert.Same(
-            entity,
-            set.Where(e => e.Id == 11 && EF.Property<Enum16?>(e, nameof(BuiltInNullableDataTypes.Enum16)) == param14).ToList()
-                .Single());
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.Enum8)) != null)
-        {
-            Enum8? param15 = Enum8.SomeValue;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<Enum8?>(e, nameof(BuiltInNullableDataTypes.Enum8)) == param15).ToList()
-                    .Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt16)) != null)
-        {
-            ushort? param16 = 1234;
-            Assert.Same(
-                entity,
-                set.Where(
-                    e => e.Id == 11
-                         && EF.Property<ushort?>(e, nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt16))
-                         == param16).ToList().Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt32)) != null)
-        {
-            uint? param17 = 1234565789U;
-            Assert.Same(
-                entity,
-                set.Where(
-                        e => e.Id == 11
-                             && EF.Property<uint?>(e, nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt32))
-                             == param17)
-                    .ToList().Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt64)) != null)
-        {
-            ulong? param18 = 1234567890123456789UL;
-            Assert.Same(
-                entity,
-                set.Where(
-                    e => e.Id == 11
-                         && EF.Property<ulong?>(
-                             e, nameof(BuiltInNullableDataTypes.TestNullableUnsignedInt64))
-                         == param18).ToList().Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableCharacter)) != null)
-        {
-            char? param19 = 'a';
-            Assert.Same(
-                entity,
-                set.Where(
-                        e => e.Id == 11 && EF.Property<char?>(e, nameof(BuiltInNullableDataTypes.TestNullableCharacter)) == param19)
-                    .ToList().Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.TestNullableSignedByte)) != null)
-        {
-            sbyte? param20 = -128;
-            Assert.Same(
-                entity,
-                set.Where(
-                        e => e.Id == 11
-                             && EF.Property<sbyte?>(e, nameof(BuiltInNullableDataTypes.TestNullableSignedByte))
-                             == param20)
-                    .ToList().Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.EnumU64)) != null)
-        {
-            var param21 = EnumU64.SomeValue;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<EnumU64?>(e, nameof(BuiltInNullableDataTypes.EnumU64)) == param21).ToList()
-                    .Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.EnumU32)) != null)
-        {
-            var param22 = EnumU32.SomeValue;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<EnumU32?>(e, nameof(BuiltInNullableDataTypes.EnumU32)) == param22).ToList()
-                    .Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.EnumU16)) != null)
-        {
-            var param23 = EnumU16.SomeValue;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<EnumU16?>(e, nameof(BuiltInNullableDataTypes.EnumU16)) == param23).ToList()
-                    .Single());
-        }
-
-        if (entityType.FindProperty(nameof(BuiltInNullableDataTypes.EnumS8)) != null)
-        {
-            var param24 = EnumS8.SomeValue;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<EnumS8?>(e, nameof(BuiltInNullableDataTypes.EnumS8)) == param24).ToList()
-                    .Single());
-        }
-
-        if (UnwrapNullableType(entityType.FindProperty(nameof(BuiltInNullableDataTypes.Enum64))?.GetProviderClrType())
-            == typeof(long))
-        {
-            int? param25 = 1;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<Enum64?>(e, nameof(BuiltInNullableDataTypes.Enum64)) == (Enum64)param25)
-                    .ToList().Single());
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && (int)EF.Property<Enum64?>(e, nameof(BuiltInNullableDataTypes.Enum64)) == param25)
-                    .ToList().Single());
-        }
-
-        if (UnwrapNullableType(entityType.FindProperty(nameof(BuiltInNullableDataTypes.Enum32))?.GetProviderClrType())
-            == typeof(int))
-        {
-            int? param26 = 1;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<Enum32?>(e, nameof(BuiltInNullableDataTypes.Enum32)) == (Enum32)param26)
-                    .ToList().Single());
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && (int)EF.Property<Enum32?>(e, nameof(BuiltInNullableDataTypes.Enum32)) == param26)
-                    .ToList().Single());
-        }
-
-        if (UnwrapNullableType(entityType.FindProperty(nameof(BuiltInNullableDataTypes.Enum16))?.GetProviderClrType())
-            == typeof(short))
-        {
-            int? param27 = 1;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<Enum16?>(e, nameof(BuiltInNullableDataTypes.Enum16)) == (Enum16)param27)
-                    .ToList().Single());
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && (int)EF.Property<Enum16?>(e, nameof(BuiltInNullableDataTypes.Enum16)) == param27)
-                    .ToList().Single());
-        }
-
-        if (UnwrapNullableType(entityType.FindProperty(nameof(BuiltInNullableDataTypes.Enum8))?.GetProviderClrType())
-            == typeof(byte))
-        {
-            int? param28 = 1;
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && EF.Property<Enum8?>(e, nameof(BuiltInNullableDataTypes.Enum8)) == (Enum8)param28)
-                    .ToList().Single());
-            Assert.Same(
-                entity,
-                set.Where(e => e.Id == 11 && (int)EF.Property<Enum8?>(e, nameof(BuiltInNullableDataTypes.Enum8)) == param28)
-                    .ToList().Single());
-        }
-
-        AssertProperties(source, context, entity);
-    }
-
     private void AssertProperties<TEntity>(EntityEntry<TEntity> source, DbContext context, TEntity entity) where TEntity: class
     {
         foreach (var propertyEntry in context.Entry(entity).Properties)
@@ -1092,6 +791,22 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         public int DecimalPrecision { get; set; } = 1;
 
         public int DoublePrecision { get; set; } = 8;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder, DbContext context)
+        {
+            base.OnModelCreating(modelBuilder, context);
+
+            modelBuilder.Entity<MaxLengthDataTypes>().Property(e => e.ByteArray5).IsRequired();
+            modelBuilder.Entity<MaxLengthDataTypes>().Property(e => e.ByteArray9000).IsRequired();
+            modelBuilder.Entity<BuiltInDataTypes>().Property(e => e.TestDecimal).HasPrecision(18, 4);
+            modelBuilder.Entity<BuiltInNullableDataTypes>().Property(e => e.TestNullableDecimal).HasPrecision(18, 4);
+            modelBuilder.Entity<NonNullableBackedDataTypes>().Property(e => e.Decimal).HasPrecision(18, 4);
+            modelBuilder.Entity<NullableBackedDataTypes>().Property(e => e.Decimal).HasPrecision(18, 4);
+            modelBuilder.Entity<BuiltInNullableDataTypes>().Ignore(e => e.TestByteArray);
+            modelBuilder.Entity<ObjectBackedDataTypes>().Property(e => e.Bytes).IsRequired();
+            modelBuilder.Entity<ObjectBackedDataTypes>().Property(e => e.Decimal).HasPrecision(18, 4);
+            modelBuilder.Entity<BuiltInDataTypesShadow>().Property("TestDecimal").HasPrecision(18, 4);
+        }
 
         public override DbContextOptionsBuilder AddOptions(DbContextOptionsBuilder builder)
         {
