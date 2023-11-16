@@ -7,14 +7,14 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
 public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
 {
-    private const byte DefaultPrecision = 32;
-    private const byte DefaultScale = 9;
+    private const byte DefaultPrecision = 38;
+    private const byte DefaultScale = 28;
 
     public ClickHouseDecimalTypeMapping(int? precision, int? scale, int? size) :
         base(
             new RelationalTypeMappingParameters(
                 new CoreTypeMappingParameters(typeof(decimal), new ClickHouseDecimalValueConverter()),
-                GetStoreType(precision, scale),
+                GetStoreType(precision ?? DefaultPrecision, scale ?? DefaultScale),
                 StoreTypePostfix.None,
                 System.Data.DbType.Decimal,
                 false,
@@ -39,5 +39,5 @@ public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
         parameter.SetStoreType(StoreType);
     }
 
-    private static string GetStoreType(int? precision, int? scale) => $"Decimal({precision ?? DefaultPrecision}, {scale ?? DefaultScale})";
+    private static string GetStoreType(int precision, int scale) => $"Decimal({precision}, {scale})";
 }

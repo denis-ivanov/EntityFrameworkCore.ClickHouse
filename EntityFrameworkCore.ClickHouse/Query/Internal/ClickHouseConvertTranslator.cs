@@ -4,12 +4,15 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
 public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTranslator
 {
+    private const int DecimalScale = 28;
+    
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
 
     public ClickHouseConvertTranslator(ISqlExpressionFactory sqlExpressionFactory)
@@ -146,7 +149,39 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 argumentsPropagateNullability: new[] { true },
                 returnType: method.ReturnType);
         }
-            
+
+        if ((method.DeclaringType == typeof(Convert) && method.Name == nameof(Convert.ToBoolean)) ||
+            (method.DeclaringType == typeof(bool) && method.Name == nameof(bool.Parse)))
+        {
+            return _sqlExpressionFactory.Function(
+                name: "toUInt8",
+                arguments: arguments,
+                nullable: false,
+                argumentsPropagateNullability: new[] { true },
+                returnType: method.ReturnType);
+        }
+        
+        if ((method.DeclaringType == typeof(Convert) && method.Name == nameof(Convert.ToDecimal)) ||
+            (method.DeclaringType == typeof(decimal) && method.Name == nameof(decimal.Parse)))
+        {
+            return _sqlExpressionFactory.Function(
+                name: "toDecimal128",
+                arguments: arguments.Append(_sqlExpressionFactory.Constant(DecimalScale)),
+                nullable: false,
+                argumentsPropagateNullability: new[] { true },
+                returnType: method.ReturnType);
+        }
+        
+        if (method.DeclaringType == typeof(Convert) && method.Name == nameof(Convert.ToString))
+        {
+            return _sqlExpressionFactory.Function(
+                name: "toString",
+                arguments: arguments,
+                nullable: false,
+                argumentsPropagateNullability: new[] { true },
+                returnType: method.ReturnType);
+        }
+        
         return null;
     }
 

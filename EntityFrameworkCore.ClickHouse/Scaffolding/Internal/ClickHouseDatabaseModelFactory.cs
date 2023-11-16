@@ -79,38 +79,36 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
         var tablesQ = string.Join(", ", tables.Select(e => $"'{e.Name}'"));
         var query = $"SELECT * FROM system.columns WHERE database='{database.DatabaseName}' AND name IN ({tablesQ});";
 
-        using (var command = connection.CreateCommand(query))
-        using (var reader = command.ExecuteReader())
+        using var command = connection.CreateCommand(query);
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
         {
-            while (reader.Read())
+            var tableName = reader.GetString("name");
+            var table = tables.Single(e => e.Name == tableName);
+            var column = new DatabaseColumn
             {
-                var tableName = reader.GetString("name");
-                var table = tables.Single(e => e.Name == tableName);
-                var column = new DatabaseColumn
-                {
-                    Comment = reader.GetString("comment"),
-                    StoreType = reader.GetString("type"),
-                    IsNullable = reader.GetString("type").StartsWith("Nullable"),
-                    DefaultValueSql = reader.GetString("default_expression"),
-                    Name = reader.GetString("name"),
-                    Table = table
-                };
+                Comment = reader.GetString("comment"),
+                StoreType = reader.GetString("type"),
+                IsNullable = reader.GetString("type").StartsWith("Nullable"),
+                DefaultValueSql = reader.GetString("default_expression"),
+                Name = reader.GetString("name"),
+                Table = table
+            };
 
-                table.Columns.Add(column);
-            }
+            table.Columns.Add(column);
+        }
 
-            connection.Close();
+        connection.Close();
 
-            foreach (var primaryKey in primaryKeys)
+        foreach (var primaryKey in primaryKeys)
+        {
+            var table = tables.Single(e => e.Name == primaryKey.Key);
+            table.PrimaryKey = new DatabasePrimaryKey();
+
+            foreach (var columnName in primaryKey.Value)
             {
-                var table = tables.Single(e => e.Name == primaryKey.Key);
-                table.PrimaryKey = new DatabasePrimaryKey();
-
-                foreach (var columnName in primaryKey.Value)
-                {
-                    var column = table.Columns.Single(e => e.Name == columnName);
-                    table.PrimaryKey.Columns.Add(column);
-                }
+                var column = table.Columns.Single(e => e.Name == columnName);
+                table.PrimaryKey.Columns.Add(column);
             }
         }
     }

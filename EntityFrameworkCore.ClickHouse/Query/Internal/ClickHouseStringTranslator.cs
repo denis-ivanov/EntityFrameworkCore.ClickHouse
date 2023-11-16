@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
@@ -23,6 +24,10 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
     private static readonly MethodInfo IsNullOrEmpty = typeof(string)
         .GetTypeInfo()
         .GetRuntimeMethod(nameof(string.IsNullOrEmpty), new [] { typeof(string) });
+
+    private static readonly MethodInfo IsNullOrWhiteSpace = typeof(string)
+        .GetTypeInfo()
+        .GetRuntimeMethod(nameof(string.IsNullOrWhiteSpace), new [] { typeof(string) });
 
     private static readonly PropertyInfo Length = typeof(string)
         .GetTypeInfo()
@@ -42,7 +47,24 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
     private static readonly MethodInfo EndsWith = typeof(string)
         .GetRuntimeMethod(nameof(string.EndsWith), new[] { typeof(string) });
-        
+
+    private static readonly MethodInfo Contains = typeof(string)
+        .GetRuntimeMethod(nameof(string.Contains), new[] { typeof(string) });
+
+    private static readonly MethodInfo IsMatch = typeof(Regex)
+        .GetRuntimeMethod(nameof(Regex.IsMatch), new[] { typeof(string), typeof(string) });
+
+    private static readonly MethodInfo FirstOrDefaultWithoutArgs = typeof(Enumerable)
+        .GetRuntimeMethods().Single(m => m.Name == nameof(Enumerable.FirstOrDefault)
+                                         && m.GetParameters().Length == 1).MakeGenericMethod(typeof(char));
+
+    private static readonly MethodInfo LastOrDefaultWithoutArgs = typeof(Enumerable)
+        .GetRuntimeMethods().Single(m => m.Name == nameof(Enumerable.LastOrDefault)
+                                         && m.GetParameters().Length == 1).MakeGenericMethod(typeof(char));
+
+    private static readonly MethodInfo SubstringWithStartIndex = typeof(string)
+        .GetRuntimeMethod(nameof(string.Substring), new[] { typeof(int) });
+    
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
         
     public ClickHouseStringTranslator([NotNull]ISqlExpressionFactory sqlExpressionFactory)
@@ -76,15 +98,38 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
         if (IsNullOrEmpty.Equals(method))
         {
-            return _sqlExpressionFactory.Function(
-                "empty",
-                arguments.ToArray(),
-                false,
-                new [] { true },
-                method.ReturnType,
-                arguments[0].TypeMapping);
+            return _sqlExpressionFactory.OrElse(
+                _sqlExpressionFactory.IsNull(arguments[0]),
+                _sqlExpressionFactory.Function(
+                    "empty",
+                    arguments.ToArray(),
+                    false,
+                    new[] { true },
+                    method.ReturnType,
+                    arguments[0].TypeMapping));
         }
 
+        if (IsNullOrWhiteSpace.Equals(method))
+        {
+            return _sqlExpressionFactory.OrElse(
+                _sqlExpressionFactory.IsNull(arguments[0]),
+                _sqlExpressionFactory.Function(
+                    "empty",
+                    new[]
+                    {
+                        _sqlExpressionFactory.Function(
+                            name: "trim",
+                            arguments: arguments,
+                            nullable: true,
+                            argumentsPropagateNullability: new[] { true },
+                            returnType: method.ReturnType)
+                    },
+                    false,
+                    new[] { true },
+                    method.ReturnType,
+                    arguments[0].TypeMapping));
+        }
+        
         if (TrimStart.Equals(method))
         {
             return _sqlExpressionFactory.Function(
@@ -135,6 +180,73 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 returnType: method.ReturnType);
         }
 
+        if (Contains.Equals(method))
+        {
+            return _sqlExpressionFactory.GreaterThan(
+                _sqlExpressionFactory.Function(
+                    name: "positionUTF8",
+                    arguments: arguments.Prepend(instance),
+                    nullable: false,
+                    argumentsPropagateNullability: new[] { true },
+                    returnType: typeof(int)),
+                _sqlExpressionFactory.Constant(0));
+        }
+
+        if (IsMatch.Equals(method))
+        {
+            return _sqlExpressionFactory.Function(
+                name: "match",
+                arguments: arguments,
+                nullable: true,
+                argumentsPropagateNullability: new[] { true },
+                returnType: method.ReturnType);
+        }
+
+        if (FirstOrDefaultWithoutArgs.Equals(method))
+        {
+            var argument = arguments[0];
+
+            return _sqlExpressionFactory.Function(
+                "substring",
+                new[] { argument, _sqlExpressionFactory.Constant(1), _sqlExpressionFactory.Constant(1) },
+                nullable: true,
+                argumentsPropagateNullability: new[] { true, true, true },
+                method.ReturnType);
+        }
+
+        if (LastOrDefaultWithoutArgs.Equals(method))
+        {
+            var argument = arguments[0];
+            return _sqlExpressionFactory.Function(
+                "substring",
+                new[]
+                {
+                    argument,
+                    _sqlExpressionFactory.Function(
+                        "lengthUTF8",
+                        new[] { argument },
+                        nullable: true,
+                        argumentsPropagateNullability: new[] { true },
+                        typeof(int)),
+                    _sqlExpressionFactory.Constant(1)
+                },
+                nullable: true,
+                argumentsPropagateNullability: new[] { true, true, true },
+                method.ReturnType);
+        }
+
+        if (SubstringWithStartIndex.Equals(method))
+        {
+            var startIndex = arguments[0];
+            
+            return _sqlExpressionFactory.Function(
+                "substring",
+                new[] { instance, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)) },
+                nullable: true,
+                argumentsPropagateNullability: new[] { true, true, true },
+                method.ReturnType);
+        }
+        
         return null;
     }
 
