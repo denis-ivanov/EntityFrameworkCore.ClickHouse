@@ -1,7 +1,6 @@
 ﻿using ClickHouse.Client.ADO;
-using ClickHouse.EntityFrameworkCore.Infrastructure.Internal;
+using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 using System.Data.Common;
@@ -28,20 +27,16 @@ public class ClickHouseRelationalConnection : RelationalConnection, IClickHouseR
 
     public IClickHouseRelationalConnection CreateMasterConnection()
     {
-        var systemDb = Dependencies.ContextOptions.FindExtension<ClickHouseOptionsExtension>()?.SystemDataBase ?? "system";
-
-        var csb = new ClickHouseConnectionStringBuilder(ConnectionString)
+        var connectionStringBuilder = new ClickHouseConnectionStringBuilder(ConnectionString)
         {
-            Database = systemDb
+            Database = "default"
         };
 
-        var relationalOptions = RelationalOptionsExtension.Extract(Dependencies.ContextOptions);
-        var connectionString = csb.ToString();
-        relationalOptions = relationalOptions.WithConnectionString(connectionString);
-        var optionsBuilder = new DbContextOptionsBuilder();
-        ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(relationalOptions);
+        var contextOptions = new DbContextOptionsBuilder()
+            .UseClickHouse(connectionStringBuilder.ConnectionString)
+            .Options;
 
-        return new ClickHouseRelationalConnection(Dependencies/*.With(optionsBuilder.Options)*/);
+        return new ClickHouseRelationalConnection(Dependencies with { ContextOptions = contextOptions });
     }
 
     public override IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
