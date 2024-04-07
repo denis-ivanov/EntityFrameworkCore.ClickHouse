@@ -27,7 +27,7 @@ public class ClickHouseOptionsExtension : RelationalOptionsExtension
         services.AddEntityFrameworkClickHouse();
     }
 
-    public virtual string SystemDataBase { get; set; } = "system";
+    public virtual string SystemDataBase { get; set; } = "default";
 
     public override int? MaxBatchSize => 1;
 
