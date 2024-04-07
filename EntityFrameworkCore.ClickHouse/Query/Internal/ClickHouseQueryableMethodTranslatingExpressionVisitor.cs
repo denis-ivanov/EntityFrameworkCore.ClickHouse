@@ -24,15 +24,8 @@ public class ClickHouseQueryableMethodTranslatingExpressionVisitor
 
     protected override ShapedQueryExpression TranslateTake(ShapedQueryExpression source, Expression count)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source));
-        }
-
-        if (count == null)
-        {
-            throw new ArgumentNullException(nameof(count));
-        }
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(count);
 
         var selectExpression = (SelectExpression)source.QueryExpression;
         var translation = _sqlTranslator.Translate(count);

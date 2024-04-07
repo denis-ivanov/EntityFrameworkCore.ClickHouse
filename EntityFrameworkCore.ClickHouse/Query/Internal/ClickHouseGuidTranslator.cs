@@ -31,6 +31,8 @@ public class ClickHouseGuidTranslator : IMethodCallTranslator
             return _sqlExpressionFactory.Function(
                 name: "generateUUIDv4",
                 arguments: arguments,
+                false,
+                Array.Empty<bool>(),
                 returnType: method.ReturnType);
         }
 

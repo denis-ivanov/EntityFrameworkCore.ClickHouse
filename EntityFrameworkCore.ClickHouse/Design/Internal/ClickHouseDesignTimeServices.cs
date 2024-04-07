@@ -11,10 +11,7 @@ public class ClickHouseDesignTimeServices : IDesignTimeServices
 {
     public void ConfigureDesignTimeServices(IServiceCollection services)
     {
-        if (services == null)
-        {
-            throw new ArgumentNullException(nameof(services));
-        }
+        ArgumentNullException.ThrowIfNull(services);
 
         services.AddEntityFrameworkClickHouse()
             .AddSingleton<IDatabaseModelFactory, ClickHouseDatabaseModelFactory>();

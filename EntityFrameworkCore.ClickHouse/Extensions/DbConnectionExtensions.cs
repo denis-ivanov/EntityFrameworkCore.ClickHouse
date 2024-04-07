@@ -10,15 +10,8 @@ internal static class DbConnectionExtensions
         [NotNull] this DbConnection connection,
         [NotNull] string commandText)
     {
-        if (connection == null)
-        {
-            throw new ArgumentNullException(nameof(connection));
-        }
-
-        if (commandText == null)
-        {
-            throw new ArgumentNullException(nameof(commandText));
-        }
+        ArgumentNullException.ThrowIfNull(connection);
+        ArgumentNullException.ThrowIfNull(commandText);
 
         var command = connection.CreateCommand();
         command.CommandText = commandText;

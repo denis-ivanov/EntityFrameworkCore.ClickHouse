@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.Update;
@@ -43,7 +42,7 @@ public static class ClickHouseServiceCollectionExtensions
             .TryAdd<IMigrationsSqlGenerator, ClickHouseMigrationsSqlGenerator>()
             .TryAdd<IRelationalDatabaseCreator, ClickHouseDatabaseCreator>()
             .TryAdd<IHistoryRepository, ClickHouseHistoryRepository>()
-            .TryAdd<IQueryCompiler, ClickHouseQueryCompiler>()
+            //.TryAdd<IQueryCompiler, ClickHouseQueryCompiler>()
             //.TryAdd<IRelationalQueryStringFactory, ClickHouseQueryStringFactory>()
 
             // New Query Pipeline

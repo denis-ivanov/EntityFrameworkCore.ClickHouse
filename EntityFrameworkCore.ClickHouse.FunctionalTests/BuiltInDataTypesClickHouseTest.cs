@@ -161,7 +161,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
-    [ConditionalFact(Skip = "Nullable arrays are not supported")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_null()
     {
     }
@@ -381,7 +381,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
-    [ConditionalFact(Skip = "FKs are not supported")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_insert_and_read_back_with_null_binary_foreign_key()
     {
     }
@@ -397,12 +397,12 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         QueryBuiltInDataTypesTest(source);
     }
 
-    [ConditionalFact(Skip = "Not supported")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_query_using_any_data_type_nullable_shadow()
     {
     }
 
-    [ConditionalFact(Skip = "Nullable arrays are not supported")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_query_using_any_nullable_data_type()
     {
     }
@@ -418,12 +418,12 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         QueryBuiltInDataTypesTest(source);
     }
 
-    [ConditionalFact(Skip = "Not supported")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_query_using_any_nullable_data_type_as_literal()
     {
     }
 
-    [ConditionalFact(Skip = "Fails often")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Optional_datetime_reading_null_from_database()
     {
         base.Optional_datetime_reading_null_from_database();
@@ -441,22 +441,22 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
-    [ConditionalFact(Skip = "Foreign keys are not supported")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_read_back_mapped_enum_from_collection_first_or_default()
     {
     }
 
-    [ConditionalFact(Skip = "Driver does not differentiate null and empty strings")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_insert_and_read_back_with_string_key()
     {
     }
 
-    [ConditionalFact(Skip = "FK is not supported")]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_insert_and_read_back_with_null_string_foreign_key()
     {
     }
 
-    [Fact(Skip = "Nullable arrays are not supported")]
+    [Fact(Skip = "TBD")]
     public override void Can_query_with_null_parameters_using_any_nullable_data_type()
     {
     }

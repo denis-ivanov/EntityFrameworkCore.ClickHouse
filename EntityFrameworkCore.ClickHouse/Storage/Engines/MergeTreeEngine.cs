@@ -9,10 +9,7 @@ public class MergeTreeEngine<T> : ClickHouseEngine
 {
     public MergeTreeEngine([NotNull] string orderBy)
     {
-        if (orderBy == null)
-        {
-            throw new ArgumentNullException(nameof(orderBy));
-        }
+        ArgumentNullException.ThrowIfNull(orderBy);
 
         OrderBy = orderBy;
     }
@@ -34,10 +31,7 @@ public class MergeTreeEngine<T> : ClickHouseEngine
 
     public MergeTreeEngine<T> WithPartitionBy([NotNull] string partitionBy)
     {
-        if (partitionBy == null)
-        {
-            throw new ArgumentNullException(nameof(partitionBy));
-        }
+        ArgumentNullException.ThrowIfNull(partitionBy);
 
         PartitionBy = partitionBy;
         return this;
@@ -45,10 +39,7 @@ public class MergeTreeEngine<T> : ClickHouseEngine
 
     public MergeTreeEngine<T> WithPrimaryKey([NotNull] string primaryKey)
     {
-        if (primaryKey == null)
-        {
-            throw new ArgumentNullException(nameof(primaryKey));
-        }
+        ArgumentNullException.ThrowIfNull(primaryKey);
 
         PrimaryKey = primaryKey;
         return this;
@@ -56,10 +47,7 @@ public class MergeTreeEngine<T> : ClickHouseEngine
 
     public MergeTreeEngine<T> WithSampleBy([NotNull] string sampleBy)
     {
-        if (sampleBy == null)
-        {
-            throw new ArgumentNullException(nameof(sampleBy));
-        }
+        ArgumentNullException.ThrowIfNull(sampleBy);
 
         SampleBy = sampleBy;
         return this;
@@ -67,15 +55,9 @@ public class MergeTreeEngine<T> : ClickHouseEngine
 
     public MergeTreeEngine<T> WithSettings([NotNull] Action<MergeTreeSettings> configure)
     {
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgumentNullException.ThrowIfNull(configure);
 
-        if (Settings == null)
-        {
-            Settings = new MergeTreeSettings();
-        }
+        Settings ??= new MergeTreeSettings();
 
         configure(Settings);
         return this;

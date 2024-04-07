@@ -12,15 +12,8 @@ public static class EntityTypeBuilderExtensions
         [NotNull] this EntityTypeBuilder<T> builder,
         [NotNull] string orderBy) where T : class
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
-
-        if (orderBy == null)
-        {
-            throw new ArgumentNullException(nameof(orderBy));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(orderBy);
 
         return builder.HasMergeTreeEngine(orderBy, e => { });
     }
@@ -30,20 +23,9 @@ public static class EntityTypeBuilderExtensions
         [NotNull] string orderBy,
         [NotNull] Action<MergeTreeEngine<T>> configure) where T : class
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
-
-        if (orderBy == null)
-        {
-            throw new ArgumentNullException(nameof(orderBy));
-        }
-
-        if (configure == null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(orderBy);
+        ArgumentNullException.ThrowIfNull(configure);
 
         var engine = new MergeTreeEngine<T>(orderBy);
         configure(engine);
@@ -55,10 +37,7 @@ public static class EntityTypeBuilderExtensions
     public static EntityTypeBuilder<T> HasStripeLogEngine<T>([NotNull] this EntityTypeBuilder<T> builder)
         where T : class
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
         var engine = new StripeLogEngine();
         builder.Metadata.SetOrRemoveAnnotation(ClickHouseAnnotationNames.Engine, engine);

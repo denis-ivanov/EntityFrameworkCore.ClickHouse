@@ -51,6 +51,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
     private static readonly MethodInfo Contains = typeof(string)
         .GetRuntimeMethod(nameof(string.Contains), new[] { typeof(string) });
 
+    private static readonly MethodInfo IndexOf = typeof(string)
+        .GetRuntimeMethod(nameof(string.IndexOf), new[] { typeof(string) });
+
     private static readonly MethodInfo IsMatch = typeof(Regex)
         .GetRuntimeMethod(nameof(Regex.IsMatch), new[] { typeof(string), typeof(string) });
 
@@ -64,7 +67,10 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
     private static readonly MethodInfo SubstringWithStartIndex = typeof(string)
         .GetRuntimeMethod(nameof(string.Substring), new[] { typeof(int) });
-    
+
+    private static readonly MethodInfo ReplaceAll = typeof(string)
+        .GetRuntimeMethod(nameof(string.Replace), new[] { typeof(string), typeof(string) });
+
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
         
     public ClickHouseStringTranslator([NotNull]ISqlExpressionFactory sqlExpressionFactory)
@@ -246,7 +252,28 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 argumentsPropagateNullability: new[] { true, true, true },
                 method.ReturnType);
         }
-        
+
+        if (IndexOf.Equals(method))
+        {
+            return _sqlExpressionFactory.Subtract(_sqlExpressionFactory.Function(
+                    name: "positionUTF8",
+                    arguments: arguments.Prepend(instance),
+                    nullable: true,
+                    argumentsPropagateNullability: new[] { true, true, true },
+                    method.ReturnType),
+                _sqlExpressionFactory.Constant(1));
+        }
+
+        if (ReplaceAll.Equals(method))
+        {
+            return _sqlExpressionFactory.Function(
+                "replaceAll",
+                arguments: arguments.Prepend(instance),
+                nullable: true,
+                argumentsPropagateNullability: new[] { true, true, true },
+                method.ReturnType);
+        }
+
         return null;
     }
 
