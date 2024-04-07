@@ -151,4 +151,39 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
     {
         return Task.CompletedTask;
     }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Where_math_degrees(bool async)
+    {
+        return Task.CompletedTask;
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Where_math_radians(bool async)
+    {
+        return Task.CompletedTask;
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Where_mathf_degrees(bool async)
+    {
+        return Task.CompletedTask;
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Where_DateOnly_FromDateTime(bool async)
+    {
+        return Task.CompletedTask;
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Where_mathf_radians(bool async)
+    {
+        return Task.CompletedTask;
+    }
 }

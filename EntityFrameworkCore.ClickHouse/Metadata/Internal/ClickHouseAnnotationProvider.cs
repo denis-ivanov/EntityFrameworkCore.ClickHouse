@@ -13,7 +13,7 @@ public class ClickHouseAnnotationProvider : RelationalAnnotationProvider
 
     public override IEnumerable<IAnnotation> For(ITable table, bool designTime)
     {
-        var entityType = table.EntityTypeMappings.First().EntityType;
+        var entityType = table.EntityTypeMappings.First().TypeBase;
 
         foreach (var annotation in entityType.GetAnnotations()
                      .Where(e => e.Name.StartsWith(ClickHouseAnnotationNames.Prefix)))

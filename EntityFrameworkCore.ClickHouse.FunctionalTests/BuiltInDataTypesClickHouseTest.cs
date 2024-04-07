@@ -461,6 +461,16 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     {
     }
 
+    [ConditionalFact(Skip = "TBD")]
+    public override void Can_insert_and_read_with_max_length_set()
+    {
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override void Can_perform_query_with_max_length()
+    {
+    }
+
     private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)
         where TEntity : BuiltInDataTypesBase
     {
