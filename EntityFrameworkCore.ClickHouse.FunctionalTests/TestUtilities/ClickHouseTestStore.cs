@@ -12,7 +12,10 @@ public class ClickHouseTestStore : RelationalTestStore
     public ClickHouseTestStore(string name, bool shared) : base(name, shared)
     {
         ConnectionString = CreateConnectionString(name);
-        Connection = new ClickHouseDbConnection(ConnectionString);
+        var clickHouseDbConnection = new ClickHouseDbConnection(ConnectionString);
+        clickHouseDbConnection.CustomSettings.Add("allow_create_index_without_type", "1");
+
+        Connection = clickHouseDbConnection;
     }
 
     public override DbContextOptionsBuilder AddProviderOptions(DbContextOptionsBuilder builder)
