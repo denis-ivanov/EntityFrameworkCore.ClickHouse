@@ -133,7 +133,7 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
 
         return existsExpression;
     }
-        
+
     private bool IsNonComposedSetOperation(SelectExpression selectExpression)
         =>    selectExpression.Offset == null
               && selectExpression.Limit == null

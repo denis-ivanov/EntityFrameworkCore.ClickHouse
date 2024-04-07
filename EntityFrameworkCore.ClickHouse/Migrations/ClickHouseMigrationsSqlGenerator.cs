@@ -4,6 +4,7 @@ using ClickHouse.EntityFrameworkCore.Storage.Engines;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using System.Text;
 
 namespace ClickHouse.EntityFrameworkCore.Migrations;
 
@@ -13,7 +14,12 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     {
     }
 
-    protected override void ColumnDefinition(string schema, string table, string name, ColumnOperation operation, IModel model,
+    protected override void ColumnDefinition(
+        string schema,
+        string table,
+        string name,
+        ColumnOperation operation,
+        IModel model,
         MigrationCommandListBuilder builder)
     {
         var columnType = operation.ColumnType ?? GetColumnType(schema, table, name, operation, model);
@@ -22,7 +28,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
             .Append(" ")
             .Append(operation.IsNullable && !operation.ClrType.IsArray ? $" Nullable({columnType})" : columnType);
     }
-        
+
     protected override void Generate(MigrationOperation operation, IModel model, MigrationCommandListBuilder builder)
     {
         if (operation is ClickHouseCreateDatabaseOperation cdo)
@@ -66,12 +72,29 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     {
         base.Generate(operation, model, builder, false);
         var engineAnnotation = operation.FindAnnotation(ClickHouseAnnotationNames.Engine);
-        var engine = engineAnnotation != null && engineAnnotation.Value != null
+        var engine = engineAnnotation is { Value: not null }
             ? (ClickHouseEngine)engineAnnotation.Value
             : new StripeLogEngine();
 
         engine.SpecifyEngine(builder, model);
         builder.AppendLine(Dependencies.SqlGenerationHelper.StatementTerminator);
         EndStatement(builder);
+    }
+
+    protected override void Generate(InsertDataOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
+    {
+        foreach (var modificationCommand in GenerateModificationCommands(operation, model))
+        {
+            var sqlBuilder = new StringBuilder();
+
+            SqlGenerator.AppendInsertOperation(
+                sqlBuilder,
+                modificationCommand,
+                0);
+
+            builder.Append(sqlBuilder.ToString());
+
+            EndStatement(builder);
+        }
     }
 }

@@ -18,15 +18,8 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
         string name,
         string schema)
     {
-        if (commandStringBuilder == null)
-        {
-            throw new ArgumentNullException(nameof(commandStringBuilder));
-        }
-
-        if (name == null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(commandStringBuilder);
+        ArgumentNullException.ThrowIfNull(name);
 
         commandStringBuilder.Append("ALTER TABLE ");
         SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, name, schema);
@@ -39,20 +32,9 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
         string schema,
         IReadOnlyList<IColumnModification> operations)
     {
-        if (commandStringBuilder == null)
-        {
-            throw new ArgumentNullException(nameof(commandStringBuilder));
-        }
-
-        if (name == null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
-
-        if (operations == null)
-        {
-            throw new ArgumentNullException(nameof(operations));
-        }
+        ArgumentNullException.ThrowIfNull(commandStringBuilder);
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(operations);
 
         commandStringBuilder.Append("ALTER TABLE ");
         SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, name, schema);
@@ -79,15 +61,8 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
 
     protected override void AppendWhereCondition(StringBuilder commandStringBuilder, IColumnModification columnModification, bool useOriginalValue)
     {
-        if (commandStringBuilder == null)
-        {
-            throw new ArgumentNullException(nameof(commandStringBuilder));
-        }
-
-        if (columnModification == null)
-        {
-            throw new ArgumentNullException(nameof(columnModification));
-        }
+        ArgumentNullException.ThrowIfNull(commandStringBuilder);
+        ArgumentNullException.ThrowIfNull(columnModification);
 
         SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, columnModification.ColumnName);
 
@@ -102,8 +77,7 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
         else
         {
             commandStringBuilder.Append(" = ");
-            if (!columnModification.UseCurrentValueParameter
-                && !columnModification.UseOriginalValueParameter)
+            if (columnModification is { UseCurrentValueParameter: false, UseOriginalValueParameter: false })
             {
                 AppendSqlLiteral(commandStringBuilder, columnModification, null, null);
             }
@@ -116,29 +90,6 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
                     columnModification.ColumnType);
             }
         }
-    }
-
-    protected override void AppendRowsAffectedWhereCondition(StringBuilder commandStringBuilder, int expectedRowsAffected)
-    {
-    }
-
-    protected override void AppendIdentityWhereCondition(StringBuilder commandStringBuilder, IColumnModification columnModification)
-    {
-    }
-
-    protected override void AppendWhereAffectedClause(StringBuilder commandStringBuilder, IReadOnlyList<IColumnModification> operations)
-    {
-    }
-
-    protected override ResultSetMapping AppendSelectAffectedCommand(
-        StringBuilder commandStringBuilder,
-        string name,
-        string schema,
-        IReadOnlyList<IColumnModification> readOperations,
-        IReadOnlyList<IColumnModification> conditionOperations,
-        int commandPosition)
-    {
-        return ResultSetMapping.NoResultSet;
     }
 
     private void AppendSqlLiteral(StringBuilder commandStringBuilder, IColumnModification modification, string tableName, string schema)
