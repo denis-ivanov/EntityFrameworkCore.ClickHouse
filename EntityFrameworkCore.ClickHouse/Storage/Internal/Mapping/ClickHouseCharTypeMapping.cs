@@ -35,7 +35,7 @@ public class ClickHouseCharTypeMapping : CharTypeMapping
 
     public override MethodInfo GetDataReaderMethod()
     {
-        return typeof(DbDataReader).GetRuntimeMethod(nameof(DbDataReader.GetString), new[] { typeof(int) });
+        return typeof(DbDataReader).GetRuntimeMethod(nameof(DbDataReader.GetString), [typeof(int)])!;
     }
 
     protected override void ConfigureParameter(DbParameter parameter)

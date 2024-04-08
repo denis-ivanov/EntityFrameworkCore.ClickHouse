@@ -1,8 +1,10 @@
 using ClickHouse.Client.ADO;
+using ClickHouse.Client.Utility;
 using ClickHouse.EntityFrameworkCore.Extensions;
 using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.TestUtilities;
+using System.Data.Common;
 using System.Diagnostics;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
@@ -29,6 +31,12 @@ public class ClickHouseTestStore : RelationalTestStore
         context.Database.EnsureClean();
     }
 
+    public int ExecuteNonQuery(string sql, params object[] parameters)
+    {
+        using var command = CreateCommand(sql, parameters);
+        return command.ExecuteNonQuery();
+    }
+
     public static ClickHouseTestStore GetExisting(string name)
         => new(name, false);
     
@@ -38,5 +46,19 @@ public class ClickHouseTestStore : RelationalTestStore
         {
             Database = dbName
         }.ConnectionString;
+    }
+
+    private DbCommand CreateCommand(string commandText, object[] parameters)
+    {
+        var command = (ClickHouseCommand)Connection.CreateCommand();
+
+        command.CommandText = commandText;
+
+        for (var i = 0; i < parameters.Length; i++)
+        {
+            command.AddParameter("@p" + i, parameters[i]);
+        }
+
+        return command;
     }
 }
