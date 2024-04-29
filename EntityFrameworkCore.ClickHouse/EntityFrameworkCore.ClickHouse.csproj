@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>ClickHouse.EntityFrameworkCore</RootNamespace>
     <TargetFramework>net8.0</TargetFramework>
-    <PackageVersion>0.0.13</PackageVersion>
+    <PackageVersion>0.0.14</PackageVersion>
     <Authors>Denis Ivanov</Authors>
     <Description>ClickHouse provider for Entity Framework Core.</Description>
     <PackageTags>ClickHouse; Entity Framework Core</PackageTags>
@@ -13,10 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClickHouse.Client" Version="7.2.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.3" PrivateAssets="none" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.3" PrivateAssets="none" />
+    <PackageReference Include="ClickHouse.Client" Version="7.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" PrivateAssets="none" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.4" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup>

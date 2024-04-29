@@ -58,6 +58,7 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         ["BLOB"] = StringTypeMapping,
         ["VARCHAR"] = StringTypeMapping,
         ["CHAR"] = StringTypeMapping,
+        ["FixedString(1)"] = CharTypeMapping,
 
         // https://clickhouse.com/docs/en/sql-reference/data-types/int-uint
         ["Int8"] = Int8TypeMapping,
@@ -144,9 +145,15 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         }
 
         if (!string.IsNullOrWhiteSpace(mappingInfo.StoreTypeNameBase) &&
-            AliasTypeMapping.TryGetValue(mappingInfo.StoreTypeNameBase, out var mapAsAlias))
+            AliasTypeMapping.TryGetValue(mappingInfo.StoreTypeNameBase, out var mapAsAlias1))
         {
-            return mapAsAlias;
+            return mapAsAlias1;
+        }
+
+        if (!string.IsNullOrWhiteSpace(mappingInfo.StoreTypeName) &&
+            AliasTypeMapping.TryGetValue(mappingInfo.StoreTypeName, out var mapAsAlias2))
+        {
+            return mapAsAlias2;
         }
 
         return null;
@@ -154,14 +161,23 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
 
     private RelationalTypeMapping FindArrayMapping(in RelationalTypeMappingInfo mappingInfo)
     {
-        if (mappingInfo.ClrType == null || !mappingInfo.ClrType.IsArray)
+        if (mappingInfo.StoreTypeName != null &&
+            mappingInfo.StoreTypeName.StartsWith("Array(") &&
+            mappingInfo.StoreTypeName.EndsWith(')'))
         {
-            return null;
+            var elementTypeName = mappingInfo.StoreTypeName.Substring(6, mappingInfo.StoreTypeName.Length - 7).Trim();
+            var elementTypeMapping = AliasTypeMapping[elementTypeName];
+            return new ClickHouseArrayTypeMapping(mappingInfo.StoreTypeName, elementTypeMapping);
         }
 
-        var elementType = mappingInfo.ClrType.GetElementType();
-        var elementTypeMapping = ClrTypeMappings[elementType];
-        return new ClickHouseArrayTypeMapping($"Array({elementTypeMapping.StoreType})", elementTypeMapping);
+        if (mappingInfo.ClrType is { IsArray: true })
+        {
+            var elementType = mappingInfo.ClrType.GetElementType();
+            var elementTypeMapping = ClrTypeMappings[elementType!];
+            return new ClickHouseArrayTypeMapping($"Array({elementTypeMapping.StoreType})", elementTypeMapping);
+        }
+
+        return null;
     }
 
     private RelationalTypeMapping GetDecimalMapping(in RelationalTypeMappingInfo mappingInfo)

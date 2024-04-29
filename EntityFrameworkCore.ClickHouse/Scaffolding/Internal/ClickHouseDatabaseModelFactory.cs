@@ -101,8 +101,9 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
             var defaultKind = reader.GetString("default_kind");
             var defaultExpression = reader.GetString("default_expression");
             var comment = reader.GetString("comment");
-            var storeType = reader.GetString("type");
+            var type = reader.GetString("type");
             var name = reader.GetString("name");
+            var (isNullable, storeType) = ParseType(type);
 
             var numericPrecision = reader.IsDBNull("numeric_precision")
                 ? null
@@ -118,7 +119,7 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
             {
                 Comment = comment,
                 StoreType = storeType,
-                IsNullable = storeType.StartsWith("Nullable"),
+                IsNullable = isNullable,
                 Name = name,
                 Table = table
             };
@@ -139,12 +140,12 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
 
             if (numericPrecision.HasValue)
             {
-                column.SetAnnotation(CoreAnnotationNames.Precision, numericPrecision.Value);
+                column.SetAnnotation(CoreAnnotationNames.Precision, Convert.ToInt32(numericPrecision.Value));
             }
 
             if (numericScale.HasValue)
             {
-                column.SetAnnotation(CoreAnnotationNames.Scale, numericScale.Value);
+                column.SetAnnotation(CoreAnnotationNames.Scale, Convert.ToInt32(numericScale.Value));
             }
 
             table.Columns.Add(column);
@@ -263,6 +264,13 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
 
     private static Type UnwrapNullableType(Type type)
         => Nullable.GetUnderlyingType(type) ?? type;
+
+    private static (bool IsNullable, string StoreType) ParseType(string storeType)
+    {
+        return storeType.StartsWith("Nullable(")
+            ? (true, storeType.Substring(9, storeType.Length - 10))
+            : (false, storeType);
+    }
 
     private static bool IsInteger(Type type)
     {
