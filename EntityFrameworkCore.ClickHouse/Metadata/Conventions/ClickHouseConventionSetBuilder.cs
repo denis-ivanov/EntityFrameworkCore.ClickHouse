@@ -25,6 +25,8 @@ public class ClickHouseConventionSetBuilder : RelationalConventionSetBuilder
         conventionSet.ForeignKeyRequirednessChangedConventions.Clear();
         conventionSet.ForeignKeyUniquenessChangedConventions.Clear();
         conventionSet.SkipNavigationForeignKeyChangedConventions.Clear();
+        conventionSet.Replace<RuntimeModelConvention>(new ClickHouseRuntimeModelConvention(Dependencies, RelationalDependencies));
+
         return conventionSet;
     }
 

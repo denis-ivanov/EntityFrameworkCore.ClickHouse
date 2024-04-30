@@ -52,9 +52,11 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
         while (reader.Read())
         {
             var isView = !string.IsNullOrWhiteSpace(Convert.ToString(reader["as_select"]));
+            var comment = reader.GetString("comment");
             var table = isView ? new DatabaseView() : new DatabaseTable();
             table.Database = database;
             table.Name = reader.GetString("name");
+            table.Comment = string.IsNullOrEmpty(comment) ? null : comment;
 
             if (tables.Count > 0 && !tables.Contains(table.Name))
             {
@@ -117,7 +119,7 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
 
             var column = new DatabaseColumn
             {
-                Comment = comment,
+                Comment = string.IsNullOrEmpty(comment) ? null : comment,
                 StoreType = storeType,
                 IsNullable = isNullable,
                 Name = name,
@@ -133,10 +135,12 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
                 column.ComputedColumnSql = defaultExpression;
             }
 
-            if (defaultKind == "MATERIALIZED")
+            column.IsStored = defaultKind switch
             {
-                column.IsStored = true;
-            }
+                "MATERIALIZED" => true,
+                "ALIAS" => false,
+                _ => column.IsStored
+            };
 
             if (numericPrecision.HasValue)
             {

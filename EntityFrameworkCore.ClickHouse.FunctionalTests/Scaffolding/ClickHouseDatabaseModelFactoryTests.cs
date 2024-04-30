@@ -300,7 +300,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
                 var generatedColumn = columns.Single(c => c.Name == "GeneratedColumn");
                 Assert.NotNull(generatedColumn.ComputedColumnSql);
-                Assert.Null(generatedColumn.IsStored);
+                Assert.False(generatedColumn.IsStored);
 
                 var generatedColumnStored = columns.Single(c => c.Name == "GeneratedColumnStored");
                 Assert.NotNull(generatedColumnStored.ComputedColumnSql);

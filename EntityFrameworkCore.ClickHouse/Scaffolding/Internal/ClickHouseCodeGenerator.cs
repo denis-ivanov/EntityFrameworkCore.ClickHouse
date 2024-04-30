@@ -26,6 +26,6 @@ public class ClickHouseCodeGenerator : ProviderCodeGenerator
         => new(
             UseClickHouseMethodInfo,
             providerOptions == null
-                ? new object[] { connectionString }
-                : new object[] { connectionString, new NestedClosureCodeFragment("x", providerOptions) });
+                ? [connectionString]
+                : [connectionString, new NestedClosureCodeFragment("x", providerOptions)]);
 }

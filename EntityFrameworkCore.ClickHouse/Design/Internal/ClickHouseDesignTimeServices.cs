@@ -18,8 +18,11 @@ public class ClickHouseDesignTimeServices : IDesignTimeServices
 
         services.AddEntityFrameworkClickHouse();
 
+#pragma warning disable EF1001 // Internal EF Core API usage.
         new EntityFrameworkRelationalDesignServicesBuilder(services)
             .TryAdd<ICSharpRuntimeAnnotationCodeGenerator, ClickHouseCSharpRuntimeAnnotationCodeGenerator>()
+#pragma warning restore EF1001 // Internal EF Core API usage.
+            .TryAdd<IAnnotationCodeGenerator, ClickHouseAnnotationCodeGenerator>()
             .TryAdd<IDatabaseModelFactory, ClickHouseDatabaseModelFactory>()
             .TryAdd<IProviderConfigurationCodeGenerator, ClickHouseCodeGenerator>()
             .TryAddCoreServices();

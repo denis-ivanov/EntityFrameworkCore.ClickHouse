@@ -15,47 +15,47 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 {
     private static readonly MethodInfo ToUpper = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeMethod(nameof(string.ToUpper), Array.Empty<Type>());
+        .GetRuntimeMethod(nameof(string.ToUpper), Type.EmptyTypes);
 
     private static readonly MethodInfo ToLower = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeMethod(nameof(string.ToLower), Array.Empty<Type>());
+        .GetRuntimeMethod(nameof(string.ToLower), Type.EmptyTypes);
 
     private static readonly MethodInfo IsNullOrEmpty = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeMethod(nameof(string.IsNullOrEmpty), new [] { typeof(string) });
+        .GetRuntimeMethod(nameof(string.IsNullOrEmpty), [typeof(string)]);
 
     private static readonly MethodInfo IsNullOrWhiteSpace = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeMethod(nameof(string.IsNullOrWhiteSpace), new [] { typeof(string) });
+        .GetRuntimeMethod(nameof(string.IsNullOrWhiteSpace), [typeof(string)]);
 
     private static readonly PropertyInfo Length = typeof(string)
         .GetTypeInfo()
         .GetRuntimeProperty(nameof(string.Length));
 
     private static readonly MethodInfo TrimStart = typeof(string)
-        .GetRuntimeMethod(nameof(string.TrimStart), Array.Empty<Type>());
+        .GetRuntimeMethod(nameof(string.TrimStart), Type.EmptyTypes);
 
     private static readonly MethodInfo TrimEnd = typeof(string)
-        .GetRuntimeMethod(nameof(string.TrimEnd), Array.Empty<Type>());
+        .GetRuntimeMethod(nameof(string.TrimEnd), Type.EmptyTypes);
 
     private static readonly MethodInfo Trim = typeof(string)
-        .GetRuntimeMethod(nameof(string.Trim), Array.Empty<Type>());
+        .GetRuntimeMethod(nameof(string.Trim), Type.EmptyTypes);
 
     private static readonly MethodInfo StartsWith = typeof(string)
-        .GetRuntimeMethod(nameof(string.StartsWith), new[] { typeof(string) });
+        .GetRuntimeMethod(nameof(string.StartsWith), [typeof(string)]);
 
     private static readonly MethodInfo EndsWith = typeof(string)
-        .GetRuntimeMethod(nameof(string.EndsWith), new[] { typeof(string) });
+        .GetRuntimeMethod(nameof(string.EndsWith), [typeof(string)]);
 
     private static readonly MethodInfo Contains = typeof(string)
-        .GetRuntimeMethod(nameof(string.Contains), new[] { typeof(string) });
+        .GetRuntimeMethod(nameof(string.Contains), [typeof(string)]);
 
     private static readonly MethodInfo IndexOf = typeof(string)
-        .GetRuntimeMethod(nameof(string.IndexOf), new[] { typeof(string) });
+        .GetRuntimeMethod(nameof(string.IndexOf), [typeof(string)]);
 
     private static readonly MethodInfo IsMatch = typeof(Regex)
-        .GetRuntimeMethod(nameof(Regex.IsMatch), new[] { typeof(string), typeof(string) });
+        .GetRuntimeMethod(nameof(Regex.IsMatch), [typeof(string), typeof(string)]);
 
     private static readonly MethodInfo FirstOrDefaultWithoutArgs = typeof(Enumerable)
         .GetRuntimeMethods().Single(m => m.Name == nameof(Enumerable.FirstOrDefault)
@@ -66,10 +66,10 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                                          && m.GetParameters().Length == 1).MakeGenericMethod(typeof(char));
 
     private static readonly MethodInfo SubstringWithStartIndex = typeof(string)
-        .GetRuntimeMethod(nameof(string.Substring), new[] { typeof(int) });
+        .GetRuntimeMethod(nameof(string.Substring), [typeof(int)]);
 
     private static readonly MethodInfo ReplaceAll = typeof(string)
-        .GetRuntimeMethod(nameof(string.Replace), new[] { typeof(string), typeof(string) });
+        .GetRuntimeMethod(nameof(string.Replace), [typeof(string), typeof(string)]);
 
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
         
