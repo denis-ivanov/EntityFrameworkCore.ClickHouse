@@ -13,6 +13,19 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
     {
     }
 
+    protected override void AppendDeleteCommand(
+        StringBuilder commandStringBuilder,
+        string name,
+        string? schema,
+        IReadOnlyList<IColumnModification> readOperations,
+        IReadOnlyList<IColumnModification> conditionOperations,
+        bool appendReturningOneClause = false)
+    {
+        AppendDeleteCommandHeader(commandStringBuilder, name, schema);
+        AppendWhereClause(commandStringBuilder, conditionOperations);
+        commandStringBuilder.AppendLine(SqlGenerationHelper.StatementTerminator);
+    }
+
     protected override void AppendDeleteCommandHeader(
         StringBuilder commandStringBuilder,
         string name,
@@ -24,6 +37,20 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
         commandStringBuilder.Append("ALTER TABLE ");
         SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, name, schema);
         commandStringBuilder.Append(" DELETE");
+    }
+
+    protected override void AppendUpdateCommand(
+        StringBuilder commandStringBuilder,
+        string name,
+        string schema,
+        IReadOnlyList<IColumnModification> writeOperations,
+        IReadOnlyList<IColumnModification> readOperations,
+        IReadOnlyList<IColumnModification> conditionOperations,
+        bool appendReturningOneClause = false)
+    {
+        AppendUpdateCommandHeader(commandStringBuilder, name, schema, writeOperations);
+        AppendWhereClause(commandStringBuilder, conditionOperations);
+        commandStringBuilder.AppendLine(SqlGenerationHelper.StatementTerminator);
     }
 
     protected override void AppendUpdateCommandHeader(

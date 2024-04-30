@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClickHouse.EntityFrameworkCore.Storage.Engines;
+namespace ClickHouse.EntityFrameworkCore.Metadata.Builders;
 
 public class MergeTreeSettings
 {

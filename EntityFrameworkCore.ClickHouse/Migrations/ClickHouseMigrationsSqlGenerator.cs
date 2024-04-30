@@ -1,17 +1,44 @@
-﻿using ClickHouse.EntityFrameworkCore.Metadata;
+﻿using System.Collections.Generic;
+using ClickHouse.EntityFrameworkCore.Extensions;
 using ClickHouse.EntityFrameworkCore.Migrations.Operations;
-using ClickHouse.EntityFrameworkCore.Storage.Engines;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Text;
 
 namespace ClickHouse.EntityFrameworkCore.Migrations;
 
 public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 {
+    private readonly RelationalTypeMapping _stringTypeMapping;
+
     public ClickHouseMigrationsSqlGenerator(MigrationsSqlGeneratorDependencies dependencies) : base(dependencies)
     {
+        _stringTypeMapping = dependencies.TypeMappingSource.FindMapping(typeof(string));
+    }
+
+    public override IReadOnlyList<MigrationCommand> Generate(
+        IReadOnlyList<MigrationOperation> operations,
+        IModel? model = null,
+        MigrationsSqlGenerationOptions options = MigrationsSqlGenerationOptions.Default)
+        => base.Generate(operations, model, options);
+
+    protected override void ComputedColumnDefinition(
+        string schema,
+        string table,
+        string name,
+        ColumnOperation operation,
+        IModel model,
+        MigrationCommandListBuilder builder)
+    {
+        var defaultValueType = operation.IsStored == true ? " MATERIALIZED " : " ALIAS ";
+
+        builder
+            .Append(" ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
+            .Append(defaultValueType)
+            .Append(operation.ComputedColumnSql!);
     }
 
     protected override void ColumnDefinition(
@@ -22,11 +49,34 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         IModel model,
         MigrationCommandListBuilder builder)
     {
+        if (!string.IsNullOrEmpty(operation.ComputedColumnSql))
+        {
+            ComputedColumnDefinition(schema, table, name, operation, model, builder);
+            return;
+        }
+
         var columnType = operation.ColumnType ?? GetColumnType(schema, table, name, operation, model);
         builder
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
             .Append(" ")
             .Append(operation.IsNullable && !operation.ClrType.IsArray ? $" Nullable({columnType})" : columnType);
+
+        var defaultValue = operation.DefaultValueSql;
+
+        if (string.IsNullOrWhiteSpace(defaultValue) && operation.DefaultValue != null)
+        {
+            var typeMapping = (columnType != null
+                                  ? Dependencies.TypeMappingSource.FindMapping(operation.DefaultValue.GetType(), columnType)
+                                  : null)
+                              ?? Dependencies.TypeMappingSource.GetMappingForValue(operation.DefaultValue);
+
+            defaultValue = typeMapping.GenerateSqlLiteral(operation.DefaultValue);
+        }
+
+        if (!string.IsNullOrWhiteSpace(defaultValue))
+        {
+            builder.Append(" DEFAULT ").Append(defaultValue);
+        }
     }
 
     protected override void Generate(MigrationOperation operation, IModel model, MigrationCommandListBuilder builder)
@@ -71,14 +121,21 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     protected override void Generate(CreateTableOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
     {
         base.Generate(operation, model, builder, false);
-        var engineAnnotation = operation.FindAnnotation(ClickHouseAnnotationNames.Engine);
-        var engine = engineAnnotation is { Value: not null }
-            ? (ClickHouseEngine)engineAnnotation.Value
-            : new StripeLogEngine();
 
-        engine.SpecifyEngine(builder, model);
+        var engineBuilder = operation.GetEngineBuilder();
+        engineBuilder.SpecifyEngine(builder, operation, Dependencies.SqlGenerationHelper);
+
         builder.AppendLine(Dependencies.SqlGenerationHelper.StatementTerminator);
         EndStatement(builder);
+
+        if (!string.IsNullOrEmpty(operation.Comment))
+        {
+            ModifyComment(operation, builder);
+        }
+
+        operation.Columns
+            .FindAll(e => !string.IsNullOrEmpty(e.Comment))
+            .ForEach(e => ModifyComment(e, builder));
     }
 
     protected override void Generate(InsertDataOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
@@ -96,5 +153,116 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 
             EndStatement(builder);
         }
+    }
+
+    protected override void Generate(AlterColumnOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        builder
+            .Append("ALTER TABLE ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+            .Append(" MODIFY COLUMN ");
+
+        ColumnDefinition(operation.Schema, operation.Table, operation.Name, operation, model, builder);
+
+        EndStatement(builder);
+
+        if (!string.IsNullOrEmpty(operation.Comment) ||
+            (!string.IsNullOrEmpty(operation.OldColumn.Comment) && string.IsNullOrEmpty(operation.Comment)))
+        {
+            ModifyComment(operation, builder);
+        }
+    }
+
+    protected override void Generate(RenameTableOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        builder
+            .Append("RENAME TABLE ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+            .Append(" TO ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.NewName));
+
+        EndStatement(builder);
+    }
+
+    protected override void Generate(RenameColumnOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        builder
+            .Append("ALTER TABLE ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+            .Append(" RENAME COLUMN ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+            .Append(" TO ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.NewName));
+
+        EndStatement(builder);
+    }
+
+    protected override void Generate(AddColumnOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
+    {
+        builder
+            .Append("ALTER TABLE ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table, operation.Schema))
+            .Append(" ADD COLUMN ");
+
+        ColumnDefinition(operation, model, builder);
+
+        EndStatement(builder);
+
+        if (!string.IsNullOrWhiteSpace(operation.Comment))
+        {
+            builder
+                .Append("ALTER TABLE ")
+                .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+                .Append(" COMMENT COLUMN ")
+                .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+                .Append($"'{operation.Comment}'");
+
+            EndStatement(builder);
+        }
+    }
+
+    protected override void Generate(DropIndexOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
+    {
+        builder
+            .Append("ALTER TABLE ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+            .Append(" DROP INDEX ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name));
+
+        EndStatement(builder);
+    }
+
+    protected override void Generate(AlterTableOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        base.Generate(operation, model, builder);
+
+        if (!string.IsNullOrEmpty(operation.Comment) ||
+            (!string.IsNullOrEmpty(operation.OldTable.Comment) && string.IsNullOrEmpty(operation.Comment)))
+        {
+            ModifyComment(operation, builder);
+        }
+    }
+
+    private void ModifyComment(TableOperation operation, MigrationCommandListBuilder builder)
+    {
+        builder
+            .Append("ALTER TABLE ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+            .Append(" MODIFY COMMENT ")
+            .Append(_stringTypeMapping.GenerateSqlLiteral(operation.Comment ?? string.Empty));
+
+        EndStatement(builder);
+    }
+
+    private void ModifyComment(ColumnOperation operation, MigrationCommandListBuilder builder)
+    {
+        builder
+            .Append("ALTER TABLE ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+            .Append(" COMMENT COLUMN ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+            .Append(_stringTypeMapping.GenerateSqlLiteral(operation.Comment ?? string.Empty));
+
+        EndStatement(builder);
     }
 }

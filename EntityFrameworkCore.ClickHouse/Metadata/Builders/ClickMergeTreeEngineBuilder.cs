@@ -1,59 +1,51 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using ClickHouse.EntityFrameworkCore.Extensions;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
-namespace ClickHouse.EntityFrameworkCore.Storage.Engines;
+namespace ClickHouse.EntityFrameworkCore.Metadata.Builders;
 
-public class MergeTreeEngine<T> : ClickHouseEngine
+public class ClickMergeTreeEngineBuilder : ClickHouseEngineBuilder
 {
-    public MergeTreeEngine([NotNull] string orderBy)
+    public ClickMergeTreeEngineBuilder(IMutableAnnotatable builder) : base(builder)
     {
-        ArgumentNullException.ThrowIfNull(orderBy);
-
-        OrderBy = orderBy;
     }
-
-    [NotNull]
-    public string OrderBy { get; set; }
-
-    [AllowNull]
-    public string PartitionBy { get; set; }
-
-    [AllowNull]
-    public string PrimaryKey { get; set; }
-
-    [AllowNull]
-    public string SampleBy { get; set; }
 
     [AllowNull]
     public MergeTreeSettings Settings { get; set; }
 
-    public MergeTreeEngine<T> WithPartitionBy([NotNull] string partitionBy)
+    public ClickMergeTreeEngineBuilder WithPartitionBy([NotNull] params string[] columns)
     {
-        ArgumentNullException.ThrowIfNull(partitionBy);
+        ArgumentNullException.ThrowIfNull(columns);
 
-        PartitionBy = partitionBy;
+        Builder.SetMergeTreePartitionBy(columns);
+
         return this;
     }
 
-    public MergeTreeEngine<T> WithPrimaryKey([NotNull] string primaryKey)
+    public ClickMergeTreeEngineBuilder WithPrimaryKey([NotNull] params string[] columns)
     {
-        ArgumentNullException.ThrowIfNull(primaryKey);
+        ArgumentNullException.ThrowIfNull(columns);
 
-        PrimaryKey = primaryKey;
+        Builder.SetMergeTreePrimaryKey(columns);
+
         return this;
     }
 
-    public MergeTreeEngine<T> WithSampleBy([NotNull] string sampleBy)
+    public ClickMergeTreeEngineBuilder WithSampleBy([NotNull] params string[] columns)
     {
-        ArgumentNullException.ThrowIfNull(sampleBy);
+        ArgumentNullException.ThrowIfNull(columns);
 
-        SampleBy = sampleBy;
+        Builder.SetMergeTreeSampleBy(columns);
+
         return this;
     }
 
-    public MergeTreeEngine<T> WithSettings([NotNull] Action<MergeTreeSettings> configure)
+    public ClickMergeTreeEngineBuilder WithSettings([NotNull] Action<MergeTreeSettings> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
 
@@ -63,32 +55,39 @@ public class MergeTreeEngine<T> : ClickHouseEngine
         return this;
     }
 
-    public override void SpecifyEngine(MigrationCommandListBuilder builder, IModel model)
+    public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table,
+        ISqlGenerationHelper sql)
     {
         builder.Append(" ENGINE = MergeTree()").AppendLine();
 
-        if (OrderBy != null)
+        var orderBy = table.GetMergeTreeOrderBy();
+        var partitionBy = table.GetMergeTreePartitionBy();
+        var primaryKey = table.GetMergeTreePrimaryKey();
+        var sampleBy = table.GetMergeTreeSampleBy();
+
+        if (orderBy is { Length: > 0 })
         {
-            builder.AppendLine($"ORDER BY ({OrderBy})");
+            builder.AppendLine($"ORDER BY ({ConcatColumns(orderBy, sql)})");
         }
 
-        if (PartitionBy != null)
+        if (partitionBy is { Length: > 0 })
         {
-            builder.AppendLine($"$PARTITION BY ({PartitionBy})");
+            builder.AppendLine($"PARTITION BY ({ConcatColumns(partitionBy, sql)})");
         }
 
-        if (PrimaryKey != null)
+        if (primaryKey is { Length: > 0 })
         {
-            builder.AppendLine($"PRIMARY KEY ({PrimaryKey})");
+            builder.AppendLine($"PRIMARY KEY ({ConcatColumns(primaryKey, sql)})");
         }
 
-        if (SampleBy != null)
+        if (sampleBy is { Length: > 0 })
         {
-            builder.AppendLine($"SAMPLE BY ({SampleBy})");
+            builder.AppendLine($"SAMPLE BY ({ConcatColumns(sampleBy, sql)})");
         }
 
-        if (Settings != null && !Settings.IsDefault)
+        if (Settings is { IsDefault: false })
         {
+            // TODO Implement settings.
             builder.AppendLine("SETTINGS");
 
             using (builder.Indent())
@@ -126,7 +125,7 @@ public class MergeTreeEngine<T> : ClickHouseEngine
 
                 if (Settings.MergeWithTtlTimeout != MergeTreeSettings.DefaultMergeWithTtlTimeout)
                 {
-                    builder.AppendLine("merge_with_ttl_timeout = " + (int) Settings.MergeWithTtlTimeout.TotalSeconds);
+                    builder.AppendLine("merge_with_ttl_timeout = " + (int)Settings.MergeWithTtlTimeout.TotalSeconds);
                 }
 
                 if (Settings.WriteFinalMark != MergeTreeSettings.DefaultWriteFinalMark)
@@ -170,5 +169,10 @@ public class MergeTreeEngine<T> : ClickHouseEngine
                 }
             }
         }
+    }
+
+    private static string ConcatColumns(string[] columns, ISqlGenerationHelper sql)
+    {
+        return string.Join(", ", columns.Select(sql.DelimitIdentifier));
     }
 }
