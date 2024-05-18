@@ -47,6 +47,7 @@ public static class ClickHouseServiceCollectionExtensions
 
             // New Query Pipeline
             .TryAdd<IMethodCallTranslatorProvider, ClickHouseMethodCallTranslatorProvider>()
+            .TryAdd<IAggregateMethodCallTranslatorProvider, ClickHouseAggregateMethodCallTranslatorProvider>()
             .TryAdd<IMemberTranslatorProvider, ClickHouseMemberTranslatorProvider>()
             .TryAdd<IQuerySqlGeneratorFactory, ClickHouseQuerySqlGeneratorFactory>()
             .TryAdd<IQueryableMethodTranslatingExpressionVisitorFactory, ClickHouseQueryableMethodTranslatingExpressionVisitorFactory>()
