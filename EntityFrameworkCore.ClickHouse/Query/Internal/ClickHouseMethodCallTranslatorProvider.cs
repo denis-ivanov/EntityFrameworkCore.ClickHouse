@@ -13,7 +13,8 @@ public sealed class ClickHouseMethodCallTranslatorProvider : RelationalMethodCal
             new ClickHouseGuidTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseStringTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseMathTranslator(dependencies.SqlExpressionFactory),
-            new ClickHouseConvertTranslator(dependencies.SqlExpressionFactory)
+            new ClickHouseConvertTranslator(dependencies.SqlExpressionFactory),
+            new ClickHouseDateTimeMethodTranslator(dependencies.SqlExpressionFactory)
         });
     }
 }

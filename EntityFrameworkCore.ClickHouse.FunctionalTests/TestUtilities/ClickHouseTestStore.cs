@@ -39,7 +39,10 @@ public class ClickHouseTestStore : RelationalTestStore
 
     public static ClickHouseTestStore GetExisting(string name)
         => new(name, false);
-    
+
+    public static ClickHouseTestStore Create(string name)
+        => new(name, shared: false);
+
     private static string CreateConnectionString(string dbName)
     {
         return new ClickHouseConnectionStringBuilder(TestEnvironment.DefaultConnection)
