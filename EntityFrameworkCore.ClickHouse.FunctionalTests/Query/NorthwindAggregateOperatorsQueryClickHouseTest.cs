@@ -110,27 +110,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Average_with_coalesce(bool async)
-    {
-        return base.Average_with_coalesce(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Average_with_division_on_decimal(bool async)
-    {
-        return base.Average_with_division_on_decimal(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Average_with_division_on_decimal_no_significant_digits(bool async)
-    {
-        return base.Average_with_division_on_decimal_no_significant_digits(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Cast_before_aggregate_is_preserved(bool async)
     {
         return base.Cast_before_aggregate_is_preserved(async);
@@ -155,27 +134,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     public override Task Contains_inside_LongCount_without_GroupBy(bool async)
     {
         return base.Contains_inside_LongCount_without_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_Max_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_Max_without_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_Min_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_Min_without_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_Sum_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_Sum_without_GroupBy(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
@@ -271,6 +229,13 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
+    public override Task Max_no_data_nullable(bool async)
+    {
+        return base.Max_no_data_nullable(async);
+    }
+
+    [ConditionalTheory]
+    [MemberData(nameof(IsAsyncData))]
     public override Task Max_over_default_returns_default(bool async)
     {
         return base.Max_over_default_returns_default(async);
@@ -306,9 +271,9 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Min_over_default_returns_default(bool async)
+    public override Task Min_no_data_nullable(bool async)
     {
-        return base.Min_over_default_returns_default(async);
+        return base.Min_no_data_nullable(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
@@ -355,23 +320,9 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Project_constant_Sum(bool async)
-    {
-        return base.Project_constant_Sum(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Sum_on_float_column_in_subquery(bool async)
     {
         return base.Sum_on_float_column_in_subquery(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_over_empty_returns_zero(bool async)
-    {
-        return base.Sum_over_empty_returns_zero(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
@@ -393,68 +344,5 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     public override Task Sum_over_subquery_is_client_eval(bool async)
     {
         return base.Sum_over_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_arg(bool async)
-    {
-        return base.Sum_with_arg(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_arg_expression(bool async)
-    {
-        return base.Sum_with_arg_expression(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_binary_expression(bool async)
-    {
-        return base.Sum_with_binary_expression(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_division_on_decimal(bool async)
-    {
-        return base.Sum_with_division_on_decimal(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_division_on_decimal_no_significant_digits(bool async)
-    {
-        return base.Sum_with_division_on_decimal_no_significant_digits(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_no_arg(bool async)
-    {
-        return base.Sum_with_no_arg(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_no_arg_empty(bool async)
-    {
-        return base.Sum_with_no_arg_empty(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_no_data_cast_to_nullable(bool async)
-    {
-        return base.Sum_with_no_data_cast_to_nullable(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_with_no_data_nullable(bool async)
-    {
-        return base.Sum_with_no_data_nullable(async);
     }
 }
