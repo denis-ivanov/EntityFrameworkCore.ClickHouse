@@ -161,11 +161,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override void Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_null()
-    {
-    }
-
     [ConditionalFact]
     public override void Can_insert_and_read_back_non_nullable_backed_data_types()
     {
@@ -381,30 +376,28 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
     public override void Can_insert_and_read_back_with_null_binary_foreign_key()
     {
+        base.Can_insert_and_read_back_with_null_binary_foreign_key();
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override void Can_query_using_any_data_type()
     {
-        using var context = CreateContext();
-        var source = AddTestBuiltInDataTypes(context.Set<BuiltInDataTypes>());
-
-        Assert.Equal(1, context.SaveChanges());
-
-        QueryBuiltInDataTypesTest(source);
+        base.Can_query_using_any_data_type();
     }
 
     [ConditionalFact(Skip = "TBD")]
     public override void Can_query_using_any_data_type_nullable_shadow()
     {
+        base.Can_query_using_any_data_type_nullable_shadow();
     }
 
     [ConditionalFact(Skip = "TBD")]
     public override void Can_query_using_any_nullable_data_type()
     {
+        base.Can_query_using_any_nullable_data_type();
     }
 
     [ConditionalFact]
@@ -421,6 +414,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     [ConditionalFact(Skip = "TBD")]
     public override void Can_query_using_any_nullable_data_type_as_literal()
     {
+        base.Can_query_using_any_nullable_data_type_as_literal();
     }
 
     [ConditionalFact(Skip = "TBD")]
@@ -444,31 +438,31 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     [ConditionalFact(Skip = "TBD")]
     public override void Can_read_back_mapped_enum_from_collection_first_or_default()
     {
+        base.Can_read_back_mapped_enum_from_collection_first_or_default();
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override void Can_insert_and_read_back_with_string_key()
-    {
-    }
-
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
     public override void Can_insert_and_read_back_with_null_string_foreign_key()
     {
+        base.Can_insert_and_read_back_with_null_string_foreign_key();
     }
 
     [Fact(Skip = "TBD")]
     public override void Can_query_with_null_parameters_using_any_nullable_data_type()
     {
+        base.Can_query_with_null_parameters_using_any_nullable_data_type();
     }
 
     [ConditionalFact(Skip = "TBD")]
     public override void Can_insert_and_read_with_max_length_set()
     {
+        base.Can_insert_and_read_with_max_length_set();
     }
 
     [ConditionalFact(Skip = "TBD")]
     public override void Can_perform_query_with_max_length()
     {
+        base.Can_perform_query_with_max_length();
     }
 
     private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)

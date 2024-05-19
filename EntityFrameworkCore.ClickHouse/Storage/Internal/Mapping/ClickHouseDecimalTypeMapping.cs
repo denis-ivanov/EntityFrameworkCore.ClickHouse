@@ -7,8 +7,8 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
 public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
 {
-    private const byte DefaultPrecision = 38;
-    private const byte DefaultScale = 28;
+    private const byte DefaultPrecision = 36;
+    private const byte DefaultScale = 24;
 
     public ClickHouseDecimalTypeMapping(int? precision, int? scale, int? size) :
         base(
