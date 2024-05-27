@@ -54,13 +54,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Average_no_data_nullable(bool async)
-    {
-        return base.Average_no_data_nullable(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Average_on_float_column_in_subquery(bool async)
     {
         return base.Average_on_float_column_in_subquery(async);
