@@ -44,15 +44,12 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
 
                     averageSqlExpression = CombineTerms(source, averageSqlExpression);
 
-                    return _sqlExpressionFactory.Convert(
-                            _sqlExpressionFactory.Function(
-                                "AVG",
-                                new[] { averageSqlExpression },
-                                nullable: true,
-                                argumentsPropagateNullability: new[] { false },
-                                typeof(double)),
-                            averageSqlExpression.Type,
-                            averageSqlExpression.TypeMapping);
+                    return _sqlExpressionFactory.Function(
+                        "avgOrNull",
+                        new[] { averageSqlExpression },
+                        nullable: true,
+                        argumentsPropagateNullability: new[] { false },
+                        typeof(double));
 
                 case nameof(Queryable.Count)
                     when methodInfo == QueryableMethods.CountWithoutPredicate
