@@ -13,10 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClickHouse.Client" Version="7.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" PrivateAssets="none" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.4" PrivateAssets="none" />
+    <PackageReference Include="ClickHouse.Client" Version="7.5.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" PrivateAssets="none" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.6" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
