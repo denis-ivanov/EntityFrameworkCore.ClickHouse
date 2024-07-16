@@ -44,7 +44,7 @@ public static class ClickHouseServiceCollectionExtensions
             .TryAdd<IHistoryRepository, ClickHouseHistoryRepository>()
             //.TryAdd<IQueryCompiler, ClickHouseQueryCompiler>()
             //.TryAdd<IRelationalQueryStringFactory, ClickHouseQueryStringFactory>()
-
+            .TryAdd<IMigrator, ClickHouseMigrator>()
             // New Query Pipeline
             .TryAdd<IMethodCallTranslatorProvider, ClickHouseMethodCallTranslatorProvider>()
             .TryAdd<IAggregateMethodCallTranslatorProvider, ClickHouseAggregateMethodCallTranslatorProvider>()
