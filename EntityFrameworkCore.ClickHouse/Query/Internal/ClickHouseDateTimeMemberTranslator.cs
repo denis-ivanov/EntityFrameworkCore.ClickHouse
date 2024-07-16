@@ -11,17 +11,24 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
 public class ClickHouseDateTimeMemberTranslator : IMemberTranslator
 {
-    private static readonly Dictionary<MemberInfo, string> Members = new()
+    private static readonly Dictionary<MemberInfo, Tuple<string, bool>> Members = new()
     {
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Year))!, "toYear" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Month))!, "toMonth" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Day))!, "toDayOfMonth" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Hour))!, "toHour" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.DayOfYear))!, "toDayOfYear" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Minute))!, "toMinute" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Second))!, "toSecond" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Millisecond))!, "toMillisecond" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.DayOfWeek))!, "toDayOfWeek" }
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Year))!, Tuple.Create("toYear", true) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Month))!, Tuple.Create("toMonth", true) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Day))!, Tuple.Create("toDayOfMonth", true) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Hour))!, Tuple.Create("toHour", true) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.DayOfYear))!, Tuple.Create("toDayOfYear", true) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Minute))!, Tuple.Create("toMinute", true) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Second))!, Tuple.Create("toSecond", true) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Millisecond))!, Tuple.Create("toMillisecond", true) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.DayOfWeek))!, Tuple.Create("toDayOfWeek", false) },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Date))!, Tuple.Create("toDate", false) }
+    };
+
+    private static readonly Dictionary<PropertyInfo, string> ClassMembers = new()
+    {
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.UtcNow))!, "UTCTimestamp" },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Now))!, "now" }
     };
 
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
@@ -39,15 +46,26 @@ public class ClickHouseDateTimeMemberTranslator : IMemberTranslator
     {
         if (Members.TryGetValue(member, out var function))
         {
-            return _sqlExpressionFactory.Convert(
-                _sqlExpressionFactory.Function(
-                    function,
-                    new[] { instance },
-                    nullable: true,
-                    argumentsPropagateNullability: [true],
-                    returnType),
-                typeof(int)
-            );
+            var expression = _sqlExpressionFactory.Function(
+                function.Item1,
+                [instance],
+                nullable: true,
+                argumentsPropagateNullability: [true],
+                returnType);
+
+            return function.Item2
+                ? _sqlExpressionFactory.Convert(expression, returnType)
+                : expression;
+        }
+
+        if (member is PropertyInfo pi && ClassMembers.TryGetValue(pi, out var f))
+        {
+            return _sqlExpressionFactory.Function(
+                f,
+                [],
+                false,
+                argumentsPropagateNullability: [],
+                returnType: returnType);
         }
 
         return null;

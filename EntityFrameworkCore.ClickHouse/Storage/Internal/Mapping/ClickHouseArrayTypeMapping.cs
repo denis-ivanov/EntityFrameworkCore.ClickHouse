@@ -1,5 +1,4 @@
 ﻿using ClickHouse.EntityFrameworkCore.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;

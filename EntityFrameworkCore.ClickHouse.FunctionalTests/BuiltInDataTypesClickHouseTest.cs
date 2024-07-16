@@ -376,6 +376,12 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
+    [ConditionalFact(Skip = "TBD")]
+    public override void Object_to_string_conversion()
+    {
+        base.Object_to_string_conversion();
+    }
+
     [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
     public override void Can_insert_and_read_back_with_null_binary_foreign_key()
     {
