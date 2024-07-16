@@ -160,7 +160,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 argumentsPropagateNullability: new[] { true },
                 returnType: method.ReturnType);
         }
-        
+
         if ((method.DeclaringType == typeof(Convert) && method.Name == nameof(Convert.ToDecimal)) ||
             (method.DeclaringType == typeof(decimal) && method.Name == nameof(decimal.Parse)))
         {
@@ -171,7 +171,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 argumentsPropagateNullability: new[] { true },
                 returnType: method.ReturnType);
         }
-        
+
         if (method.DeclaringType == typeof(Convert) && method.Name == nameof(Convert.ToString))
         {
             return _sqlExpressionFactory.Function(
@@ -181,7 +181,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 argumentsPropagateNullability: new[] { true },
                 returnType: method.ReturnType);
         }
-        
+
         return null;
     }
 

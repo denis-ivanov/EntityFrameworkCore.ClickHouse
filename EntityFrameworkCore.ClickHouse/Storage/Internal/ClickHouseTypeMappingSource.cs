@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
 
@@ -131,10 +132,16 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     {
     }
 
+    public override RelationalTypeMapping FindMapping(Type type)
+    {
+        return FindMapping(new RelationalTypeMappingInfo(type)) ?? base.FindMapping(type);
+    }
+
     protected override RelationalTypeMapping FindMapping(in RelationalTypeMappingInfo mappingInfo) =>
         FindExistingMapping(mappingInfo) ??
         FindArrayMapping(mappingInfo) ??
-        GetDecimalMapping(mappingInfo) ??
+        FindTupleMapping(mappingInfo) ??
+        FindDecimalMapping(mappingInfo) ??
         base.FindMapping(in mappingInfo);
 
     private RelationalTypeMapping FindExistingMapping(in RelationalTypeMappingInfo mappingInfo)
@@ -180,10 +187,36 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         return null;
     }
 
-    private RelationalTypeMapping GetDecimalMapping(in RelationalTypeMappingInfo mappingInfo)
+    private RelationalTypeMapping FindDecimalMapping(in RelationalTypeMappingInfo mappingInfo)
     {
         return mappingInfo.ClrType == typeof(decimal) || mappingInfo.StoreTypeNameBase == "Decimal"
             ? new ClickHouseDecimalTypeMapping(mappingInfo.Precision, mappingInfo.Scale, mappingInfo.Size)
             : null;
+    }
+
+    private RelationalTypeMapping FindTupleMapping(in RelationalTypeMappingInfo mappingInfo)
+    {
+        if (mappingInfo.ClrType is not { IsGenericType: true })
+        {
+            return null;
+        }
+
+        var genericTypeDefinition = mappingInfo.ClrType.GetGenericTypeDefinition();
+
+        if (genericTypeDefinition == typeof(Tuple<>) ||
+            genericTypeDefinition == typeof(Tuple<,>) ||
+            genericTypeDefinition == typeof(Tuple<,,>) ||
+            genericTypeDefinition == typeof(Tuple<,,,>) ||
+            genericTypeDefinition == typeof(Tuple<,,,,>) ||
+            genericTypeDefinition == typeof(Tuple<,,,,,>) ||
+            genericTypeDefinition == typeof(Tuple<,,,,,,>) ||
+            genericTypeDefinition == typeof(Tuple<,,,,,,,>))
+        {
+            var genericArguments = mappingInfo.ClrType.GetGenericArguments();
+            var storeType = "tuple(" + string.Join(", ", genericArguments.Select(e => FindMapping(new RelationalTypeMappingInfo(e))!.StoreType)) + ")";
+            return new ClickHouseTupleTypeMapping(storeType, mappingInfo.ClrType, this);
+        }
+
+        return null;
     }
 }

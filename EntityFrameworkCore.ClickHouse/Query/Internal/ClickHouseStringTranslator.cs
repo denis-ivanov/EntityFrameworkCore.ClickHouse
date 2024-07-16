@@ -68,6 +68,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
     private static readonly MethodInfo SubstringWithStartIndex = typeof(string)
         .GetRuntimeMethod(nameof(string.Substring), [typeof(int)]);
 
+    private static readonly MethodInfo SubstringWithIndexAndLength = typeof(string)
+        .GetRuntimeMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
+
     private static readonly MethodInfo ReplaceAll = typeof(string)
         .GetRuntimeMethod(nameof(string.Replace), [typeof(string), typeof(string)]);
 
@@ -253,6 +256,19 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 method.ReturnType);
         }
 
+        if (SubstringWithIndexAndLength.Equals(method))
+        {
+            var startIndex = arguments[0];
+            var length = arguments[1];
+
+            return _sqlExpressionFactory.Function(
+                "substring",
+                new[] { instance, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)), length },
+                nullable: true,
+                argumentsPropagateNullability: [true, true, true],
+                method.ReturnType);
+        }
+
         if (IndexOf.Equals(method))
         {
             return _sqlExpressionFactory.Subtract(_sqlExpressionFactory.Function(
@@ -271,6 +287,16 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 arguments: arguments.Prepend(instance),
                 nullable: true,
                 argumentsPropagateNullability: new[] { true, true, true },
+                method.ReturnType);
+        }
+
+        if (method.Name == nameof(string.Concat))
+        {
+            return _sqlExpressionFactory.Function(
+                "concat",
+                arguments: arguments,
+                nullable: true,
+                argumentsPropagateNullability: Enumerable.Repeat(true, arguments.Count),
                 method.ReturnType);
         }
 

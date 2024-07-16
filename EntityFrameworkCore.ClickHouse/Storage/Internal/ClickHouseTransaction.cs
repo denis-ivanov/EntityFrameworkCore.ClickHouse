@@ -18,12 +18,10 @@ public class ClickHouseTransaction : IDbContextTransaction
 
     public void Commit()
     {
-            
     }
 
     public void Rollback()
     {
-            
     }
 
     public Task CommitAsync(CancellationToken cancellationToken = new CancellationToken())

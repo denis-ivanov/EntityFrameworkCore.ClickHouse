@@ -99,7 +99,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(ushort[]));
         }
-            
+
         if (method.Equals(EmptyArrayUInt32))
         {
             return _sqlExpressionFactory.Function(
@@ -119,7 +119,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(ulong[]));
         }
-            
+
         if (method.Equals(EmptyArrayInt8))
         {
             return _sqlExpressionFactory.Function(
@@ -129,7 +129,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(sbyte[]));
         }
-            
+
         if (method.Equals(EmptyArrayInt16))
         {
             return _sqlExpressionFactory.Function(
@@ -139,7 +139,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(short[]));
         }
-            
+
         if (method.Equals(EmptyArrayInt32))
         {
             return _sqlExpressionFactory.Function(
@@ -149,7 +149,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(int[]));
         }
-            
+
         if (method.Equals(EmptyArrayInt64))
         {
             return _sqlExpressionFactory.Function(
@@ -159,7 +159,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(long[]));
         }
-            
+
         if (method.Equals(EmptyArrayFloat32))
         {
             return _sqlExpressionFactory.Function(
@@ -169,7 +169,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(float[]));
         }
-            
+
         if (method.Equals(EmptyArrayFloat64))
         {
             return _sqlExpressionFactory.Function(
@@ -179,7 +179,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(double[]));
         }
-            
+
         if (method.Equals(EmptyArrayDateTime))
         {
             return _sqlExpressionFactory.Function(
@@ -189,7 +189,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(DateTime[]));
         }
-            
+
         if (method.Equals(EmptyArrayString))
         {
             return _sqlExpressionFactory.Function(
@@ -199,7 +199,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 argumentsPropagateNullability: new[] { true },
                 returnType: typeof(string[]));
         }
-            
+
         return null;
     }
 }
