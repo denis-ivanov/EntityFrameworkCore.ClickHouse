@@ -18,12 +18,6 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         _stringTypeMapping = dependencies.TypeMappingSource.FindMapping(typeof(string));
     }
 
-    public override IReadOnlyList<MigrationCommand> Generate(
-        IReadOnlyList<MigrationOperation> operations,
-        IModel? model = null,
-        MigrationsSqlGenerationOptions options = MigrationsSqlGenerationOptions.Default)
-        => base.Generate(operations, model, options);
-
     protected override void ComputedColumnDefinition(
         string schema,
         string table,
@@ -241,6 +235,22 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         {
             ModifyComment(operation, builder);
         }
+    }
+
+    protected override void Generate(
+        DropPrimaryKeyOperation operation,
+        IModel model,
+        MigrationCommandListBuilder builder,
+        bool terminate = true)
+    {
+    }
+
+    protected override void Generate(
+        AddPrimaryKeyOperation operation,
+        IModel model,
+        MigrationCommandListBuilder builder,
+        bool terminate = true)
+    {
     }
 
     private void ModifyComment(TableOperation operation, MigrationCommandListBuilder builder)

@@ -1009,13 +1009,13 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Create_sequence_all_settings();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
     public override Task Create_sequence_short()
     {
         return base.Create_sequence_short();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
     public override Task Create_sequence_long()
     {
         return base.Create_sequence_long();
@@ -1288,7 +1288,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Rename_sequence();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact]
     public override Task Rename_table()
         => Test(
             builder =>
