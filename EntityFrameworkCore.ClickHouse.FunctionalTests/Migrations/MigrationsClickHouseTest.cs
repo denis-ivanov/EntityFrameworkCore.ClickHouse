@@ -61,11 +61,27 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Create_sequence();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact]
     public override Task Add_check_constraint_with_name()
-    {
-        return base.Add_check_constraint_with_name();
-    }
+        => Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("People");
+
+                entityTypeBuilder.Property<int>("Id");
+                entityTypeBuilder.Property<int>("DriverLicense");
+
+                entityTypeBuilder.ToTable(table => table
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder => { },
+            builder => builder.Entity("People")
+                .ToTable(tb => tb.HasCheckConstraint("CK_People_Foo", $"{DelimitIdentifier("DriverLicense")} > 0")),
+            model =>
+            {
+                // TODO: no scaffolding support for check constraints, https://github.com/aspnet/EntityFrameworkCore/issues/15408
+            });
 
     [ConditionalFact(Skip = "ClickHouse does not support ANSI/not ANSI")]
     public override Task Add_column_with_ansi()
@@ -73,11 +89,28 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Add_column_with_ansi();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact]
     public override Task Add_column_with_check_constraint()
-    {
-        return base.Add_column_with_check_constraint();
-    }
+        => Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("People");
+                entityTypeBuilder.Property<int>("Id");
+                entityTypeBuilder.ToTable(table => table
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder => { },
+            builder => builder.Entity(
+                "People", e =>
+                {
+                    e.Property<int>("DriverLicense");
+                    e.ToTable(tb => tb.HasCheckConstraint("CK_People_Foo", $"{DelimitIdentifier("DriverLicense")} > 0"));
+                }),
+            model =>
+            {
+                // TODO: no scaffolding support for check constraints, https://github.com/aspnet/EntityFrameworkCore/issues/15408
+            });
 
     [ConditionalTheory(Skip = "ClickHouse does not support collations")]
     public override Task Add_column_computed_with_collation(bool stored)
