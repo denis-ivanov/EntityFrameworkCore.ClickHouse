@@ -28,13 +28,6 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task String_Compare_nested(bool async)
-    {
-        return base.String_Compare_nested(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task String_Compare_to_nested(bool async)
     {
         return base.String_Compare_to_nested(async);
