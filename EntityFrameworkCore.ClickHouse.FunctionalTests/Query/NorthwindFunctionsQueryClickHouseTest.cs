@@ -11,13 +11,6 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
     public NorthwindFunctionsQueryClickHouseTest(NorthwindQueryClickHouseFixture<NoopModelCustomizer> fixture) : base(fixture)
     {
     }
-    
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Datetime_subtraction_TotalDays(bool async)
-    {
-        return base.Datetime_subtraction_TotalDays(async);
-    }
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
