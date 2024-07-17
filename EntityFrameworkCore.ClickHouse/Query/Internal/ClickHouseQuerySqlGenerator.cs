@@ -65,6 +65,30 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
         return sqlParameterExpression;
     }
 
+    protected override Expression VisitSqlFunction(SqlFunctionExpression sqlFunctionExpression)
+    {
+        if (sqlFunctionExpression is ClickHouseTrimFunction trimFunction)
+        {
+            Sql
+                .Append(trimFunction.Name)
+                .Append("(")
+                .Append(trimFunction.TrimModeName)
+                .Append(" ");
+
+            Visit(trimFunction.Arguments[0]);
+
+            Sql.Append(" FROM ");
+
+            Visit(trimFunction.Arguments[1]);
+
+            Sql.Append(")");
+
+            return sqlFunctionExpression;
+        }
+
+        return base.VisitSqlFunction(sqlFunctionExpression);
+    }
+
     protected override Expression VisitSqlBinary(SqlBinaryExpression sqlBinaryExpression)
     {
         if (OperatorMap.TryGetValue(sqlBinaryExpression.OperatorType, out var functionName))
@@ -73,8 +97,7 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
             return sqlBinaryExpression;
         }
 
-        if (sqlBinaryExpression.OperatorType == ExpressionType.Add &&
-            sqlBinaryExpression.Type == typeof(string))
+        if (sqlBinaryExpression.OperatorType == ExpressionType.Add && sqlBinaryExpression.Type == typeof(string))
         {
             TranslateToFunction(sqlBinaryExpression, "concat");
             return sqlBinaryExpression;

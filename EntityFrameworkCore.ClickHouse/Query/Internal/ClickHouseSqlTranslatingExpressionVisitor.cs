@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Internal;
@@ -95,6 +96,48 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
         return base.VisitMember(memberExpression);
     }
 
+    protected override Expression VisitMethodCall(MethodCallExpression methodCallExpression)
+    {
+        if (IsAnyTrim(methodCallExpression, out var trimMode))
+        {
+            var methodArgs = methodCallExpression.Arguments;
+            SqlExpression trimArg = null;
+
+            if (methodArgs[0].Type == typeof(char))
+            {
+                trimArg = Translate(methodArgs[0]);
+            }
+            else if (methodArgs[0] is NewArrayExpression newArrayExpression)
+            {
+                trimArg = Dependencies.SqlExpressionFactory.Function(
+                    "concat",
+                    newArrayExpression.Expressions.Select(e => Translate(e)),
+                    true,
+                    Enumerable.Repeat(true, methodArgs.Count),
+                    typeof(string),
+                    Dependencies.TypeMappingSource.FindMapping(typeof(string)));
+            }
+            else
+            {
+                trimArg = Dependencies.SqlExpressionFactory.Function(
+                    "arrayStringConcat",
+                    [Translate(methodArgs[0])],
+                    true,
+                    [true],
+                    typeof(string),
+                    Dependencies.TypeMappingSource.FindMapping(typeof(string)));
+            }
+
+            var trimInstance = Translate(methodCallExpression.Object);
+
+            var trimMapping = Dependencies.TypeMappingSource.FindMapping(methodCallExpression.Method.DeclaringType);
+
+            return new ClickHouseTrimFunction([trimArg, trimInstance], trimMapping, trimMode);
+        }
+
+        return base.VisitMethodCall(methodCallExpression);
+    }
+
     private static bool IsDateDiffExpression(MemberExpression memberExpression, out Expression left, out Expression right, out string unit)
     {
         left = null;
@@ -121,5 +164,38 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
         return type == typeof(DateOnly) ||
                type == typeof(DateTime) ||
                type == typeof(DateTimeOffset);
+    }
+
+    private static bool IsAnyTrim(MethodCallExpression methodCallExpression, out byte mode)
+    {
+        mode = byte.MaxValue;
+
+        if (methodCallExpression.Method.DeclaringType != typeof(string))
+        {
+            return false;
+        }
+
+        if (methodCallExpression.Method.Name == nameof(string.TrimStart) &&
+            methodCallExpression.Arguments.Count > 0)
+        {
+            mode = ClickHouseTrimFunction.Leading;
+            return true;
+        }
+
+        if (methodCallExpression.Method.Name == nameof(string.TrimEnd) &&
+            methodCallExpression.Arguments.Count > 0)
+        {
+            mode = ClickHouseTrimFunction.Trailing;
+            return true;
+        }
+
+        if (methodCallExpression.Method.Name == nameof(string.Trim) &&
+            methodCallExpression.Arguments.Count > 0)
+        {
+            mode = ClickHouseTrimFunction.Both;
+            return true;
+        }
+
+        return false;
     }
 }
