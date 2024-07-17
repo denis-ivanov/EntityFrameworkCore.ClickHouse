@@ -35,48 +35,6 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Trim_with_char_argument_in_predicate(bool async)
-    {
-        return base.Trim_with_char_argument_in_predicate(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Trim_with_char_array_argument_in_predicate(bool async)
-    {
-        return base.Trim_with_char_array_argument_in_predicate(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task TrimEnd_with_char_argument_in_predicate(bool async)
-    {
-        return base.TrimEnd_with_char_argument_in_predicate(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task TrimEnd_with_char_array_argument_in_predicate(bool async)
-    {
-        return base.TrimEnd_with_char_array_argument_in_predicate(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task TrimStart_with_char_argument_in_predicate(bool async)
-    {
-        return base.TrimStart_with_char_argument_in_predicate(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task TrimStart_with_char_array_argument_in_predicate(bool async)
-    {
-        return base.TrimStart_with_char_array_argument_in_predicate(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Where_math_log_new_base(bool async)
     {
         return base.Where_math_log_new_base(async);
