@@ -459,18 +459,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         base.Can_query_with_null_parameters_using_any_nullable_data_type();
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override void Can_insert_and_read_with_max_length_set()
-    {
-        base.Can_insert_and_read_with_max_length_set();
-    }
-
-    [ConditionalFact(Skip = "TBD")]
-    public override void Can_perform_query_with_max_length()
-    {
-        base.Can_perform_query_with_max_length();
-    }
-
     private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)
         where TEntity : BuiltInDataTypesBase
     {
