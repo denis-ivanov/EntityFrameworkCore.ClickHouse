@@ -95,11 +95,4 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
     {
         return base.Sum_over_truncate_works_correctly_in_projection_2(async);
     }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_DateOnly_FromDateTime(bool async)
-    {
-        return base.Where_DateOnly_FromDateTime(async);
-    }
 }
