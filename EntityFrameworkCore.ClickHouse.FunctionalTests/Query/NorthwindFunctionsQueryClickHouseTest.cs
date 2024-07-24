@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.TestModels.Northwind;
 using Microsoft.EntityFrameworkCore.TestUtilities;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,19 +22,12 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
         return base.Order_by_length_twice_followed_by_projection_of_naked_collection_navigation(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task String_Compare_to_nested(bool async)
-    {
-        return base.String_Compare_to_nested(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
+    [ConditionalTheory]
     [MemberData(nameof(IsAsyncData))]
     public override Task Regex_IsMatch_MethodCall_constant_input(bool async)
-    {
-        return base.Regex_IsMatch_MethodCall_constant_input(async);
-    }
+        => AssertQuery(
+            async,
+            ss => ss.Set<Customer>().Where(o => Regex.IsMatch(o.CustomerID, "ALFKI")));
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
