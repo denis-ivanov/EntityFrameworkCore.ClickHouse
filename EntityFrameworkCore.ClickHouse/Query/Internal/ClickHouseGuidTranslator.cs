@@ -12,7 +12,7 @@ public class ClickHouseGuidTranslator : IMethodCallTranslator
 {
     private static readonly MethodInfo New = typeof(Guid)
         .GetRuntimeMethod(nameof(Guid.NewGuid), Type.EmptyTypes);
-    
+
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
 
     public ClickHouseGuidTranslator(ISqlExpressionFactory sqlExpressionFactory)
