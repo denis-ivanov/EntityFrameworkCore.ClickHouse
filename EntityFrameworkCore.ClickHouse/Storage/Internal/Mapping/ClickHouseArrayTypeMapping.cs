@@ -29,7 +29,7 @@ public class ClickHouseArrayTypeMapping : RelationalTypeMapping
 
     protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
         => new ClickHouseArrayTypeMapping(parameters, ElementMapping);
-        
+
     protected override string GenerateNonNullSqlLiteral(object value)
     {
         var arr = (Array)value;

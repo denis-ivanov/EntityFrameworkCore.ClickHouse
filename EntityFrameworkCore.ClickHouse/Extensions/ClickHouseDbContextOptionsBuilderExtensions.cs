@@ -19,7 +19,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
         clickHouseOptionsAction?.Invoke(new ClickHouseDbContextOptionsBuilder(optionsBuilder));
         return optionsBuilder;
     }
-        
+
     public static DbContextOptionsBuilder UseClickHouse(
         this DbContextOptionsBuilder optionsBuilder,
         string connectionString,
@@ -34,7 +34,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
 
         return optionsBuilder;
     }
-        
+
     public static DbContextOptionsBuilder UseClickHouse(
         this DbContextOptionsBuilder optionsBuilder,
         DbConnection connection,
@@ -49,14 +49,14 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
 
         return optionsBuilder;
     }
-        
+
     public static DbContextOptionsBuilder<TContext> UseClickHouse<TContext>(
         this DbContextOptionsBuilder<TContext> optionsBuilder,
         Action<ClickHouseDbContextOptionsBuilder> clickHouseOptionsAction = null)
         where TContext : DbContext
         => (DbContextOptionsBuilder<TContext>)UseClickHouse(
             (DbContextOptionsBuilder)optionsBuilder, clickHouseOptionsAction);
-        
+
     public static DbContextOptionsBuilder<TContext> UseClickHouse<TContext>(
         this DbContextOptionsBuilder<TContext> optionsBuilder,
         string connectionString,
@@ -64,7 +64,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
         where TContext : DbContext
         => (DbContextOptionsBuilder<TContext>)UseClickHouse(
             (DbContextOptionsBuilder)optionsBuilder, connectionString, clickHouseOptionsAction);
-        
+
     public static DbContextOptionsBuilder<TContext> UseClickHouse<TContext>(
         this DbContextOptionsBuilder<TContext> optionsBuilder,
         DbConnection connection,
@@ -72,11 +72,11 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
         where TContext : DbContext
         => (DbContextOptionsBuilder<TContext>)UseClickHouse(
             (DbContextOptionsBuilder)optionsBuilder, connection, clickHouseOptionsAction);
-        
+
     private static ClickHouseOptionsExtension GetOrCreateExtension(DbContextOptionsBuilder options)
         => options.Options.FindExtension<ClickHouseOptionsExtension>()
            ?? new ClickHouseOptionsExtension();
-        
+
     private static void ConfigureWarnings(DbContextOptionsBuilder optionsBuilder)
     {
         var coreOptionsExtension

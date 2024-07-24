@@ -54,6 +54,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
     private static readonly MethodInfo IndexOf = typeof(string)
         .GetRuntimeMethod(nameof(string.IndexOf), [typeof(string)]);
 
+    private static readonly MethodInfo IndexOfWithStartingPosition = typeof(string)
+        .GetRuntimeMethod(nameof(string.IndexOf), [typeof(string), typeof(int)]);
+
     private static readonly MethodInfo IsMatch = typeof(Regex)
         .GetRuntimeMethod(nameof(Regex.IsMatch), [typeof(string), typeof(string)]);
 
@@ -75,7 +78,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         .GetRuntimeMethod(nameof(string.Replace), [typeof(string), typeof(string)]);
 
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
-        
+
     public ClickHouseStringTranslator([NotNull]ISqlExpressionFactory sqlExpressionFactory)
     {
         _sqlExpressionFactory = sqlExpressionFactory;
@@ -138,7 +141,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                     method.ReturnType,
                     arguments[0].TypeMapping));
         }
-        
+
         if (TrimStart.Equals(method))
         {
             return _sqlExpressionFactory.Function(
@@ -275,9 +278,14 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                     name: "positionUTF8",
                     arguments: arguments.Prepend(instance),
                     nullable: true,
-                    argumentsPropagateNullability: new[] { true, true, true },
+                    argumentsPropagateNullability: [true, true, true],
                     method.ReturnType),
                 _sqlExpressionFactory.Constant(1));
+        }
+
+        if (IndexOfWithStartingPosition.Equals(method))
+        {
+            return TranslateIndexOf(method, instance, arguments[0], arguments[1]);
         }
 
         if (ReplaceAll.Equals(method))
@@ -316,5 +324,31 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         }
 
         return null;
+    }
+
+    private SqlExpression TranslateIndexOf(
+        MethodInfo method,
+        SqlExpression instance,
+        SqlExpression searchExpression,
+        SqlExpression startIndex)
+    {
+        var indexOfArguments = new[]
+        {
+            instance,
+            searchExpression,
+            startIndex is SqlConstantExpression { Value : int constantStartIndex }
+                ? _sqlExpressionFactory.Constant(constantStartIndex + 1, typeof(int))
+                : _sqlExpressionFactory.Convert(
+                    _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)),
+                    typeof(uint))
+        };
+
+        return _sqlExpressionFactory.Subtract(_sqlExpressionFactory.Function(
+                name: "positionUTF8",
+                arguments: indexOfArguments,
+                nullable: true,
+                argumentsPropagateNullability: [true, true, true],
+                method.ReturnType),
+            _sqlExpressionFactory.Constant(1));
     }
 }

@@ -49,27 +49,6 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Indexof_with_constant_starting_position(bool async)
-    {
-        return base.Indexof_with_constant_starting_position(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Indexof_with_parameter_starting_position(bool async)
-    {
-        return base.Indexof_with_parameter_starting_position(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Substring_with_two_args_with_Index_of(bool async)
-    {
-        return base.Substring_with_two_args_with_Index_of(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Sum_over_round_works_correctly_in_projection(bool async)
     {
         return base.Sum_over_round_works_correctly_in_projection(async);

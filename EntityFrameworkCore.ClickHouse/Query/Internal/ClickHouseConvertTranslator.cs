@@ -12,7 +12,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTranslator
 {
     private const int DecimalScale = 28;
-    
+
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
 
     public ClickHouseConvertTranslator(ISqlExpressionFactory sqlExpressionFactory)

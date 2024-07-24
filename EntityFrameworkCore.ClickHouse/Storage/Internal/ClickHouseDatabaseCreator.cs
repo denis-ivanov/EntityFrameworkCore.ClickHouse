@@ -13,9 +13,9 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
 public class ClickHouseDatabaseCreator : RelationalDatabaseCreator
 {
     private const int DatabaseDoesNotExist = 81;
-        
+
     private readonly IClickHouseRelationalConnection _connection;
-        
+
     private readonly IRawSqlCommandBuilder _rawSqlCommandBuilder;
 
     public ClickHouseDatabaseCreator(
