@@ -19,37 +19,16 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Average_no_data_subquery(bool async)
-    {
-        return base.Average_no_data_subquery(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Contains_over_keyless_entity_throws(bool async)
-    {
-        return base.Contains_over_keyless_entity_throws(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Max_no_data_subquery(bool async)
-    {
-        return base.Max_no_data_subquery(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Min_no_data_subquery(bool async)
-    {
-        return base.Min_no_data_subquery(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Average_after_default_if_empty_does_not_throw(bool async)
     {
         return base.Average_after_default_if_empty_does_not_throw(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Average_no_data_subquery(bool async)
+    {
+        return base.Average_no_data_subquery(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
@@ -138,6 +117,13 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
+    public override Task Contains_over_keyless_entity_throws(bool async)
+    {
+        return base.Contains_over_keyless_entity_throws(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
     public override Task Contains_with_local_anonymous_type_array_closure(bool async)
     {
         return base.Contains_with_local_anonymous_type_array_closure(async);
@@ -208,16 +194,9 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Max_no_data_cast_to_nullable(bool async)
+    public override Task Max_no_data_subquery(bool async)
     {
-        return base.Max_no_data_cast_to_nullable(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Max_no_data_nullable(bool async)
-    {
-        return base.Max_no_data_nullable(async);
+        return base.Max_no_data_subquery(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
@@ -257,6 +236,13 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
+    public override Task Min_no_data_subquery(bool async)
+    {
+        return base.Min_no_data_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
     public override Task Min_over_max_subquery_is_client_eval(bool async)
     {
         return base.Min_over_max_subquery_is_client_eval(async);
@@ -288,6 +274,20 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     public override Task Multiple_collection_navigation_with_FirstOrDefault_chained_projecting_scalar(bool async)
     {
         return base.Multiple_collection_navigation_with_FirstOrDefault_chained_projecting_scalar(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Max_no_data_cast_to_nullable(bool async)
+    {
+        return base.Max_no_data_cast_to_nullable(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Max_no_data_nullable(bool async)
+    {
+        return base.Max_no_data_nullable(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
