@@ -15,7 +15,7 @@ public class ClickHouseMigrationsSqlGeneratorTest : MigrationsSqlGeneratorTestBa
     public ClickHouseMigrationsSqlGeneratorTest()
         : base(
             ClickHouseTestHelpers.Instance,
-            new ServiceCollection()/*.AddEntityFrameworkClickHouseNetTopologySuite()*/,
+            new ServiceCollection().AddEntityFrameworkClickHouseNetTopologySuite(),
             ClickHouseTestHelpers.Instance.AddProviderOptions(
                 ((IRelationalDbContextOptionsBuilderInfrastructure)
                     new ClickHouseDbContextOptionsBuilder(new DbContextOptionsBuilder())/*.UseNetTopologySuite()*/)
