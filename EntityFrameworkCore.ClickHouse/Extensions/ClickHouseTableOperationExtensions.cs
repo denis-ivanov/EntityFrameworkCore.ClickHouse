@@ -12,9 +12,10 @@ public static class ClickHouseTableOperationExtensions
 
         return (string)engine?.Value switch
         {
-            ClickHouseAnnotationNames.MergeTreeEngine => new ClickMergeTreeEngineBuilder(operation),
-            ClickHouseAnnotationNames.StripeLogEngine => new ClickStripeLogEngineBuilder(operation),
-            _ => new ClickStripeLogEngineBuilder(operation)
+            ClickHouseAnnotationNames.MergeTreeEngine => new ClickHouseMergeTreeEngineBuilder(operation),
+            ClickHouseAnnotationNames.StripeLogEngine => new ClickHouseStripeLogEngineBuilder(operation),
+            ClickHouseAnnotationNames.ReplacingMergeTree => new ClickHouseReplacingMergeTreeEngineBuilder(operation),
+            _ => new ClickHouseStripeLogEngineBuilder(operation)
         };
     }
 }

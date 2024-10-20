@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ClickHouse.EntityFrameworkCore.Extensions;
 using Xunit;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Scaffolding;
@@ -746,8 +747,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             ) ENGINE = MergeTree
             PRIMARY KEY ( Id2, Id1 );
             """],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var pk = dbModel.Tables.Single().PrimaryKey;
@@ -775,6 +776,46 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
                 Assert.Equal(["Id"], pk.Columns.Select(ic => ic.Name).ToList());
             },
             ["DROP TABLE RowidPrimaryKey;"]);
+
+    #endregion
+
+    #region MergeTree
+
+    [Fact]
+    public void MergeTree_with_partition_by_and_order_by()
+    {
+        Test(
+            [
+                """
+                CREATE TABLE tab
+                (
+                    d DateTime,
+                    a Int TTL d + INTERVAL 1 MONTH,
+                    b Int TTL d + INTERVAL 1 MONTH,
+                    c String
+                )
+                ENGINE = MergeTree
+                PARTITION BY toYYYYMM(d)
+                ORDER BY d;
+                """
+            ],
+            [],
+            [],
+            dbModel =>
+            {
+                var table = Assert.Single(dbModel.Tables, e => e.Name == "tab");
+
+                var engine = table.GetTableEngine();
+                Assert.Equal("MergeTree", engine);
+
+                var partitionBy = table.GetPartitionBy();
+                Assert.Equal(["toYYYYMM(d)"], partitionBy);
+
+                var orderBy = table.GetOrderBy();
+                Assert.Equal(["d"], orderBy);
+            },
+            ["DROP TABLE tab;"]);
+    }
 
     #endregion
 

@@ -5,47 +5,55 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace ClickHouse.EntityFrameworkCore.Metadata.Builders;
 
-public class ClickMergeTreeEngineBuilder : ClickHouseEngineBuilder
+public class ClickHouseMergeTreeEngineBuilder : ClickHouseEngineBuilder
 {
-    public ClickMergeTreeEngineBuilder(IMutableAnnotatable builder) : base(builder)
+    public ClickHouseMergeTreeEngineBuilder(IMutableAnnotatable builder) : base(builder)
     {
     }
 
     [AllowNull]
     public MergeTreeSettings Settings { get; set; }
 
-    public ClickMergeTreeEngineBuilder WithPartitionBy([NotNull] params string[] columns)
+    public ClickHouseMergeTreeEngineBuilder WithPartitionBy([NotNull] params string[] columns)
     {
         ArgumentNullException.ThrowIfNull(columns);
 
-        Builder.SetMergeTreePartitionBy(columns);
+        Builder.SetPartitionBy(columns);
 
         return this;
     }
 
-    public ClickMergeTreeEngineBuilder WithPrimaryKey([NotNull] params string[] columns)
+    public ClickHouseMergeTreeEngineBuilder WithOrderBy([NotNull] params string[] columns)
     {
         ArgumentNullException.ThrowIfNull(columns);
 
-        Builder.SetMergeTreePrimaryKey(columns);
+        Builder.SetOrderBy(columns);
 
         return this;
     }
 
-    public ClickMergeTreeEngineBuilder WithSampleBy([NotNull] params string[] columns)
+    public ClickHouseMergeTreeEngineBuilder WithPrimaryKey([NotNull] params string[] columns)
     {
         ArgumentNullException.ThrowIfNull(columns);
 
-        Builder.SetMergeTreeSampleBy(columns);
+        Builder.SetPrimaryKey(columns);
 
         return this;
     }
 
-    public ClickMergeTreeEngineBuilder WithSettings([NotNull] Action<MergeTreeSettings> configure)
+    public ClickHouseMergeTreeEngineBuilder WithSampleBy([NotNull] params string[] columns)
+    {
+        ArgumentNullException.ThrowIfNull(columns);
+
+        Builder.SetSampleBy(columns);
+
+        return this;
+    }
+
+    public ClickHouseMergeTreeEngineBuilder WithSettings([NotNull] Action<MergeTreeSettings> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
 
@@ -55,35 +63,17 @@ public class ClickMergeTreeEngineBuilder : ClickHouseEngineBuilder
         return this;
     }
 
-    public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table,
+    public override void SpecifyEngine(
+        MigrationCommandListBuilder builder,
+        TableOperation table,
         ISqlGenerationHelper sql)
     {
         builder.Append(" ENGINE = MergeTree()").AppendLine();
 
-        var orderBy = table.GetMergeTreeOrderBy();
-        var partitionBy = table.GetMergeTreePartitionBy();
-        var primaryKey = table.GetMergeTreePrimaryKey();
-        var sampleBy = table.GetMergeTreeSampleBy();
-
-        if (orderBy is { Length: > 0 })
-        {
-            builder.AppendLine($"ORDER BY ({ConcatColumns(orderBy, sql)})");
-        }
-
-        if (partitionBy is { Length: > 0 })
-        {
-            builder.AppendLine($"PARTITION BY ({ConcatColumns(partitionBy, sql)})");
-        }
-
-        if (primaryKey is { Length: > 0 })
-        {
-            builder.AppendLine($"PRIMARY KEY ({ConcatColumns(primaryKey, sql)})");
-        }
-
-        if (sampleBy is { Length: > 0 })
-        {
-            builder.AppendLine($"SAMPLE BY ({ConcatColumns(sampleBy, sql)})");
-        }
+        AddOrderBy(builder, table.GetOrderBy(), sql);
+        AddPartitionBy(builder, table.GetPartitionBy(), sql);
+        AddPrimaryKey(builder, table.GetPrimaryKey(), sql);
+        AddSampleBy(builder, table.GetSampleBy(), sql);
 
         if (Settings is { IsDefault: false })
         {
@@ -169,10 +159,5 @@ public class ClickMergeTreeEngineBuilder : ClickHouseEngineBuilder
                 }
             }
         }
-    }
-
-    private static string ConcatColumns(string[] columns, ISqlGenerationHelper sql)
-    {
-        return string.Join(", ", columns.Select(sql.DelimitIdentifier));
     }
 }

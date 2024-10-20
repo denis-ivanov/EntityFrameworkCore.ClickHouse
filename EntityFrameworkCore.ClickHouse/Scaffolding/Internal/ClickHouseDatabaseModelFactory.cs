@@ -63,14 +63,34 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
                 continue;
             }
 
-            var primaryKey = reader.GetString("primary_key");
+            var partitionKey = ParseColumns(reader.GetString("partition_key"));
+            var sortingKey = ParseColumns(reader.GetString("sorting_key"));
+            var primaryKey = ParseColumns(reader.GetString("primary_key"));
+            var samplingKey = ParseColumns(reader.GetString("sampling_key"));
 
-            if (!string.IsNullOrEmpty(primaryKey))
+            if (primaryKey != null)
             {
-                var primaryKeyColumns = Array.ConvertAll(primaryKey.Split(','), e => e.Trim());
-                primaryKeys[table.Name] = primaryKeyColumns;
+                primaryKeys[table.Name] = primaryKey;
+                table.SetPrimaryKey(primaryKey);
             }
-                    
+
+            if (partitionKey != null)
+            {
+                table.SetPartitionBy(partitionKey);
+            }
+
+            if (sortingKey != null)
+            {
+                table.SetOrderBy(sortingKey);
+            }
+
+            if (samplingKey != null)
+            {
+                table.SetSampleBy(samplingKey);
+            }
+
+            table.SetTableEngine(reader.GetString("engine"));
+
             result.Add(table);
         }
 
@@ -289,5 +309,10 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
                || type == typeof(ushort)
                || type == typeof(sbyte)
                || type == typeof(char);
+    }
+
+    private static string[] ParseColumns(string columnsSql)
+    {
+        return string.IsNullOrWhiteSpace(columnsSql) ? null : Array.ConvertAll(columnsSql.Split(','), e => e.Trim());
     }
 }
