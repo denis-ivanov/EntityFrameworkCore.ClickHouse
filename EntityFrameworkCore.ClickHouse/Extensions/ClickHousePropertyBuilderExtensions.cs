@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using ClickHouse.EntityFrameworkCore.Metadata;
 
 namespace ClickHouse.EntityFrameworkCore.Extensions;
 
@@ -15,5 +16,20 @@ public static class ClickHousePropertyBuilderExtensions
             .IsUnicode()
             .IsFixedLength()
             .IsRequired();
+    }
+
+    public static PropertyBuilder Ttl(this PropertyBuilder builder, string ttl)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentException.ThrowIfNullOrWhiteSpace(ttl);
+
+        return builder.HasAnnotation(ClickHouseAnnotationNames.ColumnTtl, ttl);
+    }
+
+    public static string GetTtl<T>(this PropertyBuilder<T> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        return (string)builder.Metadata.FindAnnotation(ClickHouseAnnotationNames.ColumnTtl)?.Value;
     }
 }

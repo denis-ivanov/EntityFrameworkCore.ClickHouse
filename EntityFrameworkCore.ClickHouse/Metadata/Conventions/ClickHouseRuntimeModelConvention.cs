@@ -21,10 +21,10 @@ public class ClickHouseRuntimeModelConvention : RelationalRuntimeModelConvention
         if (!runtime)
         {
             annotations.Remove(ClickHouseAnnotationNames.MergeTreeEngine);
-            annotations.Remove(ClickHouseAnnotationNames.MergeTreeOrderBy);
-            annotations.Remove(ClickHouseAnnotationNames.MergeTreePartitionBy);
-            annotations.Remove(ClickHouseAnnotationNames.MergeTreePrimaryKey);
-            annotations.Remove(ClickHouseAnnotationNames.MergeTreeSampleBy);
+            annotations.Remove(ClickHouseAnnotationNames.OrderBy);
+            annotations.Remove(ClickHouseAnnotationNames.PartitionBy);
+            annotations.Remove(ClickHouseAnnotationNames.PrimaryKey);
+            annotations.Remove(ClickHouseAnnotationNames.SampleBy);
         }
     }
 }

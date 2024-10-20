@@ -5,14 +5,13 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ClickHouse.EntityFrameworkCore.Metadata.Builders;
 
-public class ClickStripeLogEngineBuilder : ClickHouseEngineBuilder
+public class ClickHouseStripeLogEngineBuilder : ClickHouseEngineBuilder
 {
-    public ClickStripeLogEngineBuilder(IMutableAnnotatable builder) : base(builder)
+    public ClickHouseStripeLogEngineBuilder(IMutableAnnotatable builder) : base(builder)
     {
     }
 
-    public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table,
-        ISqlGenerationHelper sql)
+    public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table, ISqlGenerationHelper sql)
     {
         builder.AppendLine(" ENGINE = StripeLog;");
     }

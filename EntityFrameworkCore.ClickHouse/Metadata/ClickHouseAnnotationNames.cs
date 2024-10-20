@@ -6,23 +6,73 @@ public static class ClickHouseAnnotationNames
 
     public const string TableEngine = Prefix + "TableEngine";
 
+    public const string ColumnTtl = Prefix + "ColumnTtl";
+
+    public const string PartitionBy = TableEngine + ":PartitionBy";
+
+    public const string OrderBy = TableEngine + ":OrderBy";
+
+    public const string PrimaryKey = TableEngine + ":PrimaryKey";
+
+    public const string SampleBy = TableEngine + ":SampleBy";
+
     #region Merge tree
 
-    public const string MergeTreeEngine = TableEngine + ":MergeTreeEngine";
+    public const string MergeTreeEngine = "MergeTree";
 
-    public const string MergeTreeOrderBy = MergeTreeEngine + ":OrderBy";
+    #endregion
 
-    public const string MergeTreePartitionBy = MergeTreeEngine + ":PartitionaBy";
+    #region ReplacingMergeTree
 
-    public const string MergeTreePrimaryKey = MergeTreeEngine + ":PrimaryKey";
+    public const string ReplacingMergeTree = "ReplacingMergeTree";
 
-    public const string MergeTreeSampleBy = MergeTreeEngine + ":SampleBy";
+    public const string ReplacingMergeTreeVersion = TableEngine + ":ReplacingMergeTree:Version";
+
+    public const string ReplacingMergeTreeIsDeleted = TableEngine + ":ReplacingMergeTree:IsDeleted";
+
+    #endregion
+
+    #region SummingMergeTree
+
+    public const string SummingMergeTree = "SummingMergeTree";
+
+    #endregion
+
+    #region AggregatingMergeTree
+
+    public const string AggregatingMergeTree = "AggregatingMergeTree";
+
+    #endregion
+
+    #region CollapsingMergeTree
+
+    public const string CollapsingMergeTree = "CollapsingMergeTree";
+
+    public const string CollapsingMergeTreeSign = CollapsingMergeTree + ":Sign";
+
+    #endregion
+
+    #region VersionedCollapsingMergeTree
+
+    public const string VersionedCollapsingMergeTree = "VersionedCollapsingMergeTree";
+
+    public const string VersionedCollapsingMergeTreeSign = VersionedCollapsingMergeTree + ":Sign";
+
+    public const string VersionedCollapsingMergeTreeVersion = VersionedCollapsingMergeTree + ":Version";
+
+    #endregion
+
+    #region GraphiteMergeTree
+
+    public const string GraphiteMergeTree = "GraphiteMergeTree";
+
+    public const string GraphiteMergeTreeConfigSection = GraphiteMergeTree + ":ConfigSection";
 
     #endregion
 
     #region StripeLog
 
-    public const string StripeLogEngine = TableEngine + ":StripeLog";
+    public const string StripeLogEngine = "StripeLog";
 
     #endregion
 }

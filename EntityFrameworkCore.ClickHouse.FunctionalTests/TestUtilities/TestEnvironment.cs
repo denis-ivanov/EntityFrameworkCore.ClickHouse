@@ -14,8 +14,8 @@ public static class TestEnvironment
 
         Configuration = configBuilder.Build().GetSection("Test:ClickHouse");
     }
-        
-    public static IConfiguration Configuration { get; private set; }
+
+    public static IConfiguration Configuration { get; }
 
     public static string DefaultConnection => Configuration["DefaultConnection"];
 }

@@ -1476,6 +1476,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             builder => builder.Entity("Person").HasData(new Person { Id = 2, Name = "Another John Snow" }),
             model => { });
 
+
     protected override string NonDefaultCollation { get; }
 
     public class MigrationsClickHouseFixture : MigrationsFixtureBase
