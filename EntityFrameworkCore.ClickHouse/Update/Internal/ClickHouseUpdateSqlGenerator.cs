@@ -3,6 +3,7 @@ using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Update;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ClickHouse.EntityFrameworkCore.Update.Internal;
@@ -84,6 +85,24 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
                         g.SqlGenerationHelper.GenerateParameterNamePlaceholder(sb, o.ParameterName, o.ColumnType);
                     }
                 });
+    }
+
+    public override ResultSetMapping AppendUpdateOperation(StringBuilder commandStringBuilder, IReadOnlyModificationCommand command,
+        int commandPosition, out bool requiresTransaction)
+    {
+        var name = command.TableName;
+        var schema = command.Schema;
+        var operations = command.ColumnModifications;
+
+        var writeOperations = operations.Where(o => o.IsWrite).ToList();
+        var conditionOperations = operations.Where(o => o.IsCondition).ToList();
+        var readOperations = operations.Where(o => o.IsRead).ToList();
+
+        requiresTransaction = false;
+
+        AppendUpdateCommand(commandStringBuilder, name, schema, writeOperations, readOperations, conditionOperations);
+
+        return readOperations.Count > 0 ? ResultSetMapping.LastInResultSet : ResultSetMapping.NoResults;
     }
 
     protected override void AppendWhereCondition(StringBuilder commandStringBuilder, IColumnModification columnModification, bool useOriginalValue)

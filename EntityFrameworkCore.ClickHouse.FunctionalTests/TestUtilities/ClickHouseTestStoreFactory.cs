@@ -6,7 +6,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 
 public class ClickHouseTestStoreFactory : RelationalTestStoreFactory
 {
-    public static ClickHouseTestStoreFactory Instance = new ();
+    public static readonly ClickHouseTestStoreFactory Instance = new ();
 
     public override TestStore Create(string storeName)
     {
