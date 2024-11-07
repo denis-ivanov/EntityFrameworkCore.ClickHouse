@@ -1,6 +1,7 @@
 ﻿using ClickHouse.EntityFrameworkCore.Design.Internal;
 using ClickHouse.EntityFrameworkCore.Diagnostics.Internal;
 using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.EntityFrameworkCore.Metadata;
 using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -18,7 +19,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ClickHouse.EntityFrameworkCore.Metadata;
 using Xunit;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Scaffolding;
