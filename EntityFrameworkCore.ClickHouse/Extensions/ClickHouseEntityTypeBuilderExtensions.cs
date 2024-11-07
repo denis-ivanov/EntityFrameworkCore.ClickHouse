@@ -53,7 +53,17 @@ public static class ClickHouseEntityTypeBuilderExtensions
         ArgumentNullException.ThrowIfNull(builder);
 
         var engine = new ClickHouseSummingMergeTreeEngineBuilder(builder.Metadata);
-        builder.Metadata.SetSummingMergeTreeTableEngine();
+        builder.Metadata.SetSummingMergeTreeTableEngine(null);
+
+        return engine;
+    }
+
+    public static ClickHouseSummingMergeTreeEngineBuilder HasSummingMergeTreeEngine([NotNull] this TableBuilder builder, string column)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        var engine = new ClickHouseSummingMergeTreeEngineBuilder(builder.Metadata);
+        builder.Metadata.SetSummingMergeTreeTableEngine(column);
 
         return engine;
     }
@@ -90,6 +100,19 @@ public static class ClickHouseEntityTypeBuilderExtensions
 
         var engine = new ClickHouseVersionedCollapsingMergeTreeEngineBuilder(builder.Metadata);
         builder.Metadata.SetVersionedCollapsingMergeTreeTableEngine(sign, version);
+
+        return engine;
+    }
+
+    public static ClickHouseGraphiteMergeTreeEngineBuilder HasGraphiteMergeTreeEngine(
+        [NotNull] this TableBuilder builder,
+        string configSection)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentException.ThrowIfNullOrWhiteSpace(configSection);
+
+        var engine = new ClickHouseGraphiteMergeTreeEngineBuilder(builder.Metadata);
+        builder.Metadata.SetGraphiteMergeTreeTableEngine(configSection);
 
         return engine;
     }

@@ -313,7 +313,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
                     Id = 101,
                     PartitionId = 101,
                     String = "TestString",
-                    Bytes = new byte[] { 10, 9, 8, 7, 6 },
+                    Bytes = [10, 9, 8, 7, 6],
                     Int16 = -1234,
                     Int32 = -123456789,
                     Int64 = -1234567890123456789L,
@@ -348,7 +348,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             var dt = context.Set<ObjectBackedDataTypes>().Where(ndt => ndt.Id == 101).ToList().Single();
 
             Assert.Equal("TestString", dt.String);
-            Assert.Equal(new byte[] { 10, 9, 8, 7, 6 }, dt.Bytes);
+            Assert.Equal([10, 9, 8, 7, 6], dt.Bytes);
             Assert.Equal((short)-1234, dt.Int16);
             Assert.Equal(-123456789, dt.Int32);
             Assert.Equal(-1234567890123456789L, dt.Int64);

@@ -126,6 +126,20 @@ public static class ClickHouseEntityTypeExtensions
         return table;
     }
 
+    public static void SetReplacingMergeTreeTableEngineVersion(this AnnotatableBase table, string version)
+    {
+        ArgumentNullException.ThrowIfNull(table);
+
+        table.SetAnnotation(ClickHouseAnnotationNames.ReplacingMergeTreeVersion, version);
+    }
+
+    public static void SetReplacingMergeTreeTableEngineIsDeleted(this AnnotatableBase table, string isDeleted)
+    {
+        ArgumentNullException.ThrowIfNull(table);
+
+        table.SetAnnotation(ClickHouseAnnotationNames.ReplacingMergeTreeIsDeleted, isDeleted);
+    }
+
     public static string GetReplacingMergeTreeVersion(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
@@ -148,13 +162,37 @@ public static class ClickHouseEntityTypeExtensions
 
     #region SummingMergeTree
 
-    public static IMutableAnnotatable SetSummingMergeTreeTableEngine(this IMutableEntityType table)
+    public static IMutableAnnotatable SetSummingMergeTreeTableEngine(this IMutableEntityType table, string column)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         table.SetOrRemoveAnnotation(ClickHouseAnnotationNames.TableEngine, ClickHouseAnnotationNames.SummingMergeTree);
 
+        if (!string.IsNullOrWhiteSpace(column))
+        {
+            table.SetOrRemoveAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumn, column);
+        }
+
         return table;
+    }
+
+    public static void SetSummingMergeTreeTableEngineColumn(this AnnotatableBase table, string column)
+    {
+        ArgumentNullException.ThrowIfNull(table);
+
+        if (!string.IsNullOrWhiteSpace(column))
+        {
+            table.SetAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumn, column);
+        }
+    }
+
+    public static string GetSummingMergeTreeColumn(this IAnnotatable table)
+    {
+        ArgumentNullException.ThrowIfNull(table);
+
+        var columns = table.FindAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumn);
+
+        return (string)columns?.Value;
     }
 
     #endregion

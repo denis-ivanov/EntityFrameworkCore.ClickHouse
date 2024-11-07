@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClickHouse.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using ClickHouse.EntityFrameworkCore.Metadata;
 
 namespace ClickHouse.EntityFrameworkCore.Extensions;
 

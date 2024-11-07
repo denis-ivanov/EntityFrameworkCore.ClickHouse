@@ -23,6 +23,15 @@ public class ClickHouseSummingMergeTreeEngineBuilder : ClickHouseEngineBuilder
         return this;
     }
 
+    public ClickHouseSummingMergeTreeEngineBuilder WithPrimaryKey([NotNull] params string[] columns)
+    {
+        ArgumentNullException.ThrowIfNull(columns);
+
+        Builder.SetPrimaryKey(columns);
+
+        return this;
+    }
+
     public ClickHouseSummingMergeTreeEngineBuilder WithOrderBy([NotNull] params string[] columns)
     {
         ArgumentNullException.ThrowIfNull(columns);
@@ -43,7 +52,15 @@ public class ClickHouseSummingMergeTreeEngineBuilder : ClickHouseEngineBuilder
 
     public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table, ISqlGenerationHelper sql)
     {
-        builder.Append(" ENGINE = SummingMergeTree()").AppendLine();
+        var column = table.GetSummingMergeTreeColumn();
+        string engineArg = null;
+
+        if (!string.IsNullOrEmpty(column))
+        {
+            engineArg = IsFunctionCall(column) ? column : sql.DelimitIdentifier(column);
+        }
+
+        builder.Append($" ENGINE = SummingMergeTree({engineArg})").AppendLine();
 
         AddPartitionBy(builder, table.GetPartitionBy(), sql);
         AddOrderBy(builder, table.GetOrderBy(), sql);

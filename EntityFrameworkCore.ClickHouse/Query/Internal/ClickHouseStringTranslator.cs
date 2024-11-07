@@ -90,9 +90,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Function(
                 "lowerUTF8",
-                new[] { instance },
+                [instance],
                 true,
-                new[] { true },
+                [true],
                 method.ReturnType,
                 instance.TypeMapping);
         }
@@ -101,9 +101,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Function(
                 "upperUTF8",
-                new[] { instance },
+                [instance],
                 true,
-                new[] { true },
+                [true],
                 method.ReturnType,
                 instance.TypeMapping);
         }
@@ -116,7 +116,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                     "empty",
                     arguments.ToArray(),
                     false,
-                    new[] { true },
+                    [true],
                     method.ReturnType,
                     arguments[0].TypeMapping));
         }
@@ -127,17 +127,16 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 _sqlExpressionFactory.IsNull(arguments[0]),
                 _sqlExpressionFactory.Function(
                     "empty",
-                    new[]
-                    {
+                    [
                         _sqlExpressionFactory.Function(
                             name: "trim",
                             arguments: arguments,
                             nullable: true,
-                            argumentsPropagateNullability: new[] { true },
+                            argumentsPropagateNullability: [true],
                             returnType: method.ReturnType)
-                    },
+                    ],
                     false,
-                    new[] { true },
+                    [true],
                     method.ReturnType,
                     arguments[0].TypeMapping));
         }
@@ -146,9 +145,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Function(
                 name: "trimLeft",
-                arguments: new [] { instance },
+                arguments: [instance],
                 nullable: true,
-                argumentsPropagateNullability: new [] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -156,9 +155,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Function(
                 name: "trimRight",
-                arguments: new [] { instance },
+                arguments: [instance],
                 nullable: true,
-                argumentsPropagateNullability: new [] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -166,9 +165,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Function(
                 name: "trim",
-                arguments: new [] { instance },
+                arguments: [instance],
                 nullable: true,
-                argumentsPropagateNullability: new [] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -178,7 +177,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 name: "startsWith",
                 arguments: arguments.Prepend(instance),
                 nullable: true,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -188,7 +187,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 name: "endsWith",
                 arguments: arguments.Prepend(instance),
                 nullable: true,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -199,7 +198,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                     name: "positionUTF8",
                     arguments: arguments.Prepend(instance),
                     nullable: false,
-                    argumentsPropagateNullability: new[] { true },
+                    argumentsPropagateNullability: [true],
                     returnType: typeof(int)),
                 _sqlExpressionFactory.Constant(0));
         }
@@ -210,7 +209,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 name: "match",
                 arguments: arguments,
                 nullable: true,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -220,9 +219,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
             return _sqlExpressionFactory.Function(
                 "substring",
-                new[] { argument, _sqlExpressionFactory.Constant(1), _sqlExpressionFactory.Constant(1) },
+                [argument, _sqlExpressionFactory.Constant(1), _sqlExpressionFactory.Constant(1)],
                 nullable: true,
-                argumentsPropagateNullability: new[] { true, true, true },
+                argumentsPropagateNullability: [true, true, true],
                 method.ReturnType);
         }
 
@@ -231,19 +230,18 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
             var argument = arguments[0];
             return _sqlExpressionFactory.Function(
                 "substring",
-                new[]
-                {
+                [
                     argument,
                     _sqlExpressionFactory.Function(
                         "lengthUTF8",
-                        new[] { argument },
+                        [argument],
                         nullable: true,
-                        argumentsPropagateNullability: new[] { true },
+                        argumentsPropagateNullability: [true],
                         typeof(int)),
                     _sqlExpressionFactory.Constant(1)
-                },
+                ],
                 nullable: true,
-                argumentsPropagateNullability: new[] { true, true, true },
+                argumentsPropagateNullability: [true, true, true],
                 method.ReturnType);
         }
 
@@ -253,9 +251,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
             
             return _sqlExpressionFactory.Function(
                 "substring",
-                new[] { instance, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)) },
+                [instance, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1))],
                 nullable: true,
-                argumentsPropagateNullability: new[] { true, true, true },
+                argumentsPropagateNullability: [true, true, true],
                 method.ReturnType);
         }
 
@@ -266,7 +264,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
             return _sqlExpressionFactory.Function(
                 "substring",
-                new[] { instance, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)), length },
+                [instance, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)), length],
                 nullable: true,
                 argumentsPropagateNullability: [true, true, true],
                 method.ReturnType);
@@ -294,7 +292,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 "replaceAll",
                 arguments: arguments.Prepend(instance),
                 nullable: true,
-                argumentsPropagateNullability: new[] { true, true, true },
+                argumentsPropagateNullability: [true, true, true],
                 method.ReturnType);
         }
 
@@ -317,9 +315,9 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Function(
                 "char_length",
-                new[] { instance },
+                [instance],
                 nullable: true,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType);
         }
 

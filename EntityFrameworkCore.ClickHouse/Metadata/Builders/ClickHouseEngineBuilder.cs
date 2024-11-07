@@ -56,6 +56,13 @@ public abstract class ClickHouseEngineBuilder
 
     private static string ConcatColumns(string[] columns, ISqlGenerationHelper sql)
     {
-        return string.Join(", ", columns.Select(sql.DelimitIdentifier));
+        return string.Join(", ", columns.Select(column => IsFunctionCall(column) ? column : sql.DelimitIdentifier(column)));
+    }
+
+    protected static bool IsFunctionCall(string expression)
+    {
+        return !string.IsNullOrWhiteSpace(expression) &&
+               expression.Contains('(') &&
+               expression.Contains(')');
     }
 }

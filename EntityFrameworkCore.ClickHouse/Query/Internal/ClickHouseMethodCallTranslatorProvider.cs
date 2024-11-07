@@ -7,8 +7,7 @@ public sealed class ClickHouseMethodCallTranslatorProvider : RelationalMethodCal
     public ClickHouseMethodCallTranslatorProvider(RelationalMethodCallTranslatorProviderDependencies dependencies)
         : base(dependencies)
     {
-        AddTranslators(new IMethodCallTranslator[]
-        {
+        AddTranslators([
             new ClickHouseArrayTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseGuidTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseStringTranslator(dependencies.SqlExpressionFactory),
@@ -19,6 +18,6 @@ public sealed class ClickHouseMethodCallTranslatorProvider : RelationalMethodCal
             new ClickHouseObjectToStringTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseDateOnlyMethodTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseRegexMethodTranslator(dependencies.SqlExpressionFactory)
-        });
+        ]);
     }
 }

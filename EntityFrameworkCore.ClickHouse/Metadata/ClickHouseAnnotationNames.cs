@@ -36,6 +36,8 @@ public static class ClickHouseAnnotationNames
 
     public const string SummingMergeTree = "SummingMergeTree";
 
+    public const string SummingMergeTreeColumn = TableEngine + ":SummingMergeTree:Column";
+
     #endregion
 
     #region AggregatingMergeTree
@@ -48,7 +50,7 @@ public static class ClickHouseAnnotationNames
 
     public const string CollapsingMergeTree = "CollapsingMergeTree";
 
-    public const string CollapsingMergeTreeSign = CollapsingMergeTree + ":Sign";
+    public const string CollapsingMergeTreeSign = TableEngine + ":Sign";
 
     #endregion
 
@@ -56,9 +58,9 @@ public static class ClickHouseAnnotationNames
 
     public const string VersionedCollapsingMergeTree = "VersionedCollapsingMergeTree";
 
-    public const string VersionedCollapsingMergeTreeSign = VersionedCollapsingMergeTree + ":Sign";
+    public const string VersionedCollapsingMergeTreeSign = TableEngine + ":Sign";
 
-    public const string VersionedCollapsingMergeTreeVersion = VersionedCollapsingMergeTree + ":Version";
+    public const string VersionedCollapsingMergeTreeVersion = TableEngine + ":Version";
 
     #endregion
 

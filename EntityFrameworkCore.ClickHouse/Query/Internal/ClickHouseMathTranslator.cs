@@ -117,7 +117,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
                 name: functionName,
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 

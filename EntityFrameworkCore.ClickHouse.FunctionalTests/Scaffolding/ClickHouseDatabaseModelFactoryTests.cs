@@ -1,5 +1,6 @@
 ﻿using ClickHouse.EntityFrameworkCore.Design.Internal;
 using ClickHouse.EntityFrameworkCore.Diagnostics.Internal;
+using ClickHouse.EntityFrameworkCore.Extensions;
 using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -17,7 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.EntityFrameworkCore.Metadata;
 using Xunit;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Scaffolding;
@@ -87,8 +88,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             "CREATE TABLE Everest ( id int ) ENGINE = StripeLog;",
             "CREATE TABLE Denali ( id int ) ENGINE StripeLog;"
             ],
-            new[] { "Everest" },
-            Enumerable.Empty<string>(),
+            ["Everest"],
+            [],
             dbModel =>
             {
                 var table = Assert.Single(dbModel.Tables);
@@ -108,8 +109,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             "CREATE TABLE Everest ( id int ) ENGINE = StripeLog;",
             "CREATE TABLE Denali ( id int ) ENGINE = StripeLog;"
             ],
-            new[] { "eVeReSt" },
-            Enumerable.Empty<string>(),
+            ["eVeReSt"],
+            [],
             dbModel =>
             {
                 var table = Assert.Single(dbModel.Tables);
@@ -133,8 +134,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             "CREATE TABLE Everest ( id int ) ENGINE = StripeLog;",
             "CREATE TABLE Denali ( id int ) ENGINE = StripeLog;"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 Assert.Collection(
@@ -156,8 +157,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
                 Name String NOT NULL
             ) ENGINE StripeLog;
             """],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var table = dbModel.Tables.Single();
@@ -180,8 +181,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
              CAST(100 AS integer) AS Id,
              CAST('' AS text) AS Name;
             """],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var table = Assert.IsType<DatabaseView>(dbModel.Tables.Single());
@@ -200,8 +201,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
     public void Create_primary_key()
         => Test(
             ["CREATE TABLE Place ( Id int ) ENGINE = MergeTree PRIMARY KEY (Id);"],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var pk = dbModel.Tables.Single().PrimaryKey;
@@ -226,8 +227,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             ) ENGINE = StripeLog;
             """],
 
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -249,8 +250,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
                 NonNullString text NOT NULL
             ) ENGINE = StripeLog;
             """],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -271,8 +272,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
                 Created datetime DEFAULT('2020-10-15 11:00:00')
             ) ENGINE StripeLog
             """],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -293,8 +294,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
                 GeneratedColumnStored Int32 MATERIALIZED (1 + 2)
             ) ENGINE = StripeLog;
             """],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -326,8 +327,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
             "INSERT INTO MyTable VALUES (1, 1, 1, 1, 1, 1, 1, 1);"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -374,8 +375,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
             "INSERT INTO MyTable VALUES (1, 1, 1);"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -403,8 +404,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
                 $"INSERT INTO MyTable VALUES (1, {long.MaxValue}, {long.MaxValue});"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -430,8 +431,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             """,
             "INSERT INTO MyTable VALUES (1, 1, 1);"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -459,8 +460,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
             "INSERT INTO MyTable VALUES (1, 1.1, 1.2, 1.3);"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -492,8 +493,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
             "INSERT INTO MyTable VALUES (1, '1.1', '1.2', '1.3');"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -525,8 +526,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
             "INSERT INTO MyTable VALUES (1, '1.1', '1.2', '1.3');"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -559,8 +560,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
                 """,
                 "INSERT INTO MyTable VALUES (1, 1, 1, 1, 1);"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -595,8 +596,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
             "INSERT INTO MyTable VALUES (1, '2023-01-20 13:37:00', '2023-01-20 13:37:00');"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -624,8 +625,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             """,
             "INSERT INTO MyTable VALUES (1, '2023-01-20 13:37:00', '2023-01-20 13:37:00');"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -651,8 +652,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             """,
 
             "INSERT INTO MyTable VALUES (1, '2023-01-20', '2023-01-20');"],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -678,8 +679,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
             "INSERT INTO MyTable VALUES (1, '993CDD7A-F4DF-4C5E-A810-8F51A11E9B6D');"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -705,8 +706,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
             "INSERT INTO MyTable VALUES (1, 'A', 'Tale', 'Of', 'Two', 'Cities');"
             ],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var columns = dbModel.Tables.Single().Columns;
@@ -766,8 +767,8 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
                 Id Int32
             ) ENGINE MergeTree PRIMARY KEY (Id);
             """],
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
+            [],
+            [],
             dbModel =>
             {
                 var pk = dbModel.Tables.Single().PrimaryKey;
@@ -782,39 +783,48 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
     #region MergeTree
 
     [Fact]
-    public void MergeTree_with_partition_by_and_order_by()
+    public void MergeTree_with_all_parameters()
     {
         Test(
             [
                 """
-                CREATE TABLE tab
+                CREATE TABLE my_table
                 (
-                    d DateTime,
-                    a Int TTL d + INTERVAL 1 MONTH,
-                    b Int TTL d + INTERVAL 1 MONTH,
-                    c String
+                    id UInt64,
+                    name String,
+                    age UInt8,
+                    created_at DateTime,
+                    score Float32
                 )
                 ENGINE = MergeTree
-                PARTITION BY toYYYYMM(d)
-                ORDER BY d;
+                PARTITION BY toYYYYMM(created_at)
+                PRIMARY KEY (id, age)
+                ORDER BY (id, age, created_at)
+                SAMPLE BY id;
                 """
             ],
             [],
             [],
             dbModel =>
             {
-                var table = Assert.Single(dbModel.Tables, e => e.Name == "tab");
+                var table = Assert.Single(dbModel.Tables, e => e.Name == "my_table");
 
                 var engine = table.GetTableEngine();
-                Assert.Equal("MergeTree", engine);
+                Assert.Equal(ClickHouseAnnotationNames.MergeTreeEngine, engine);
 
                 var partitionBy = table.GetPartitionBy();
-                Assert.Equal(["toYYYYMM(d)"], partitionBy);
+                Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
+
+                var primaryKey = table.GetPrimaryKey();
+                Assert.Equal(["id", "age"], primaryKey);
 
                 var orderBy = table.GetOrderBy();
-                Assert.Equal(["d"], orderBy);
+                Assert.Equal(["id", "age", "created_at"], orderBy);
+
+                var sampleBy = table.GetSampleBy();
+                Assert.Equal(["id"], sampleBy);
             },
-            ["DROP TABLE tab;"]);
+            ["DROP TABLE my_table;"]);
     }
 
     #endregion

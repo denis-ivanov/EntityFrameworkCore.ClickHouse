@@ -30,9 +30,9 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
             Dependencies.SqlExpressionFactory.ApplyDefaultTypeMapping(
                 Dependencies.SqlExpressionFactory.Function(
                     "COUNT",
-                    new [] { sqlExpression },
+                    [sqlExpression],
                     false,
-                    new[] { false },
+                    [false],
                     typeof(long)
                 )
             ),
@@ -47,9 +47,9 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
             Dependencies.SqlExpressionFactory.ApplyDefaultTypeMapping(
                 Dependencies.SqlExpressionFactory.Function(
                     "COUNT",
-                    new [] { sqlExpression },
+                    [sqlExpression],
                     false,
-                    new[] { false },
+                    [false],
                     typeof(ulong)
                 )
             ),
@@ -64,9 +64,9 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
             Dependencies.SqlExpressionFactory.ApplyDefaultTypeMapping(
                 Dependencies.SqlExpressionFactory.Function(
                     "SUM",
-                    new [] { sqlExpression },
+                    [sqlExpression],
                     false,
-                    new[] { false },
+                    [false],
                     typeof(long)
                 )
             ),

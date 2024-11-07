@@ -1,5 +1,6 @@
 ﻿using ClickHouse.Client.ADO;
 using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Scaffolding;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
@@ -90,6 +91,7 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
             }
 
             table.SetTableEngine(reader.GetString("engine"));
+            SetTableEngineArgs(table, reader.GetString("engine_full"));
 
             result.Add(table);
         }
@@ -314,5 +316,64 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
     private static string[] ParseColumns(string columnsSql)
     {
         return string.IsNullOrWhiteSpace(columnsSql) ? null : Array.ConvertAll(columnsSql.Split(','), e => e.Trim());
+    }
+
+    private static string[] ParseEngineArgs(string engineFull)
+    {
+        if (string.IsNullOrWhiteSpace(engineFull))
+        {
+            return null;
+        }
+
+        var openBracePosition = engineFull.IndexOf('(');
+
+        if (openBracePosition < 0)
+        {
+            return null;
+        }
+
+        var closeBracePosition = engineFull.IndexOf(')', openBracePosition);
+
+        if (closeBracePosition < 0)
+        {
+            return null;
+        }
+
+        var args = engineFull.Substring(openBracePosition + 1, closeBracePosition - openBracePosition - 1);
+
+        return ParseColumns(args);
+    }
+
+    private static void SetTableEngineArgs(DatabaseTable table, string engineFull)
+    {
+        var args = ParseEngineArgs(engineFull);
+
+        if (args == null || args.Length == 0)
+        {
+            return;
+        }
+
+        var tableEngine = table.GetTableEngine();
+
+        switch (tableEngine)
+        {
+            case ClickHouseAnnotationNames.ReplacingMergeTree:
+                table.SetReplacingMergeTreeTableEngineVersion(args[0]);
+
+                if (args.Length == 2)
+                {
+                    table.SetReplacingMergeTreeTableEngineIsDeleted(args[1]);
+                }
+
+                break;
+
+            case ClickHouseAnnotationNames.SummingMergeTree:
+                table.SetSummingMergeTreeTableEngineColumn(args[0]);
+                break;
+
+            case ClickHouseAnnotationNames.CollapsingMergeTree:
+                table.SetSummingMergeTreeTableEngineColumn(args[0]);
+                break;
+        }
     }
 }
