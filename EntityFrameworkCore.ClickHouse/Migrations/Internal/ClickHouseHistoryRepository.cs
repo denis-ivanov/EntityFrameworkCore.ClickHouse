@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.IO;
@@ -71,6 +73,15 @@ public class ClickHouseHistoryRepository : HistoryRepository
             .AppendLine(")")
             .Append("BEGIN")
             .ToString();
+    }
+
+    protected override void ConfigureTable(EntityTypeBuilder<HistoryRow> history)
+    {
+        history.Property<string>(h => h.MigrationId).HasMaxLength(150);
+        history.Property<string>(h => h.ProductVersion).HasMaxLength(32).IsRequired();
+        history.ToTable("__EFMigrationsHistory", table => table
+            .HasMergeTreeEngine()
+            .WithPrimaryKey("MigrationId"));
     }
 
     public override string GetEndIfScript()
