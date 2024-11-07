@@ -1,10 +1,10 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using ClickHouse.EntityFrameworkCore.Extensions;
+﻿using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClickHouse.EntityFrameworkCore.Metadata.Builders;
 

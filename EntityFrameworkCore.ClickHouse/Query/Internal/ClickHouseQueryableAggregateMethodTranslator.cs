@@ -46,9 +46,9 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
 
                     return _sqlExpressionFactory.Function(
                         "avgOrNull",
-                        new[] { averageSqlExpression },
+                        [averageSqlExpression],
                         nullable: true,
-                        argumentsPropagateNullability: new[] { false },
+                        argumentsPropagateNullability: [false],
                         typeof(double));
 
                 case nameof(Queryable.Count)
@@ -59,9 +59,9 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     return _sqlExpressionFactory.Convert(
                         _sqlExpressionFactory.Function(
                             "COUNT",
-                            new[] { countSqlExpression },
+                            [countSqlExpression],
                             nullable: false,
-                            argumentsPropagateNullability: new[] { false },
+                            argumentsPropagateNullability: [false],
                             typeof(int)),
                         typeof(int));
 
@@ -72,9 +72,9 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     longCountSqlExpression = CombineTerms(source, longCountSqlExpression);
                     var longCountFunction = _sqlExpressionFactory.Function(
                         "COUNT",
-                        new[] { longCountSqlExpression },
+                        [longCountSqlExpression],
                         nullable: false,
-                        argumentsPropagateNullability: new[] { false },
+                        argumentsPropagateNullability: [false],
                         typeof(long));
 
                     return _sqlExpressionFactory.Convert(
@@ -89,9 +89,9 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     maxSqlExpression = CombineTerms(source, maxSqlExpression);
                     var maxFunction = _sqlExpressionFactory.Function(
                         "MAX",
-                        new[] { maxSqlExpression },
+                        [maxSqlExpression],
                         nullable: true,
-                        argumentsPropagateNullability: new[] { false },
+                        argumentsPropagateNullability: [false],
                         maxSqlExpression.Type,
                         maxSqlExpression.TypeMapping);
 
@@ -108,9 +108,9 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
 
                     var minFunction = _sqlExpressionFactory.Function(
                         "MIN",
-                        new[] { minSqlExpression },
+                        [minSqlExpression],
                         nullable: true,
-                        argumentsPropagateNullability: new[] { false },
+                        argumentsPropagateNullability: [false],
                         minSqlExpression.Type,
                         minSqlExpression.TypeMapping);
 
@@ -128,9 +128,9 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     return _sqlExpressionFactory.Convert(
                             _sqlExpressionFactory.Function(
                                 "SUM",
-                                new[] { sumSqlExpression },
+                                [sumSqlExpression],
                                 nullable: true,
-                                argumentsPropagateNullability: new[] { false },
+                                argumentsPropagateNullability: [false],
                                 sumInputType,
                                 sumSqlExpression.TypeMapping),
                             sumInputType,

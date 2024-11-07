@@ -15,6 +15,11 @@ public static class ClickHouseTableOperationExtensions
             ClickHouseAnnotationNames.MergeTreeEngine => new ClickHouseMergeTreeEngineBuilder(operation),
             ClickHouseAnnotationNames.StripeLogEngine => new ClickHouseStripeLogEngineBuilder(operation),
             ClickHouseAnnotationNames.ReplacingMergeTree => new ClickHouseReplacingMergeTreeEngineBuilder(operation),
+            ClickHouseAnnotationNames.SummingMergeTree => new ClickHouseSummingMergeTreeEngineBuilder(operation),
+            ClickHouseAnnotationNames.AggregatingMergeTree => new ClickHouseAggregatingMergeTreeEngineBuilder(operation),
+            ClickHouseAnnotationNames.CollapsingMergeTree => new ClickHouseCollapsingMergeTreeEngineBuilder(operation),
+            ClickHouseAnnotationNames.VersionedCollapsingMergeTree => new ClickHouseVersionedCollapsingMergeTreeEngineBuilder(operation),
+            ClickHouseAnnotationNames.GraphiteMergeTree => new ClickHouseGraphiteMergeTreeEngineBuilder(operation),
             _ => new ClickHouseStripeLogEngineBuilder(operation)
         };
     }

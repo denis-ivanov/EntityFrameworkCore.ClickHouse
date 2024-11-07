@@ -71,9 +71,9 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                member.Name == nameof(Array.Length)
             ? _sqlExpressionFactory.Function(
                 name: "length",
-                arguments: new[] { instance },
+                arguments: [instance],
                 nullable: true,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: returnType)
             : null;
     }
@@ -86,7 +86,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayUInt8",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(byte[]));
         }
 
@@ -96,7 +96,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayUInt16",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(ushort[]));
         }
 
@@ -106,7 +106,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayUInt32",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(uint[]));
         }
             
@@ -116,7 +116,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayUInt64",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(ulong[]));
         }
 
@@ -126,7 +126,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayInt8",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(sbyte[]));
         }
 
@@ -136,7 +136,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayInt16",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(short[]));
         }
 
@@ -146,7 +146,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayInt32",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(int[]));
         }
 
@@ -156,7 +156,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayInt64",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(long[]));
         }
 
@@ -166,7 +166,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayFloat32",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(float[]));
         }
 
@@ -176,7 +176,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayFloat64",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(double[]));
         }
 
@@ -186,7 +186,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayDateTime",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(DateTime[]));
         }
 
@@ -196,7 +196,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 name: "emptyArrayString",
                 arguments: Array.Empty<SqlExpression>(),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: typeof(string[]));
         }
 

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Collections.Generic;
 using System.Text;
 
 namespace ClickHouse.EntityFrameworkCore.Migrations;

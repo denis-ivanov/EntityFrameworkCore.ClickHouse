@@ -1,4 +1,6 @@
-﻿using ClickHouse.EntityFrameworkCore.Scaffolding.Internal;
+﻿using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.EntityFrameworkCore.Metadata;
+using ClickHouse.EntityFrameworkCore.Scaffolding.Internal;
 using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -317,7 +319,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             {
                 var table = Assert.Single(model.Tables);
                 var column = Assert.Single(table.Columns, c => c.Name == "Name");
-                Assert.Equal(TypeMappingSource.FindMapping(typeof(string)).StoreType, column.StoreType);
+                Assert.Equal(TypeMappingSource.FindMapping(typeof(string))!.StoreType, column.StoreType);
                 Assert.False(column.IsNullable);
             });
 
@@ -341,7 +343,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var column = Assert.Single(table.Columns, c => c.Name == "Name");
                 Assert.Equal(
                     TypeMappingSource
-                        .FindMapping(typeof(string), storeTypeName: null, size: -1)
+                        .FindMapping(typeof(string), storeTypeName: null, size: -1)!
                         .StoreType,
                     column.StoreType);
             });
@@ -1476,6 +1478,269 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             builder => builder.Entity("Person").HasData(new Person { Id = 2, Name = "Another John Snow" }),
             model => { });
 
+    [ConditionalFact]
+    public Task MergeTree_with_all_args() =>
+        Test(
+            builder =>
+            {
+
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<uint>("id");
+                entityTypeBuilder.Property<string>("name");
+                entityTypeBuilder.Property<byte>("age");
+                entityTypeBuilder.Property<DateTime>("created_at");
+                entityTypeBuilder.Property<float>("score");
+
+                entityTypeBuilder.ToTable(table => table
+                    .HasMergeTreeEngine()
+                    .WithPartitionBy("toYYYYMM(created_at)")
+                    .WithPrimaryKey("id", "age")
+                    .WithOrderBy("id", "age", "created_at")
+                    .WithSampleBy("id")
+                );
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.MergeTreeEngine, engine);
+
+                var partitionBy = table.GetPartitionBy();
+                Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
+
+                var primaryKey = table.GetPrimaryKey();
+                Assert.Equal(["id", "age"], primaryKey);
+
+                var orderBy = table.GetOrderBy();
+                Assert.Equal(["id", "age", "created_at"], orderBy);
+
+                var sampleBy = table.GetSampleBy();
+                Assert.Equal(["id"], sampleBy);
+            });
+
+    [ConditionalFact]
+    public Task ReplacingMergeTree_with_all_args() =>
+        Test(
+            builder =>
+            {
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<uint>("id");
+                entityTypeBuilder.Property<string>("name");
+                entityTypeBuilder.Property<byte>("age");
+                entityTypeBuilder.Property<DateTime>("created_at");
+                entityTypeBuilder.Property<uint>("ver");
+                entityTypeBuilder.Property<bool>("is_deleted");
+
+                entityTypeBuilder.ToTable(table => table
+                    .HasReplacingMergeTreeEngine("ver", "is_deleted")
+                    .WithPartitionBy("toYYYYMM(created_at)")
+                    .WithPrimaryKey("id")
+                    .WithOrderBy("id","created_at")
+                    .WithSampleBy("id")
+                );
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.ReplacingMergeTree, engine);
+
+                var version = table.GetReplacingMergeTreeVersion();
+                Assert.Equal("ver", version);
+
+                var isDeleted = table.GetReplacingMergeTreeIsDeleted();
+                Assert.Equal("is_deleted", isDeleted);
+
+                var partitionBy = table.GetPartitionBy();
+                Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
+
+                var primaryKey = table.GetPrimaryKey();
+                Assert.Equal(["id"], primaryKey);
+
+                var orderBy = table.GetOrderBy();
+                Assert.Equal(["id", "created_at"], orderBy);
+
+                var sampleBy = table.GetSampleBy();
+                Assert.Equal(["id"], sampleBy);
+            });
+
+    [ConditionalFact]
+    public Task SummingMergeTree_with_all_args() =>
+        Test(
+            builder =>
+            {
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<ulong>("id");
+                entityTypeBuilder.Property<string>("name");
+                entityTypeBuilder.Property<string>("category").IsRequired();
+                entityTypeBuilder.Property<float>("amount");
+                entityTypeBuilder.Property<DateTime>("created_at");
+
+                entityTypeBuilder.ToTable("my_table", table => table
+                    .HasSummingMergeTreeEngine("amount")
+                    .WithPartitionBy("toYYYYMM(created_at)")
+                    .WithPrimaryKey("id")
+                    .WithOrderBy("id", "category", "created_at")
+                    .WithSampleBy("id")
+                );
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.SummingMergeTree, engine);
+
+                var engineColumn = table.GetSummingMergeTreeColumn();
+                Assert.Equal("amount", engineColumn);
+
+                var partitionBy = table.GetPartitionBy();
+                Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
+
+                var primaryKey = table.GetPrimaryKey();
+                Assert.Equal(["id", "category", "created_at"], primaryKey);
+
+                var orderBy = table.GetOrderBy();
+                Assert.Equal(["id", "category", "created_at"], orderBy);
+
+                var sampleBy = table.GetSampleBy();
+                Assert.Equal(["id"], sampleBy);
+            });
+
+    [ConditionalFact]
+    public Task AggregatingMergeTree_with_all_args() =>
+        Test(
+            builder =>
+            {
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<ulong>("id");
+                entityTypeBuilder.Property<string>("name");
+                entityTypeBuilder.Property<string>("category");
+                entityTypeBuilder.Property<DateTime>("created_at");
+                entityTypeBuilder.Property<float>("amount_state").HasColumnType("AggregateFunction(sum, Float32)");
+                entityTypeBuilder.Property<float>("quantity_state").HasColumnType("AggregateFunction(sum, UInt32)");
+
+                entityTypeBuilder.ToTable("my_table", table => table
+                    .HasAggregatingMergeTreeEngine()
+                    .WithPartitionBy("toYYYYMM(created_at)")
+                    .WithOrderBy("id", "created_at")
+                    .WithSampleBy("id"));
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.AggregatingMergeTree, engine);
+
+                var partitionBy = table.GetPartitionBy();
+                Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
+
+                var orderBy = table.GetOrderBy();
+                Assert.Equal(["id", "created_at"], orderBy);
+
+                var sampleBy = table.GetSampleBy();
+                Assert.Equal(["id"], sampleBy);
+            });
+
+    [ConditionalFact]
+    public Task CollapsingMergeTree_with_all_args() =>
+        Test(
+            builder =>
+            {
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<ulong>("id");
+                entityTypeBuilder.Property<string>("name");
+                entityTypeBuilder.Property<string>("category").IsRequired();
+                entityTypeBuilder.Property<DateTime>("created_at");
+                entityTypeBuilder.Property<float>("amount");
+                entityTypeBuilder.Property<sbyte>("sign");
+
+                entityTypeBuilder.ToTable("my_table", table => table
+                    .HasCollapsingMergeTreeEngine("sign")
+                    .WithPartitionBy("toYYYYMM(created_at)")
+                    .WithOrderBy("id", "category", "created_at")
+                    .WithSampleBy("id"));
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.CollapsingMergeTree, engine);
+
+                var partitionBy = table.GetPartitionBy();
+                Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
+
+                var orderBy = table.GetOrderBy();
+                Assert.Equal(["id", "category", "created_at"], orderBy);
+
+                var samepleBy = table.GetSampleBy();
+                Assert.Equal(["id"], samepleBy);
+            });
+
+    [ConditionalFact]
+    public Task VersionedCollapsingMergeTree_with_all_args() =>
+        Test(
+            builder =>
+            {
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<ulong>("id");
+                entityTypeBuilder.Property<string>("name");
+                entityTypeBuilder.Property<string>("category").IsRequired();
+                entityTypeBuilder.Property<DateTime>("created_at");
+                entityTypeBuilder.Property<float>("amount");
+                entityTypeBuilder.Property<sbyte>("sign");
+                entityTypeBuilder.Property<uint>("version");
+
+                entityTypeBuilder.ToTable("my_table", table => table
+                    .HasVersionedCollapsingMergeTreeEngine("sign", "version")
+                    .WithPartitionBy("toYYYYMM(created_at)")
+                    .WithOrderBy("id", "category", "created_at")
+                    .WithSampleBy("id"));
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.VersionedCollapsingMergeTree, engine);
+
+                var partitionBy = table.GetPartitionBy();
+                Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
+
+                var orderBy = table.GetOrderBy();
+                Assert.Equal(["id", "category", "created_at", "version"], orderBy);
+
+                var sampleBy = table.GetSampleBy();
+                Assert.Equal(["id"], sampleBy);
+            });
 
     protected override string NonDefaultCollation { get; }
 

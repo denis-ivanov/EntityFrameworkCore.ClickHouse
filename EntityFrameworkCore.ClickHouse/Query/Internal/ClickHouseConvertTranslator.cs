@@ -36,7 +36,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toInt8",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -47,7 +47,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toInt16",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -58,7 +58,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toInt32",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -69,7 +69,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toInt64",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -80,7 +80,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toUInt8",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -91,7 +91,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toUInt16",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -102,7 +102,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toUInt32",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -113,7 +113,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toUInt64",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -124,7 +124,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toFloat32",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -135,7 +135,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toFloat64",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -146,7 +146,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toDateTime",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -157,7 +157,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toUInt8",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -168,7 +168,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toDecimal128",
                 arguments: arguments.Append(_sqlExpressionFactory.Constant(DecimalScale)),
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 
@@ -178,7 +178,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toString",
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: new[] { true },
+                argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
         }
 

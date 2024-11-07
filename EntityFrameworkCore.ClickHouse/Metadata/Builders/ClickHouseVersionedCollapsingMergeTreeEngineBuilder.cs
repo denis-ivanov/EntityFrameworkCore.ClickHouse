@@ -1,9 +1,9 @@
-﻿using System;
-using ClickHouse.EntityFrameworkCore.Extensions;
+﻿using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
 
 namespace ClickHouse.EntityFrameworkCore.Metadata.Builders;
 
