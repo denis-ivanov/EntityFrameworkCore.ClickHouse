@@ -13,13 +13,15 @@ public static class ClickHouseTableOperationExtensions
         return (string)engine?.Value switch
         {
             ClickHouseAnnotationNames.MergeTreeEngine => new ClickHouseMergeTreeEngineBuilder(operation),
-            ClickHouseAnnotationNames.StripeLogEngine => new ClickHouseStripeLogEngineBuilder(operation),
             ClickHouseAnnotationNames.ReplacingMergeTree => new ClickHouseReplacingMergeTreeEngineBuilder(operation),
             ClickHouseAnnotationNames.SummingMergeTree => new ClickHouseSummingMergeTreeEngineBuilder(operation),
             ClickHouseAnnotationNames.AggregatingMergeTree => new ClickHouseAggregatingMergeTreeEngineBuilder(operation),
             ClickHouseAnnotationNames.CollapsingMergeTree => new ClickHouseCollapsingMergeTreeEngineBuilder(operation),
             ClickHouseAnnotationNames.VersionedCollapsingMergeTree => new ClickHouseVersionedCollapsingMergeTreeEngineBuilder(operation),
             ClickHouseAnnotationNames.GraphiteMergeTree => new ClickHouseGraphiteMergeTreeEngineBuilder(operation),
+            ClickHouseAnnotationNames.TinyLogEngine => new ClickHouseTinyLogEngineBuilder(operation),
+            ClickHouseAnnotationNames.StripeLogEngine => new ClickHouseStripeLogEngineBuilder(operation),
+            ClickHouseAnnotationNames.LogEngine => new ClickHouseLogEngineBuilder(operation),
             _ => new ClickHouseStripeLogEngineBuilder(operation)
         };
     }

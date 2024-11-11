@@ -117,12 +117,32 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
+    public static ClickHouseTinyLogEngineBuilder HasTinyLogEngine([NotNull] this TableBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        var engine = new ClickHouseTinyLogEngineBuilder(builder.Metadata);
+        builder.Metadata.SetTinyLogTableEngine();
+
+        return engine;
+    }
+
     public static ClickHouseStripeLogEngineBuilder HasStripeLogEngine([NotNull] this TableBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
         var engine = new ClickHouseStripeLogEngineBuilder(builder.Metadata);
         builder.Metadata.SetStripeLogTableEngine();
+
+        return engine;
+    }
+
+    public static ClickHouseStripeLogEngineBuilder HasLogEngine([NotNull] this TableBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        var engine = new ClickHouseStripeLogEngineBuilder(builder.Metadata);
+        builder.Metadata.SetLogTableEngine();
 
         return engine;
     }

@@ -72,9 +72,21 @@ public static class ClickHouseAnnotationNames
 
     #endregion
 
+    #region TinyLog
+
+    public const string TinyLogEngine = "TinyLog";
+
+    #endregion
+
     #region StripeLog
 
     public const string StripeLogEngine = "StripeLog";
+
+    #endregion
+
+    #region Log
+
+    public const string LogEngine = "Log";
 
     #endregion
 }

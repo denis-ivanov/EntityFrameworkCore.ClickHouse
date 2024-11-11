@@ -145,6 +145,18 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(ClickHouseGraphiteMergeTreeEngineBuilder).GetRuntimeMethod(
             nameof(ClickHouseGraphiteMergeTreeEngineBuilder.WithSampleBy), [typeof(string[])]);
 
+    private static readonly MethodInfo HasTinyLogEngineMethodInfo
+        = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
+            nameof(ClickHouseEntityTypeBuilderExtensions.HasTinyLogEngine), [typeof(TableBuilder)])!;
+
+    private static readonly MethodInfo HasStripeLogEngineMethodInfo
+        = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
+            nameof(ClickHouseEntityTypeBuilderExtensions.HasStripeLogEngine), [typeof(TableBuilder)])!;
+
+    private static readonly MethodInfo HasLogEngineMethodInfo
+        = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
+            nameof(ClickHouseEntityTypeBuilderExtensions.HasLogEngine), [typeof(TableBuilder)])!;
+
     public ClickHouseAnnotationCodeGenerator(AnnotationCodeGeneratorDependencies dependencies) : base(dependencies)
     {
     }
@@ -251,6 +263,18 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
                         (GraphiteMergeTreeOrderByMethodInfo, orderBy),
                         (GraphiteMergeTreeSampleByMethodInfo, sampleBy));
 
+                    break;
+
+                case ClickHouseAnnotationNames.TinyLogEngine:
+                    engineCall = new MethodCallCodeFragment(HasTinyLogEngineMethodInfo);
+                    break;
+
+                case ClickHouseAnnotationNames.StripeLogEngine:
+                    engineCall = new MethodCallCodeFragment(HasStripeLogEngineMethodInfo);
+                    break;
+
+                case ClickHouseAnnotationNames.LogEngine:
+                    engineCall = new MethodCallCodeFragment(HasLogEngineMethodInfo);
                     break;
             }
 

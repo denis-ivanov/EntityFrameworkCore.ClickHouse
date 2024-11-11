@@ -296,6 +296,19 @@ public static class ClickHouseEntityTypeExtensions
 
     #endregion
 
+    #region TinyLog
+
+    public static IMutableAnnotatable SetTinyLogTableEngine(this IMutableEntityType table)
+    {
+        ArgumentNullException.ThrowIfNull(table);
+
+        table.SetAnnotation(ClickHouseAnnotationNames.TableEngine, ClickHouseAnnotationNames.TinyLogEngine);
+
+        return table;
+    }
+
+    #endregion
+
     #region StripeLog
 
     public static IMutableAnnotatable SetStripeLogTableEngine(this IMutableEntityType table)
@@ -303,6 +316,19 @@ public static class ClickHouseEntityTypeExtensions
         ArgumentNullException.ThrowIfNull(table);
 
         table.SetAnnotation(ClickHouseAnnotationNames.TableEngine, ClickHouseAnnotationNames.StripeLogEngine);
+
+        return table;
+    }
+
+    #endregion
+
+    #region Log
+
+    public static IMutableAnnotatable SetLogTableEngine(this IMutableEntityType table)
+    {
+        ArgumentNullException.ThrowIfNull(table);
+
+        table.SetAnnotation(ClickHouseAnnotationNames.TableEngine, ClickHouseAnnotationNames.LogEngine);
 
         return table;
     }

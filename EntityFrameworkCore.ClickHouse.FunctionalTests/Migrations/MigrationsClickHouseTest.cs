@@ -1742,6 +1742,69 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(["id"], sampleBy);
             });
 
+    [ConditionalFact]
+    public Task TinyLog_no_args() =>
+        Test(
+            _ =>
+            {
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<ulong>("id");
+                entityTypeBuilder.ToTable("my_table", table => table.HasTinyLogEngine());
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.TinyLogEngine, engine);
+            });
+
+    [ConditionalFact]
+    public Task StripeLog_no_args() =>
+        Test(
+            _ =>
+            {
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<ulong>("id");
+                entityTypeBuilder.ToTable("my_table", table => table.HasStripeLogEngine());
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.StripeLogEngine, engine);
+            });
+
+    [ConditionalFact]
+    public Task Log_no_args() =>
+        Test(
+            _ =>
+            {
+            },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("my_table");
+                entityTypeBuilder.Property<ulong>("id");
+                entityTypeBuilder.ToTable("my_table", table => table.HasLogEngine());
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("my_table", table.Name);
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.LogEngine, engine);
+            });
+
     protected override string NonDefaultCollation { get; }
 
     public class MigrationsClickHouseFixture : MigrationsFixtureBase
