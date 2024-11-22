@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests;
@@ -16,9 +17,9 @@ public class ValueConvertersEndToEndClickHouseTest
     }
 
     [ConditionalTheory(Skip = "TBD")]
-    public override void Can_insert_and_read_back_with_conversions(int[] valueOrder)
+    public override Task Can_insert_and_read_back_with_conversions(int[] valueOrder)
     {
-        base.Can_insert_and_read_back_with_conversions(valueOrder);
+        return base.Can_insert_and_read_back_with_conversions(valueOrder);
     }
     
     [ConditionalTheory]

@@ -54,27 +54,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Average_over_max_subquery_is_client_eval(bool async)
-    {
-        return base.Average_over_max_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Average_over_nested_subquery_is_client_eval(bool async)
-    {
-        return base.Average_over_nested_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Average_over_subquery_is_client_eval(bool async)
-    {
-        return base.Average_over_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Cast_before_aggregate_is_preserved(bool async)
     {
         return base.Cast_before_aggregate_is_preserved(async);
@@ -201,27 +180,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Max_over_nested_subquery_is_client_eval(bool async)
-    {
-        return base.Max_over_nested_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Max_over_subquery_is_client_eval(bool async)
-    {
-        return base.Max_over_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Max_over_sum_subquery_is_client_eval(bool async)
-    {
-        return base.Max_over_sum_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Min_no_data_cast_to_nullable(bool async)
     {
         return base.Min_no_data_cast_to_nullable(async);
@@ -239,27 +197,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     public override Task Min_no_data_subquery(bool async)
     {
         return base.Min_no_data_subquery(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Min_over_max_subquery_is_client_eval(bool async)
-    {
-        return base.Min_over_max_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Min_over_nested_subquery_is_client_eval(bool async)
-    {
-        return base.Min_over_nested_subquery_is_client_eval(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Min_over_subquery_is_client_eval(bool async)
-    {
-        return base.Min_over_subquery_is_client_eval(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
@@ -306,22 +243,106 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_over_min_subquery_is_client_eval(bool async)
+    public override Task Average_over_max_subquery(bool async)
     {
-        return base.Sum_over_min_subquery_is_client_eval(async);
+        return base.Average_over_max_subquery(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_over_nested_subquery_is_client_eval(bool async)
+    public override Task Average_over_nested_subquery(bool async)
     {
-        return base.Sum_over_nested_subquery_is_client_eval(async);
+        return base.Average_over_nested_subquery(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Sum_over_subquery_is_client_eval(bool async)
+    public override Task Average_over_subquery(bool async)
     {
-        return base.Sum_over_subquery_is_client_eval(async);
+        return base.Average_over_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Max_over_nested_subquery(bool async)
+    {
+        return base.Max_over_nested_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Max_over_subquery(bool async)
+    {
+        return base.Max_over_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Max_over_sum_subquery(bool async)
+    {
+        return base.Max_over_sum_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Min_over_max_subquery(bool async)
+    {
+        return base.Min_over_max_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Min_over_nested_subquery(bool async)
+    {
+        return base.Min_over_nested_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Min_over_subquery(bool async)
+    {
+        return base.Min_over_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Sum_over_Any_subquery(bool async)
+    {
+        return base.Sum_over_Any_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Sum_over_min_subquery(bool async)
+    {
+        return base.Sum_over_min_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Sum_over_nested_subquery(bool async)
+    {
+        return base.Sum_over_nested_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Sum_over_scalar_returning_subquery(bool async)
+    {
+        return base.Sum_over_scalar_returning_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Sum_over_subquery(bool async)
+    {
+        return base.Sum_over_subquery(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Type_casting_inside_sum(bool async)
+    {
+        return base.Type_casting_inside_sum(async);
     }
 }

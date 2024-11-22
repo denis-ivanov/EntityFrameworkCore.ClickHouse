@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClickHouse.EntityFrameworkCore.Migrations.Internal;
 
@@ -75,6 +77,16 @@ public class ClickHouseHistoryRepository : HistoryRepository
             .ToString();
     }
 
+    public override IMigrationsDatabaseLock AcquireDatabaseLock()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task<IMigrationsDatabaseLock> AcquireDatabaseLockAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
     protected override void ConfigureTable(EntityTypeBuilder<HistoryRow> history)
     {
         history.Property<string>(h => h.MigrationId).HasMaxLength(150);
@@ -89,6 +101,8 @@ public class ClickHouseHistoryRepository : HistoryRepository
             .Append("END")
             .AppendLine(SqlGenerationHelper.StatementTerminator)
             .ToString();
+
+    public override LockReleaseBehavior LockReleaseBehavior { get; }
 
     protected override string ExistsSql
         => "EXISTS " +

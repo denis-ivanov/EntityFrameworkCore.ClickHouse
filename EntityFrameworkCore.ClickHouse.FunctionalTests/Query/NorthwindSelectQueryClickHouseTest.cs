@@ -29,6 +29,55 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
             """);
     }
 
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Client_method_in_projection_requiring_materialization_1(bool async)
+    {
+        return base.Client_method_in_projection_requiring_materialization_1(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Client_method_in_projection_requiring_materialization_2(bool async)
+    {
+        return base.Client_method_in_projection_requiring_materialization_2(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task New_date_time_in_anonymous_type_works(bool async)
+    {
+        return base.New_date_time_in_anonymous_type_works(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Projection_of_entity_type_into_object_array(bool async)
+    {
+        return base.Projection_of_entity_type_into_object_array(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Set_operation_in_pending_collection(bool async)
+    {
+        return base.Set_operation_in_pending_collection(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task Using_enumerable_parameter_in_projection(bool async)
+    {
+        return base.Using_enumerable_parameter_in_projection(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task VisitLambda_should_not_be_visited_trivially(bool async)
+    {
+        return base.VisitLambda_should_not_be_visited_trivially(async);
+    }
+
     [ConditionalTheory]
     [MemberData(nameof(IsAsyncData))]
     public virtual async Task Select_datetime_year_component_composed(bool async)

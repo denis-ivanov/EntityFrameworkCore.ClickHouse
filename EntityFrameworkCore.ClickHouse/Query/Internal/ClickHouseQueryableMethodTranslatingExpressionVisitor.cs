@@ -10,7 +10,7 @@ public class ClickHouseQueryableMethodTranslatingExpressionVisitor
 {
     private readonly RelationalSqlTranslatingExpressionVisitor _sqlTranslator;
 
-    public ClickHouseQueryableMethodTranslatingExpressionVisitor(QueryableMethodTranslatingExpressionVisitorDependencies dependencies, RelationalQueryableMethodTranslatingExpressionVisitorDependencies relationalDependencies, QueryCompilationContext queryCompilationContext) : base(dependencies, relationalDependencies, queryCompilationContext)
+    public ClickHouseQueryableMethodTranslatingExpressionVisitor(QueryableMethodTranslatingExpressionVisitorDependencies dependencies, RelationalQueryableMethodTranslatingExpressionVisitorDependencies relationalDependencies, RelationalQueryCompilationContext queryCompilationContext) : base(dependencies, relationalDependencies, queryCompilationContext)
     {
         _sqlTranslator =
             relationalDependencies.RelationalSqlTranslatingExpressionVisitorFactory.Create(queryCompilationContext,
