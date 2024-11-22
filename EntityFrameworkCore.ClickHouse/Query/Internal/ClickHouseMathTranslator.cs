@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Internal;
@@ -62,32 +63,6 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
         { typeof(Math).GetRuntimeMethod(nameof(Math.Floor), [typeof(decimal)])!, "floor" },
         { typeof(Math).GetRuntimeMethod(nameof(Math.Floor), [typeof(double)])!, "floor" },
         { typeof(MathF).GetRuntimeMethod(nameof(MathF.Floor), [typeof(float)])!, "floor" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(byte), typeof(byte)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(decimal), typeof(decimal)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(double), typeof(double)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(float), typeof(float)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(int), typeof(int)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(long), typeof(long)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(nint), typeof(nint)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(nuint), typeof(nuint)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(sbyte), typeof(sbyte)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(short), typeof(short)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(uint), typeof(uint)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(ulong), typeof(ulong)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Max), [typeof(ushort), typeof(ushort)])!, "greatest" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(byte), typeof(byte)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(decimal), typeof(decimal)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(double), typeof(double)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(float), typeof(float)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(int), typeof(int)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(long), typeof(long)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(nint), typeof(nint)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(nuint), typeof(nuint)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(sbyte), typeof(sbyte)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(short), typeof(short)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(uint), typeof(uint)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(ulong), typeof(ulong)])!, "least" },
-        { typeof(Math).GetRuntimeMethod(nameof(Math.Min), [typeof(ushort), typeof(ushort)])!, "least" },
         { typeof(Math).GetRuntimeMethod(nameof(Math.Sign), [typeof(decimal)])!, "sign" },
         { typeof(Math).GetRuntimeMethod(nameof(Math.Sign), [typeof(double)])!, "sign" },
         { typeof(Math).GetRuntimeMethod(nameof(Math.Sign), [typeof(float)])!, "sign" },
@@ -117,7 +92,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
                 name: functionName,
                 arguments: arguments,
                 nullable: false,
-                argumentsPropagateNullability: [true],
+                argumentsPropagateNullability: Enumerable.Repeat(true, arguments.Count),
                 returnType: method.ReturnType);
         }
 

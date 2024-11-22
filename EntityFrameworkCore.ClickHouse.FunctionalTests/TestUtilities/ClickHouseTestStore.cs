@@ -1,23 +1,18 @@
 using ClickHouse.Client.ADO;
 using ClickHouse.Client.Utility;
 using ClickHouse.EntityFrameworkCore.Extensions;
-using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 
 public class ClickHouseTestStore : RelationalTestStore
 {
-    public ClickHouseTestStore(string name, bool shared) : base(name, shared)
+    public ClickHouseTestStore(string name, bool shared) : base(name, shared, CreateConnection(name, shared))
     {
-        ConnectionString = CreateConnectionString(name);
-        var clickHouseDbConnection = new ClickHouseDbConnection(ConnectionString);
-        clickHouseDbConnection.CustomSettings.Add("allow_create_index_without_type", "1");
-
-        Connection = clickHouseDbConnection;
     }
 
     public override DbContextOptionsBuilder AddProviderOptions(DbContextOptionsBuilder builder)
@@ -26,15 +21,16 @@ public class ClickHouseTestStore : RelationalTestStore
         return builder.UseClickHouse(Connection);
     }
 
-    public override void Clean(DbContext context)
-    {
-        context.Database.EnsureClean();
-    }
-
     public int ExecuteNonQuery(string sql, params object[] parameters)
     {
         using var command = CreateCommand(sql, parameters);
         return command.ExecuteNonQuery();
+    }
+
+    public override Task CleanAsync(DbContext context)
+    {
+        context.Database.EnsureClean();
+        return Task.CompletedTask;
     }
 
     public static ClickHouseTestStore GetExisting(string name)
@@ -43,12 +39,16 @@ public class ClickHouseTestStore : RelationalTestStore
     public static ClickHouseTestStore Create(string name)
         => new(name, shared: false);
 
-    private static string CreateConnectionString(string dbName)
+    private static ClickHouseConnection CreateConnection(string name, bool sharedCache)
     {
-        return new ClickHouseConnectionStringBuilder(TestEnvironment.DefaultConnection)
+        var connectionString = new ClickHouseConnectionStringBuilder(TestEnvironment.DefaultConnection)
         {
-            Database = dbName
-        }.ConnectionString;
+            Database = name
+        }.ToString();
+
+        var connection = new ClickHouseConnection(connectionString);
+        connection.CustomSettings.Add("allow_create_index_without_type", "1");
+        return connection;
     }
 
     private DbCommand CreateCommand(string commandText, object[] parameters)

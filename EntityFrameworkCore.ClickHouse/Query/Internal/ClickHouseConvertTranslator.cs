@@ -168,7 +168,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
                 name: "toDecimal128",
                 arguments: arguments.Append(_sqlExpressionFactory.Constant(DecimalScale)),
                 nullable: false,
-                argumentsPropagateNullability: [true],
+                argumentsPropagateNullability: [true, false],
                 returnType: method.ReturnType);
         }
 

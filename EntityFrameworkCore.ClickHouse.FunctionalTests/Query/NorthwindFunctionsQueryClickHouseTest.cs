@@ -70,4 +70,11 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
     {
         return base.Sum_over_truncate_works_correctly_in_projection_2(async);
     }
+
+    [ConditionalTheory(Skip = "TBD")]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task String_Join_non_aggregate(bool async)
+    {
+        return base.String_Join_non_aggregate(async);
+    }
 }

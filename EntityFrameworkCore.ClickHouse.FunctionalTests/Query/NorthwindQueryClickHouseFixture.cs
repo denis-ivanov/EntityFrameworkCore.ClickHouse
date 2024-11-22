@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.TestUtilities;
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 
 public class NorthwindQueryClickHouseFixture<TModelCustomizer> : NorthwindQueryRelationalFixture<TModelCustomizer>
-    where TModelCustomizer : IModelCustomizer, new()
+    where TModelCustomizer : ITestModelCustomizer, new()
 {
     protected override ITestStoreFactory TestStoreFactory
         => ClickHouseNorthwindTestStoreFactory.Instance;

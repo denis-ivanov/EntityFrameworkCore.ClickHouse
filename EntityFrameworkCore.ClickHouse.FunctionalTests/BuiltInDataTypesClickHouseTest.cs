@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests;
@@ -18,7 +19,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     }
 
     [ConditionalFact]
-    public override void Can_insert_and_read_back_all_non_nullable_data_types()
+    public override Task Can_insert_and_read_back_all_non_nullable_data_types()
     {
         using (var context = CreateContext())
         {
@@ -86,10 +87,12 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             Assert.Equal(EnumU16.SomeValue, dt.EnumU16);
             Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
         }
+
+        return Task.CompletedTask;
     }
 
     [ConditionalFact]
-    public override void Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_non_null()
+    public override Task Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_non_null()
     {
         using (var context = CreateContext())
         {
@@ -159,10 +162,12 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             Assert.Equal(EnumU16.SomeValue, dt.EnumU16);
             Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
         }
+
+        return Task.CompletedTask;
     }
 
     [ConditionalFact]
-    public override void Can_insert_and_read_back_non_nullable_backed_data_types()
+    public override Task Can_insert_and_read_back_non_nullable_backed_data_types()
     {
         using (var context = CreateContext())
         {
@@ -230,10 +235,12 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             Assert.Equal(EnumU16.SomeValue, dt.EnumU16);
             Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
         }
+
+        return Task.CompletedTask;
     }
 
     [ConditionalFact]
-    public override void Can_insert_and_read_back_nullable_backed_data_types()
+    public override Task Can_insert_and_read_back_nullable_backed_data_types()
     {
         using (var context = CreateContext())
         {
@@ -300,10 +307,12 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             Assert.Equal(EnumU16.SomeValue, dt.EnumU16);
             Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
         }
+
+        return Task.CompletedTask;
     }
 
     [ConditionalFact]
-    public override void Can_insert_and_read_back_object_backed_data_types()
+    public override Task Can_insert_and_read_back_object_backed_data_types()
     {
         using (var context = CreateContext())
         {
@@ -374,40 +383,54 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             Assert.Equal(EnumU16.SomeValue, dt.EnumU16);
             Assert.Equal(EnumS8.SomeValue, dt.EnumS8);
         }
+
+        return Task.CompletedTask;
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override void Object_to_string_conversion()
+    public override Task Can_insert_and_read_with_max_length_set()
     {
-        base.Object_to_string_conversion();
+        return base.Can_insert_and_read_with_max_length_set();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Can_perform_query_with_max_length()
+    {
+        return base.Can_perform_query_with_max_length();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Object_to_string_conversion()
+    {
+        return base.Object_to_string_conversion();
     }
 
     [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
-    public override void Can_insert_and_read_back_with_null_binary_foreign_key()
+    public override Task Can_insert_and_read_back_with_null_binary_foreign_key()
     {
-        base.Can_insert_and_read_back_with_null_binary_foreign_key();
+        return base.Can_insert_and_read_back_with_null_binary_foreign_key();
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override void Can_query_using_any_data_type()
+    public override Task Can_query_using_any_data_type()
     {
-        base.Can_query_using_any_data_type();
+        return base.Can_query_using_any_data_type();
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override void Can_query_using_any_data_type_nullable_shadow()
+    public override Task Can_query_using_any_data_type_nullable_shadow()
     {
-        base.Can_query_using_any_data_type_nullable_shadow();
+        return base.Can_query_using_any_data_type_nullable_shadow();
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override void Can_query_using_any_nullable_data_type()
+    public override Task Can_query_using_any_nullable_data_type()
     {
-        base.Can_query_using_any_nullable_data_type();
+        return base.Can_query_using_any_nullable_data_type();
     }
 
     [ConditionalFact]
-    public override void Can_query_using_any_data_type_shadow()
+    public override Task Can_query_using_any_data_type_shadow()
     {
         using var context = CreateContext();
         var source = AddTestBuiltInDataTypes(context.Set<BuiltInDataTypesShadow>());
@@ -415,16 +438,18 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         Assert.Equal(1, context.SaveChanges());
 
         QueryBuiltInDataTypesTest(source);
+
+        return Task.CompletedTask;
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override void Can_query_using_any_nullable_data_type_as_literal()
+    public override Task Can_query_using_any_nullable_data_type_as_literal()
     {
-        base.Can_query_using_any_nullable_data_type_as_literal();
+        return base.Can_query_using_any_nullable_data_type_as_literal();
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override void Optional_datetime_reading_null_from_database()
+    public override Task Optional_datetime_reading_null_from_database()
     {
         base.Optional_datetime_reading_null_from_database();
 
@@ -439,24 +464,26 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         {
             Assert.Equal(expected[i].DT, actual[i].DT);
         }
+
+        return Task.CompletedTask;
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override void Can_read_back_mapped_enum_from_collection_first_or_default()
+    public override Task Can_read_back_mapped_enum_from_collection_first_or_default()
     {
-        base.Can_read_back_mapped_enum_from_collection_first_or_default();
+        return base.Can_read_back_mapped_enum_from_collection_first_or_default();
     }
 
     [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
-    public override void Can_insert_and_read_back_with_null_string_foreign_key()
+    public override Task Can_insert_and_read_back_with_null_string_foreign_key()
     {
-        base.Can_insert_and_read_back_with_null_string_foreign_key();
+        return base.Can_insert_and_read_back_with_null_string_foreign_key();
     }
 
     [Fact(Skip = "TBD")]
-    public override void Can_query_with_null_parameters_using_any_nullable_data_type()
+    public override Task Can_query_with_null_parameters_using_any_nullable_data_type()
     {
-        base.Can_query_with_null_parameters_using_any_nullable_data_type();
+        return base.Can_query_with_null_parameters_using_any_nullable_data_type();
     }
 
     private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)

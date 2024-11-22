@@ -19,6 +19,6 @@ public class ClickHouseQueryableMethodTranslatingExpressionVisitorFactory :
         return new ClickHouseQueryableMethodTranslatingExpressionVisitor(
             _dependencies,
             _relationalDependencies,
-            queryCompilationContext);
+            (RelationalQueryCompilationContext)queryCompilationContext);
     }
 }

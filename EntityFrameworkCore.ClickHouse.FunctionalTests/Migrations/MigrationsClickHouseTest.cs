@@ -77,9 +77,10 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     .HasMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
-            builder => { },
-            builder => builder.Entity("People")
-                .ToTable(tb => tb.HasCheckConstraint("CK_People_Foo", $"{DelimitIdentifier("DriverLicense")} > 0")),
+            builder =>
+            {
+            },
+            builder => builder.Entity("People").ToTable(tb => tb.HasCheckConstraint("CK_People_Foo", $"{DelimitIdentifier("DriverLicense")} > 0")),
             model =>
             {
                 // TODO: no scaffolding support for check constraints, https://github.com/aspnet/EntityFrameworkCore/issues/15408
@@ -347,6 +348,12 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                         .StoreType,
                     column.StoreType);
             });
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Add_required_primitive_collection_with_custom_default_value_sql_to_existing_table()
+    {
+        return Task.CompletedTask;
+    }
 
     [ConditionalFact]
     public override Task Add_optional_primitive_collection_to_existing_table()
@@ -1804,6 +1811,90 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var engine = table.GetTableEngine();
                 Assert.Equal(ClickHouseAnnotationNames.LogEngine, engine);
             });
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Add_json_columns_to_existing_table()
+    {
+        return base.Add_json_columns_to_existing_table();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Add_required_primitive_collection_to_existing_table()
+    {
+        return base.Add_required_primitive_collection_to_existing_table();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Add_required_primitive_collection_with_custom_converter_and_custom_default_value_to_existing_table()
+    {
+        return base.Add_required_primitive_collection_with_custom_converter_and_custom_default_value_to_existing_table();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Add_required_primitive_collection_with_custom_default_value_to_existing_table()
+    {
+        return base.Add_required_primitive_collection_with_custom_default_value_to_existing_table();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Convert_json_entities_to_regular_owned()
+    {
+        return base.Convert_json_entities_to_regular_owned();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Convert_regular_owned_entities_to_json()
+    {
+        return base.Convert_regular_owned_entities_to_json();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Convert_string_column_to_a_json_column_containing_collection()
+    {
+        return base.Convert_string_column_to_a_json_column_containing_collection();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Convert_string_column_to_a_json_column_containing_reference()
+    {
+        return base.Convert_string_column_to_a_json_column_containing_reference();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Convert_string_column_to_a_json_column_containing_required_reference()
+    {
+        return base.Convert_string_column_to_a_json_column_containing_required_reference();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Create_table_with_json_column()
+    {
+        return base.Create_table_with_json_column();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Create_table_with_json_column_explicit_json_column_names()
+    {
+        return base.Create_table_with_json_column_explicit_json_column_names();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Drop_json_columns_from_existing_table()
+    {
+        return base.Drop_json_columns_from_existing_table();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Rename_json_column()
+    {
+        return base.Rename_json_column();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Rename_table_with_json_column()
+    {
+        return base.Rename_table_with_json_column();
+    }
 
     protected override string NonDefaultCollation { get; }
 

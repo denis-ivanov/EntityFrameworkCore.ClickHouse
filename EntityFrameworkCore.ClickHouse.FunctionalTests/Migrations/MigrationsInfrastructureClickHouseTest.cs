@@ -1,6 +1,7 @@
 ﻿using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.TestUtilities;
+using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Migrations;
 
@@ -33,6 +34,11 @@ internal class MigrationsInfrastructureClickHouseTest : MigrationsInfrastructure
     }
 
     public override void Can_diff_against_2_1_ASP_NET_Identity_model()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    protected override Task ExecuteSqlAsync(string value)
     {
         throw new System.NotImplementedException();
     }
