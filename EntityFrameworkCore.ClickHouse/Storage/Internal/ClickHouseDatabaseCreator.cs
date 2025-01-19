@@ -1,4 +1,6 @@
-﻿using ClickHouse.Client;
+﻿using System;
+
+using ClickHouse.Client;
 using ClickHouse.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -8,6 +10,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using ClickHouse.Client.ADO;
+using ClickHouse.Client.ADO.Parameters;
+
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
 
 public class ClickHouseDatabaseCreator : RelationalDatabaseCreator
@@ -15,16 +20,18 @@ public class ClickHouseDatabaseCreator : RelationalDatabaseCreator
     private const int DatabaseDoesNotExist = 81;
 
     private readonly IClickHouseRelationalConnection _connection;
-
     private readonly IRawSqlCommandBuilder _rawSqlCommandBuilder;
+    private readonly ISqlGenerationHelper _sql;
 
     public ClickHouseDatabaseCreator(
         RelationalDatabaseCreatorDependencies dependencies,
         IClickHouseRelationalConnection connection,
-        IRawSqlCommandBuilder rawSqlCommandBuilder) : base(dependencies)
+        IRawSqlCommandBuilder rawSqlCommandBuilder,
+        ISqlGenerationHelper sql) : base(dependencies)
     {
         _connection = connection;
         _rawSqlCommandBuilder = rawSqlCommandBuilder;
+        _sql = sql;
     }
 
     public override bool Exists()
@@ -32,7 +39,12 @@ public class ClickHouseDatabaseCreator : RelationalDatabaseCreator
         try
         {
             _connection.Open();
-            return true;
+
+            var databaseName = new ClickHouseConnectionStringBuilder(_connection.ConnectionString).Database;
+            var command = _connection.DbConnection.CreateCommand();
+            command.CommandText = "EXISTS DATABASE " + _sql.DelimitIdentifier(databaseName);
+
+            return Convert.ToBoolean(command.ExecuteScalar());
         }
         catch (ClickHouseServerException e)
         {
