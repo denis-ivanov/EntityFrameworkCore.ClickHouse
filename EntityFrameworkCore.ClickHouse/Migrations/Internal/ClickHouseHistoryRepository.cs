@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,27 +20,8 @@ public class ClickHouseHistoryRepository : HistoryRepository
 
     public override string GetCreateIfNotExistsScript()
     {
-        var builder = new StringBuilder();
-        var isFirstLine = true;
-
-        using (var reader = new StringReader(GetCreateScript()))
-        {
-            while (reader.ReadLine() is { } line)
-            {
-                if (!isFirstLine)
-                {
-                    builder.AppendLine();
-                }
-                isFirstLine = false;
-
-                if (!string.IsNullOrWhiteSpace(line))
-                {
-                    builder.Append("    ").Append(line);
-                }
-            }
-        }
-
-        return builder.ToString();
+        var script = GetCreateScript();
+        return script.Insert(script.IndexOf("CREATE TABLE", StringComparison.Ordinal) + 12, " IF NOT EXISTS");
     }
 
     public override string GetBeginIfNotExistsScript(string migrationId)
@@ -79,12 +59,12 @@ public class ClickHouseHistoryRepository : HistoryRepository
 
     public override IMigrationsDatabaseLock AcquireDatabaseLock()
     {
-        throw new NotImplementedException();
+        return new ClickHouseMigrationDatabaseLock(this);
     }
 
-    public override Task<IMigrationsDatabaseLock> AcquireDatabaseLockAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override Task<IMigrationsDatabaseLock> AcquireDatabaseLockAsync(CancellationToken cancellationToken = new())
     {
-        throw new NotImplementedException();
+        return Task.FromResult<IMigrationsDatabaseLock>(new ClickHouseMigrationDatabaseLock(this));
     }
 
     protected override void ConfigureTable(EntityTypeBuilder<HistoryRow> history)
@@ -102,7 +82,7 @@ public class ClickHouseHistoryRepository : HistoryRepository
             .AppendLine(SqlGenerationHelper.StatementTerminator)
             .ToString();
 
-    public override LockReleaseBehavior LockReleaseBehavior { get; }
+    public override LockReleaseBehavior LockReleaseBehavior => LockReleaseBehavior.Connection;
 
     protected override string ExistsSql
         => "EXISTS " +
