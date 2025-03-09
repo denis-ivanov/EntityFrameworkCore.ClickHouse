@@ -16,6 +16,11 @@ jobs:
         image: 'clickhouse/clickhouse-server'
         ports:
           - 8123:8123
+        env:
+          CLICKHOUSE_DB: default
+          CLICKHOUSE_USER: integration-test
+          CLICKHOUSE_PASSWORD: secret-password
+          CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: '1'
 
     steps:
     - uses: actions/checkout@v4
