@@ -19,6 +19,7 @@ jobs:
         env:
           CLICKHOUSE_USER: default
           CLICKHOUSE_PASSWORD: default
+          CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: '1'
 
     steps:
     - uses: actions/checkout@v4
