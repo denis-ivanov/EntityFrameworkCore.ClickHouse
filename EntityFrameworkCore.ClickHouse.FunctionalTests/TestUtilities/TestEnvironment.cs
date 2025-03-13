@@ -9,7 +9,7 @@ public static class TestEnvironment
     {
         var configBuilder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true)
+            .AddJsonFile("appsettings.json", optional: false)
             .AddEnvironmentVariables();
 
         Configuration = configBuilder.Build().GetSection("Test:ClickHouse");

@@ -18,8 +18,8 @@ jobs:
           - 8123:8123
         env:
           CLICKHOUSE_DB: default
-          CLICKHOUSE_USER: integration-test
-          CLICKHOUSE_PASSWORD: secret-password
+          CLICKHOUSE_USER: default
+          CLICKHOUSE_PASSWORD: changeme
           CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: '1'
 
     steps:
