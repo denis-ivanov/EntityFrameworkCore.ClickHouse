@@ -1,35 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 
 namespace ClickHouse.EntityFrameworkCore.Extensions;
 
 internal static class StringBuilderExtensions
 {
-    public static StringBuilder AppendJoin<T>(
-        this StringBuilder stringBuilder,
-        IEnumerable<T> values,
-        Action<StringBuilder, T> joinAction,
-        string separator = ", ")
-    {
-        var appended = false;
-
-        foreach (var value in values)
-        {
-            joinAction(stringBuilder, value);
-            stringBuilder.Append(separator);
-            appended = true;
-        }
-
-        if (appended)
-        {
-            stringBuilder.Length -= separator.Length;
-        }
-
-        return stringBuilder;
-    }
-
     public static StringBuilder AppendJoin<T, TParam>(
         this StringBuilder stringBuilder,
         IEnumerable<T> values,
@@ -52,48 +28,5 @@ internal static class StringBuilderExtensions
         }
 
         return stringBuilder;
-    }
-
-    public static StringBuilder AppendJoin<T, TParam1, TParam2>(
-        this StringBuilder stringBuilder,
-        IEnumerable<T> values,
-        TParam1 param1,
-        TParam2 param2,
-        Action<StringBuilder, T, TParam1, TParam2> joinAction,
-        string separator = ", ")
-    {
-        var appended = false;
-
-        foreach (var value in values)
-        {
-            joinAction(stringBuilder, value, param1, param2);
-            stringBuilder.Append(separator);
-            appended = true;
-        }
-
-        if (appended)
-        {
-            stringBuilder.Length -= separator.Length;
-        }
-
-        return stringBuilder;
-    }
-
-    public static void AppendBytes(this StringBuilder builder, byte[] bytes)
-    {
-        builder.Append("'0x");
-
-        for (var i = 0; i < bytes.Length; i++)
-        {
-            if (i > 31)
-            {
-                builder.Append("...");
-                break;
-            }
-
-            builder.Append(bytes[i].ToString("X2", CultureInfo.InvariantCulture));
-        }
-
-        builder.Append('\'');
     }
 }

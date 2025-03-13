@@ -52,7 +52,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         builder
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
             .Append(" ")
-            .Append(operation.IsNullable && !operation.ClrType.IsArray ? $" Nullable({columnType})" : columnType);
+            .Append(operation.IsNullable && !operation.ClrType.IsArray ? $" {columnType.GetNullableType()}" : columnType);
 
         var defaultValue = operation.DefaultValueSql;
 

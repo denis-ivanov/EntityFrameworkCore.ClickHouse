@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
 
@@ -24,6 +25,7 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     private static readonly RelationalTypeMapping Float64TypeMapping = new ClickHouseFloat64TypeMapping();
     private static readonly RelationalTypeMapping Float32TypeMapping = new ClickHouseFloat32TypeMapping();
     private static readonly RelationalTypeMapping UuidTypeMapping = new ClickHouseUuidTypeMapping();
+    private static readonly RelationalTypeMapping JsonTypeMapping = new ClickHouseJsonTypeMapping();
 
     private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new()
     {
@@ -42,7 +44,8 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         { typeof(DateOnly), DateTypeMapping },
         { typeof(double), Float64TypeMapping },
         { typeof(float), Float32TypeMapping },
-        { typeof(Guid), UuidTypeMapping }
+        { typeof(Guid), UuidTypeMapping },
+        { typeof(JsonElement), JsonTypeMapping }
     };
 
     private static readonly Dictionary<string, RelationalTypeMapping> AliasTypeMapping = new(StringComparer.InvariantCultureIgnoreCase)
@@ -124,7 +127,8 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         ["Date"] = DateTypeMapping,
         ["Date32"] = DateTypeMapping,
         ["DateTime"] = DateTimeTypeMapping,
-        ["DateTime64"] = DateTimeTypeMapping
+        ["DateTime64"] = DateTimeTypeMapping,
+        ["Json"] = JsonTypeMapping
     };
 
     public ClickHouseTypeMappingSource(TypeMappingSourceDependencies dependencies, RelationalTypeMappingSourceDependencies relationalDependencies)

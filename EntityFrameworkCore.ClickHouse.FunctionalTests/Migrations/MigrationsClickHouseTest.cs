@@ -1812,10 +1812,94 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(ClickHouseAnnotationNames.LogEngine, engine);
             });
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Add_json_columns_to_existing_table()
+    [ConditionalFact]
+    public override async Task Add_json_columns_to_existing_table()
     {
-        return base.Add_json_columns_to_existing_table();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+                entityTypeBuilder.Property<int>("Id");
+                entityTypeBuilder.Property<string>("Name");
+                entityTypeBuilder.ToTable("Entity", table => table.HasMergeTreeEngine().WithPrimaryKey("Id"));
+            },
+            builder =>
+            {
+                builder.Entity(
+                    "Entity", e =>
+                    {
+                        e.Property<int>("Id").ValueGeneratedOnAdd();
+                        e.HasKey("Id");
+                        e.Property<string>("Name");
+
+                        e.OwnsOne(
+                            "Owned", "OwnedReference", o =>
+                            {
+                                o.OwnsOne(
+                                    "Nested", "NestedReference", n =>
+                                    {
+                                        n.Property<int>("Number");
+                                    });
+                                o.OwnsMany(
+                                    "Nested2", "NestedCollection", n =>
+                                    {
+                                        n.Property<int>("Number2");
+                                    });
+                                o.Property<DateTime>("Date");
+                                o.ToJson();
+                            });
+
+                        e.OwnsOne(
+                            "Owned", "OwnedRequiredReference", o =>
+                            {
+                                o.Property<DateTime>("Date");
+                                o.ToJson();
+                            });
+
+                        e.Navigation("OwnedRequiredReference").IsRequired();
+
+                        e.OwnsMany(
+                            "Owned2", "OwnedCollection", o =>
+                            {
+                                o.OwnsOne(
+                                    "Nested3", "NestedReference2", n =>
+                                    {
+                                        n.Property<int>("Number3");
+                                    });
+                                o.OwnsMany(
+                                    "Nested4", "NestedCollection2", n =>
+                                    {
+                                        n.Property<int>("Number4");
+                                    });
+                                o.Property<DateTime>("Date2");
+                                o.ToJson();
+                            });
+                    });
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("Entity", table.Name);
+
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name),
+                    c => Assert.Equal("OwnedCollection", c.Name),
+                    c =>
+                    {
+                        Assert.Equal("OwnedReference", c.Name);
+                        // Assert.True(c.IsNullable); ClickHouse does not support nullable JSON columns
+                    },
+                    c =>
+                    {
+                        Assert.Equal("OwnedRequiredReference", c.Name);
+                        Assert.False(c.IsNullable);
+                    });
+                Assert.Same(
+                    table.Columns.Single(c => c.Name == "Id"),
+                    Assert.Single(table.PrimaryKey!.Columns));
+            });
     }
 
     [ConditionalFact(Skip = "TBD")]
@@ -1836,64 +1920,732 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Add_required_primitive_collection_with_custom_default_value_to_existing_table();
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Convert_json_entities_to_regular_owned()
+    [ConditionalFact]
+    public override async Task Convert_json_entities_to_regular_owned()
     {
-        return base.Convert_json_entities_to_regular_owned();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+
+                entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+
+                entityTypeBuilder.OwnsOne(
+                    "Owned", "OwnedReference", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested", "NestedReference", n =>
+                            {
+                                n.Property<int>("Number");
+                            });
+                        o.OwnsMany(
+                            "Nested2", "NestedCollection", n =>
+                            {
+                                n.Property<int>("Number2");
+                            });
+                        o.Property<DateTime>("Date");
+                        o.ToJson();
+                    });
+
+                entityTypeBuilder.OwnsMany(
+                    "Owned2", "OwnedCollection", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested3", "NestedReference2", n =>
+                            {
+                                n.Property<int>("Number3");
+                            });
+                        o.OwnsMany(
+                            "Nested4", "NestedCollection2", n =>
+                            {
+                                n.Property<int>("Number4");
+                            });
+                        o.Property<DateTime>("Date2");
+                        o.ToJson();
+                    });
+            },
+            builder =>
+            {
+                builder.Entity(
+                    "Entity", e =>
+                    {
+                        e.Property<int>("Id").ValueGeneratedOnAdd();
+                        e.HasKey("Id");
+                        e.Property<string>("Name");
+
+                        e.OwnsOne(
+                            "Owned", "OwnedReference", o =>
+                            {
+                                o.OwnsOne(
+                                    "Nested", "NestedReference", n =>
+                                    {
+                                        n.Property<int>("Number");
+                                    });
+                                o.OwnsMany(
+                                    "Nested2", "NestedCollection", n =>
+                                    {
+                                        n.Property<int>("Number2");
+                                    });
+                                o.Property<DateTime>("Date");
+                            });
+
+                        e.OwnsMany(
+                            "Owned2", "OwnedCollection", o =>
+                            {
+                                o.OwnsOne(
+                                    "Nested3", "NestedReference2", n =>
+                                    {
+                                        n.Property<int>("Number3");
+                                    });
+                                o.OwnsMany(
+                                    "Nested4", "NestedCollection2", n =>
+                                    {
+                                        n.Property<int>("Number4");
+                                    });
+                                o.Property<DateTime>("Date2");
+                            });
+                    });
+            },
+            model =>
+            {
+                Assert.Equal(4, model.Tables.Count());
+            });
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Convert_regular_owned_entities_to_json()
+    [ConditionalFact]
+    public override async Task Convert_regular_owned_entities_to_json()
     {
-        return base.Convert_regular_owned_entities_to_json();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+
+                entityTypeBuilder.ToTable(tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+
+                entityTypeBuilder.OwnsOne(
+                    "Owned", "OwnedReference", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested", "NestedReference", n =>
+                            {
+                                n.Property<int>("Number");
+                            });
+                        o.OwnsMany(
+                            "Nested2", "NestedCollection", n =>
+                            {
+                                n.Property<int>("Number2");
+                            });
+                        o.Property<DateTime>("Date");
+                    });
+
+                entityTypeBuilder.OwnsMany(
+                    "Owned2", "OwnedCollection", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested3", "NestedReference2", n =>
+                            {
+                                n.Property<int>("Number3");
+                            });
+                        o.OwnsMany(
+                            "Nested4", "NestedCollection2", n =>
+                            {
+                                n.Property<int>("Number4");
+                            });
+                        o.Property<DateTime>("Date2");
+                    });
+            },
+            builder =>
+            {
+                builder.Entity(
+                    "Entity", e =>
+                    {
+                        e.Property<int>("Id").ValueGeneratedOnAdd();
+                        e.HasKey("Id");
+                        e.Property<string>("Name");
+
+                        e.OwnsOne(
+                            "Owned", "OwnedReference", o =>
+                            {
+                                o.OwnsOne("Nested", "NestedReference", n => n.Property<int>("Number"));
+                                o.OwnsMany("Nested2", "NestedCollection", n => n.Property<int>("Number2"));
+                                o.Property<DateTime>("Date");
+                                o.ToJson();
+                            });
+
+                        e.OwnsMany(
+                            "Owned2", "OwnedCollection", o =>
+                            {
+                                o.OwnsOne("Nested3", "NestedReference2", n => n.Property<int>("Number3"));
+                                o.OwnsMany("Nested4", "NestedCollection2", n => n.Property<int>("Number4"));
+                                o.Property<DateTime>("Date2");
+                                o.ToJson();
+                            });
+                    });
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("Entity", table.Name);
+
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name),
+                    c => Assert.Equal("OwnedCollection", c.Name),
+                    c => Assert.Equal("OwnedReference", c.Name));
+                Assert.Same(
+                    table.Columns.Single(c => c.Name == "Id"),
+                    Assert.Single(table.PrimaryKey!.Columns));
+            });
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Convert_string_column_to_a_json_column_containing_collection()
+    [ConditionalFact]
+    public override async Task Convert_string_column_to_a_json_column_containing_collection()
     {
-        return base.Convert_string_column_to_a_json_column_containing_collection();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+
+                entityTypeBuilder.ToTable(tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder =>
+            {
+                builder.Entity(
+                    "Entity", e =>
+                    {
+                        e.Property<int>("Id").ValueGeneratedOnAdd();
+                        e.HasKey("Id");
+
+                        e.OwnsMany(
+                            "Owned2", "OwnedCollection", o =>
+                            {
+                                o.OwnsOne("Nested3", "NestedReference2", n => n.Property<int>("Number3"));
+                                o.OwnsMany("Nested4", "NestedCollection2", n => n.Property<int>("Number4"));
+                                o.Property<DateTime>("Date2");
+                                o.ToJson("Name");
+                            });
+                    });
+            },
+            model =>
+            {
+                var table = model.Tables.Single();
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name));
+            });
+
+        // AssertSql();
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Convert_string_column_to_a_json_column_containing_reference()
+    [ConditionalFact()]
+    public override async Task Convert_string_column_to_a_json_column_containing_reference()
     {
-        return base.Convert_string_column_to_a_json_column_containing_reference();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+
+                entityTypeBuilder.ToTable(tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder =>
+            {
+                builder.Entity(
+                    "Entity", e =>
+                    {
+                        e.Property<int>("Id").ValueGeneratedOnAdd();
+                        e.HasKey("Id");
+
+                        e.OwnsOne(
+                            "Owned", "OwnedReference", o =>
+                            {
+                                o.ToJson("Name");
+                                o.OwnsOne("Nested", "NestedReference", n => n.Property<int>("Number"));
+                                o.OwnsMany("Nested2", "NestedCollection", n => n.Property<int>("Number2"));
+                                o.Property<DateTime>("Date");
+                            });
+                    });
+            },
+            model =>
+            {
+                var table = model.Tables.Single();
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name));
+            });
+
+        // AssertSql();
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Convert_string_column_to_a_json_column_containing_required_reference()
+    [ConditionalFact]
+    public override async Task Convert_string_column_to_a_json_column_containing_required_reference()
     {
-        return base.Convert_string_column_to_a_json_column_containing_required_reference();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+
+                entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder =>
+            {
+                builder.Entity(
+                    "Entity", e =>
+                    {
+                        e.Property<int>("Id").ValueGeneratedOnAdd();
+                        e.HasKey("Id");
+
+                        e.OwnsOne(
+                            "Owned", "OwnedReference", o =>
+                            {
+                                o.ToJson("Name");
+                                o.OwnsOne("Nested", "NestedReference", n => n.Property<int>("Number"));
+                                o.OwnsMany("Nested2", "NestedCollection", n => n.Property<int>("Number2"));
+                                o.Property<DateTime>("Date");
+                            });
+
+                        e.Navigation("OwnedReference").IsRequired();
+                    });
+            },
+            model =>
+            {
+                var table = model.Tables.Single();
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name));
+            });
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Create_table_with_json_column()
+    [ConditionalFact]
+    public override async Task Create_table_with_json_column()
     {
-        return base.Create_table_with_json_column();
+        await Test(
+            builder => { },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+                entityTypeBuilder.OwnsOne(
+                            "Owned", "OwnedReference", o =>
+                            {
+                                o.OwnsOne(
+                                    "Nested", "NestedReference", n =>
+                                    {
+                                        n.Property<int>("Number");
+                                    });
+                                o.OwnsMany(
+                                    "Nested2", "NestedCollection", n =>
+                                    {
+                                        n.Property<int>("Number2");
+                                    });
+                                o.Property<DateTime>("Date");
+                                o.ToJson();
+                            });
+
+                entityTypeBuilder.OwnsMany(
+                            "Owned2", "OwnedCollection", o =>
+                            {
+                                o.OwnsOne(
+                                    "Nested3", "NestedReference2", n =>
+                                    {
+                                        n.Property<int>("Number3");
+                                    });
+                                o.OwnsMany(
+                                    "Nested4", "NestedCollection2", n =>
+                                    {
+                                        n.Property<int>("Number4");
+                                    });
+                                o.Property<DateTime>("Date2");
+                                o.ToJson();
+                            });
+
+                entityTypeBuilder.OwnsOne(
+                            "Owned", "OwnedRequiredReference", o =>
+                            {
+                                o.Property<DateTime>("Date");
+                                o.ToJson();
+                            });
+
+                entityTypeBuilder.Navigation("OwnedRequiredReference").IsRequired();
+
+                entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("Entity", table.Name);
+
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name),
+                    c => Assert.Equal("OwnedCollection", c.Name),
+                    c =>
+                    {
+                        Assert.Equal("OwnedReference", c.Name);
+                        // Assert.True(c.IsNullable);
+                    },
+                    c =>
+                    {
+                        Assert.Equal("OwnedRequiredReference", c.Name);
+                        Assert.False(c.IsNullable);
+                    });
+                Assert.Same(
+                    table.Columns.Single(c => c.Name == "Id"),
+                    Assert.Single(table.PrimaryKey!.Columns));
+            });
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Create_table_with_json_column_explicit_json_column_names()
+    [ConditionalFact]
+    public override async Task Create_table_with_json_column_explicit_json_column_names()
     {
-        return base.Create_table_with_json_column_explicit_json_column_names();
+        await Test(
+            builder => { },
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+                entityTypeBuilder.OwnsOne(
+                    "Owned", "json_reference", o =>
+                    {
+                        o.OwnsOne("Nested", "json_reference", n => n.Property<int>("Number"));
+                        o.OwnsMany("Nested2", "NestedCollection", n => n.Property<int>("Number2"));
+                        o.Property<DateTime>("Date");
+                        o.ToJson();
+                    });
+
+                entityTypeBuilder.OwnsMany(
+                    "Owned2", "json_collection", o =>
+                    {
+                        o.OwnsOne("Nested3", "NestedReference2", n => n.Property<int>("Number3"));
+                        o.OwnsMany("Nested4", "NestedCollection2", n => n.Property<int>("Number4"));
+                        o.Property<DateTime>("Date2");
+                        o.ToJson();
+                    });
+
+                entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("Entity", table.Name);
+
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name),
+                    c => Assert.Equal("json_collection", c.Name),
+                    c => Assert.Equal("json_reference", c.Name));
+                Assert.Same(
+                    table.Columns.Single(c => c.Name == "Id"),
+                    Assert.Single(table.PrimaryKey!.Columns));
+            });
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Drop_json_columns_from_existing_table()
+    [ConditionalFact]
+    public override async Task Drop_json_columns_from_existing_table()
     {
-        return base.Drop_json_columns_from_existing_table();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+                entityTypeBuilder.OwnsOne(
+                    "Owned", "OwnedReference", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested", "NestedReference", n =>
+                            {
+                                n.Property<int>("Number");
+                            });
+                        o.OwnsMany(
+                            "Nested2", "NestedCollection", n =>
+                            {
+                                n.Property<int>("Number2");
+                            });
+                        o.Property<DateTime>("Date");
+                        o.ToJson();
+                    });
+
+                entityTypeBuilder.OwnsMany(
+                    "Owned2", "OwnedCollection", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested3", "NestedReference2", n =>
+                            {
+                                n.Property<int>("Number3");
+                            });
+                        o.OwnsMany(
+                            "Nested4", "NestedCollection2", n =>
+                            {
+                                n.Property<int>("Number4");
+                            });
+                        o.Property<DateTime>("Date2");
+                        o.ToJson();
+                    });
+
+                entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder => builder.Entity(
+                "Entity", e =>
+                {
+                    e.Property<int>("Id").ValueGeneratedOnAdd();
+                    e.HasKey("Id");
+                    e.Property<string>("Name");
+                }),
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("Entity", table.Name);
+
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name));
+                Assert.Same(
+                    table.Columns.Single(c => c.Name == "Id"),
+                    Assert.Single(table.PrimaryKey!.Columns));
+            });
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Rename_json_column()
+    [ConditionalFact]
+    public override async Task Rename_json_column()
     {
-        return base.Rename_json_column();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+
+                entityTypeBuilder.OwnsOne(
+                    "Owned", "OwnedReference", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested", "NestedReference", n =>
+                            {
+                                n.Property<int>("Number");
+                            });
+                        o.OwnsMany(
+                            "Nested2", "NestedCollection", n =>
+                            {
+                                n.Property<int>("Number2");
+                            });
+                        o.Property<DateTime>("Date");
+                        o.ToJson("json_reference");
+                    });
+
+                entityTypeBuilder.OwnsMany(
+                    "Owned2", "OwnedCollection", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested3", "NestedReference2", n =>
+                            {
+                                n.Property<int>("Number3");
+                            });
+                        o.OwnsMany(
+                            "Nested4", "NestedCollection2", n =>
+                            {
+                                n.Property<int>("Number4");
+                            });
+                        o.Property<DateTime>("Date2");
+                        o.ToJson("json_collection");
+                    });
+
+                entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder =>
+            {
+                builder.Entity(
+                    "Entity", e =>
+                    {
+                        e.Property<int>("Id").ValueGeneratedOnAdd();
+                        e.HasKey("Id");
+                        e.Property<string>("Name");
+
+                        e.OwnsOne(
+                            "Owned", "OwnedReference", o =>
+                            {
+                                o.OwnsOne("Nested", "NestedReference", n => n.Property<int>("Number"));
+                                o.OwnsMany("Nested2", "NestedCollection", n => n.Property<int>("Number2"));
+                                o.Property<DateTime>("Date");
+                                o.ToJson("new_json_reference");
+                            });
+
+                        e.OwnsMany(
+                            "Owned2", "OwnedCollection", o =>
+                            {
+                                o.OwnsOne("Nested3", "NestedReference2", n => n.Property<int>("Number3"));
+                                o.OwnsMany("Nested4", "NestedCollection2", n => n.Property<int>("Number4"));
+                                o.Property<DateTime>("Date2");
+                                o.ToJson("new_json_collection");
+                            });
+                    });
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("Entity", table.Name);
+
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name),
+                    c => Assert.Equal("new_json_collection", c.Name),
+                    c => Assert.Equal("new_json_reference", c.Name));
+                Assert.Same(
+                    table.Columns.Single(c => c.Name == "Id"),
+                    Assert.Single(table.PrimaryKey!.Columns));
+            });
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Rename_table_with_json_column()
+    [ConditionalFact]
+    public override async Task Rename_table_with_json_column()
     {
-        return base.Rename_table_with_json_column();
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("Entity");
+
+                entityTypeBuilder.Property<int>("Id").ValueGeneratedOnAdd();
+                entityTypeBuilder.HasKey("Id");
+                entityTypeBuilder.Property<string>("Name");
+                entityTypeBuilder.ToTable("Entities");
+
+                entityTypeBuilder.OwnsOne(
+                    "Owned", "OwnedReference", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested", "NestedReference", n =>
+                            {
+                                n.Property<int>("Number");
+                            });
+                        o.OwnsMany(
+                            "Nested2", "NestedCollection", n =>
+                            {
+                                n.Property<int>("Number2");
+                            });
+                        o.Property<DateTime>("Date");
+                        o.ToJson();
+                    });
+
+                entityTypeBuilder.OwnsMany(
+                    "Owned2", "OwnedCollection", o =>
+                    {
+                        o.OwnsOne(
+                            "Nested3", "NestedReference2", n =>
+                            {
+                                n.Property<int>("Number3");
+                            });
+                        o.OwnsMany(
+                            "Nested4", "NestedCollection2", n =>
+                            {
+                                n.Property<int>("Number4");
+                            });
+                        o.Property<DateTime>("Date2");
+                        o.ToJson();
+                    });
+
+                entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder =>
+            {
+                builder.Entity(
+                    "Entity", e =>
+                    {
+                        e.Property<int>("Id").ValueGeneratedOnAdd();
+                        e.HasKey("Id");
+                        e.Property<string>("Name");
+                        e.ToTable("NewEntities");
+
+                        e.OwnsOne(
+                            "Owned", "OwnedReference", o =>
+                            {
+                                o.OwnsOne("Nested", "NestedReference", n => n.Property<int>("Number"));
+                                o.OwnsMany("Nested2", "NestedCollection", n => n.Property<int>("Number2"));
+                                o.Property<DateTime>("Date");
+                                o.ToJson();
+                            });
+
+                        e.OwnsMany(
+                            "Owned2", "OwnedCollection", o =>
+                            {
+                                o.OwnsOne("Nested3", "NestedReference2", n => n.Property<int>("Number3"));
+                                o.OwnsMany("Nested4", "NestedCollection2", n => n.Property<int>("Number4"));
+                                o.Property<DateTime>("Date2");
+                                o.ToJson();
+                            });
+                    });
+            },
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                Assert.Equal("NewEntities", table.Name);
+
+                Assert.Collection(
+                    table.Columns,
+                    c => Assert.Equal("Id", c.Name),
+                    c => Assert.Equal("Name", c.Name),
+                    c => Assert.Equal("OwnedCollection", c.Name),
+                    c => Assert.Equal("OwnedReference", c.Name));
+                Assert.Same(
+                    table.Columns.Single(c => c.Name == "Id"),
+                    Assert.Single(table.PrimaryKey!.Columns));
+            });
     }
 
     protected override string NonDefaultCollation { get; }

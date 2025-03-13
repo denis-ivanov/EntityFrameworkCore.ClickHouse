@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Update;
 using System;
 using System.Text;
 
+using ClickHouse.EntityFrameworkCore.Extensions;
+
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
 
 public class ClickHouseSqlGenerationHelper : RelationalSqlGenerationHelper
@@ -15,7 +17,12 @@ public class ClickHouseSqlGenerationHelper : RelationalSqlGenerationHelper
     }
 
     public void GenerateParameterNamePlaceholder(StringBuilder builder, IColumnModification column) =>
-        GenerateParameterNamePlaceholder(builder, column.ParameterName, column.IsNullable.GetValueOrDefault() ? $"Nullable({column.ColumnType})" : column.ColumnType);
+        GenerateParameterNamePlaceholder(
+            builder,
+            column.ParameterName,
+            column.IsNullable.GetValueOrDefault()
+                ? column.ColumnType.GetNullableType()
+                : column.ColumnType);
 
     public void GenerateParameterNamePlaceholder(StringBuilder builder, string name, string type) =>
         builder.AppendFormat(ParameterFormat, name, type);

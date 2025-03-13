@@ -6,11 +6,13 @@ namespace ClickHouse.EntityFrameworkCore.Extensions;
 
 internal static class ClickHouseDbParameterExtensions
 {
-    public static void SetStoreType(this DbParameter parameter, string storeType)
+    internal static void SetStoreType(this DbParameter parameter, string storeType)
     {
         if (parameter is ClickHouseDbParameter clickHouseDbParameter)
         {
-            clickHouseDbParameter.ClickHouseType = clickHouseDbParameter.Value is DBNull ? $"Nullable({storeType})" : storeType;
+            clickHouseDbParameter.ClickHouseType = clickHouseDbParameter.Value is DBNull
+                ? storeType.GetNullableType()
+                : storeType;
         }
     }
 }

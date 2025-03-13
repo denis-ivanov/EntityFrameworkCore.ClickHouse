@@ -48,6 +48,7 @@ public class ClickHouseTestStore : RelationalTestStore
 
         var connection = new ClickHouseConnection(connectionString);
         connection.CustomSettings.Add("allow_create_index_without_type", "1");
+        connection.CustomSettings.Add("enable_json_type", "1");
         return connection;
     }
 
