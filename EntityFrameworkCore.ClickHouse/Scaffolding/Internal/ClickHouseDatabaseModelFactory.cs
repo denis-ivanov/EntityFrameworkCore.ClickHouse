@@ -12,6 +12,8 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 
+using ClickHouse.EntityFrameworkCore.Storage.Internal;
+
 namespace ClickHouse.EntityFrameworkCore.Scaffolding.Internal;
 
 public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
@@ -25,7 +27,7 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
 
     public override DatabaseModel Create(string connectionString, DatabaseModelFactoryOptions options)
     {
-        var connection = new ClickHouseConnection(connectionString);
+        var connection = new ClickHouseDbConnection(connectionString);
         return Create(connection, options);
     }
 

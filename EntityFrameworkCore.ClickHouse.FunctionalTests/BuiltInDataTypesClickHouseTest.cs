@@ -388,18 +388,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override Task Can_insert_and_read_with_max_length_set()
-    {
-        return base.Can_insert_and_read_with_max_length_set();
-    }
-
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Can_perform_query_with_max_length()
-    {
-        return base.Can_perform_query_with_max_length();
-    }
-
-    [ConditionalFact(Skip = "TBD")]
     public override Task Object_to_string_conversion()
     {
         return base.Object_to_string_conversion();

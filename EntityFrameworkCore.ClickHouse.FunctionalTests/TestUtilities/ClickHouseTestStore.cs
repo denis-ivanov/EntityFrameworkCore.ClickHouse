@@ -7,6 +7,8 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
+using ClickHouse.EntityFrameworkCore.Storage.Internal;
+
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 
 public class ClickHouseTestStore : RelationalTestStore
@@ -39,14 +41,14 @@ public class ClickHouseTestStore : RelationalTestStore
     public static ClickHouseTestStore Create(string name)
         => new(name, shared: false);
 
-    private static ClickHouseConnection CreateConnection(string name, bool sharedCache)
+    private static ClickHouseDbConnection CreateConnection(string name, bool sharedCache)
     {
         var connectionString = new ClickHouseConnectionStringBuilder(TestEnvironment.DefaultConnection)
         {
             Database = name
         }.ToString();
 
-        var connection = new ClickHouseConnection(connectionString);
+        var connection = new ClickHouseDbConnection(connectionString);
         connection.CustomSettings.Add("allow_create_index_without_type", "1");
         connection.CustomSettings.Add("enable_json_type", "1");
         return connection;
