@@ -407,10 +407,67 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Object_to_string_conversion()
+    [ConditionalFact]
+    public override async Task Object_to_string_conversion()
     {
-        return base.Object_to_string_conversion();
+        await using var context = CreateContext();
+        var expected = (await context.Set<BuiltInDataTypes>()
+                .Where(e => e.Id == 13)
+                .ToListAsync())
+            .Select(
+                b => new
+                {
+                    Sbyte = b.TestSignedByte.ToString(),
+                    Byte = b.TestByte.ToString(),
+                    Short = b.TestInt16.ToString(),
+                    Ushort = b.TestUnsignedInt16.ToString(),
+                    Int = b.TestInt32.ToString(),
+                    Uint = b.TestUnsignedInt32.ToString(),
+                    Long = b.TestInt64.ToString(),
+                    Ulong = b.TestUnsignedInt64.ToString(),
+                    Decimal = b.TestDecimal.ToString("F2"),
+                    Char = b.TestCharacter.ToString()
+                })
+            .First();
+
+        Fixture.ListLoggerFactory.Clear();
+
+        var query = await context.Set<BuiltInDataTypes>()
+            .Where(e => e.Id == 13)
+            .Select(
+                b => new
+                {
+                    Sbyte = b.TestSignedByte.ToString(),
+                    Byte = b.TestByte.ToString(),
+                    Short = b.TestInt16.ToString(),
+                    Ushort = b.TestUnsignedInt16.ToString(),
+                    Int = b.TestInt32.ToString(),
+                    Uint = b.TestUnsignedInt32.ToString(),
+                    Long = b.TestInt64.ToString(),
+                    Ulong = b.TestUnsignedInt64.ToString(),
+                    Float = b.TestSingle.ToString(),
+                    Double = b.TestDouble.ToString(),
+                    Decimal = b.TestDecimal.ToString(),
+                    Char = b.TestCharacter.ToString(),
+                    DateTime = b.TestDateTime.ToString(),
+                    DateTimeOffset = b.TestDateTimeOffset.ToString(),
+                    TimeSpan = b.TestTimeSpan.ToString(),
+                    DateOnly = b.TestDateOnly.ToString(),
+                    TimeOnly = b.TestTimeOnly.ToString(),
+                })
+            .ToListAsync();
+
+        var actual = Assert.Single(query);
+        Assert.Equal(expected.Sbyte, actual.Sbyte);
+        Assert.Equal(expected.Byte, actual.Byte);
+        Assert.Equal(expected.Short, actual.Short);
+        Assert.Equal(expected.Ushort, actual.Ushort);
+        Assert.Equal(expected.Int, actual.Int);
+        Assert.Equal(expected.Uint, actual.Uint);
+        Assert.Equal(expected.Long, actual.Long);
+        Assert.Equal(expected.Ulong, actual.Ulong);
+        Assert.Equal(expected.Decimal, actual.Decimal);
+        Assert.Equal(expected.Char, actual.Char);
     }
 
     [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
