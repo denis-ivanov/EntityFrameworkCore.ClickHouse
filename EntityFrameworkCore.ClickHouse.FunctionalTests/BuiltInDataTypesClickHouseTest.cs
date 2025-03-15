@@ -387,6 +387,26 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         return Task.CompletedTask;
     }
 
+    [ConditionalFact]
+    public override async Task Optional_datetime_reading_null_from_database()
+    {
+        await using var context = CreateContext();
+        var expected = (await context.Set<DateTimeEnclosure>().ToListAsync())
+            .OrderBy(e => e.Id)
+            .Select(e => new { DT = e.DateTimeOffset == null ? (DateTime?)null : e.DateTimeOffset.Value.DateTime.Date })
+            .ToList();
+
+        var actual = await context.Set<DateTimeEnclosure>()
+            .OrderBy(e => e.Id)
+            .Select(e => new { DT = e.DateTimeOffset == null ? (DateTime?)null : e.DateTimeOffset.Value.DateTime.Date })
+            .ToListAsync();
+
+        for (var i = 0; i < expected.Count; i++)
+        {
+            Assert.Equal(expected[i].DT, actual[i].DT);
+        }
+    }
+
     [ConditionalFact(Skip = "TBD")]
     public override Task Object_to_string_conversion()
     {
