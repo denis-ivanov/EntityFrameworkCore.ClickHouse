@@ -449,26 +449,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override Task Optional_datetime_reading_null_from_database()
-    {
-        base.Optional_datetime_reading_null_from_database();
-
-        using var context = CreateContext();
-        var expected = context.Set<DateTimeEnclosure>().ToList()
-            .Select(e => new { DT = e.DateTimeOffset == null ? (DateTime?)null : e.DateTimeOffset.Value.DateTime.Date }).ToList();
-
-        var actual = context.Set<DateTimeEnclosure>()
-            .Select(e => new { DT = e.DateTimeOffset == null ? (DateTime?)null : e.DateTimeOffset.Value.DateTime.Date }).ToList();
-
-        for (var i = 0; i < expected.Count; i++)
-        {
-            Assert.Equal(expected[i].DT, actual[i].DT);
-        }
-
-        return Task.CompletedTask;
-    }
-
-    [ConditionalFact(Skip = "TBD")]
     public override Task Can_read_back_mapped_enum_from_collection_first_or_default()
     {
         return base.Can_read_back_mapped_enum_from_collection_first_or_default();
