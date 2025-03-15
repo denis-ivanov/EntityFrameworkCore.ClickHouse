@@ -27,9 +27,12 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     {
         var defaultValueType = operation.IsStored == true ? " MATERIALIZED " : " ALIAS ";
 
+        var columnType = operation.ColumnType ?? GetColumnType(schema, table, name, operation, model);
+
         builder
             .Append(" ")
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
+            .Append(operation.IsNullable && !operation.ClrType.IsArray ? columnType.GetNullableType() : columnType)
             .Append(defaultValueType)
             .Append(operation.ComputedColumnSql!);
     }
@@ -52,7 +55,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         builder
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
             .Append(" ")
-            .Append(operation.IsNullable && !operation.ClrType.IsArray ? $" {columnType.GetNullableType()}" : columnType);
+            .Append(operation.IsNullable && !operation.ClrType.IsArray ? columnType.GetNullableType() : columnType);
 
         var defaultValue = operation.DefaultValueSql;
 

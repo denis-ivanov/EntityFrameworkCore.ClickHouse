@@ -161,10 +161,39 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalTheory(Skip = "TBD")]
-    public override Task Add_column_with_computedSql(bool? stored)
+    [ConditionalTheory]
+    public override async Task Add_column_with_computedSql(bool? stored)
     {
-        return base.Add_column_with_computedSql(stored);
+        await Test(
+            builder =>
+            {
+                var entityTypeBuilder = builder.Entity("People");
+
+                entityTypeBuilder.Property<int>("Id");
+                entityTypeBuilder.Property<int>("X");
+                entityTypeBuilder.Property<int>("Y");
+
+                entityTypeBuilder.ToTable("People", tableBuilder => tableBuilder
+                    .HasMergeTreeEngine()
+                    .WithPrimaryKey("Id"));
+            },
+            builder => { },
+            builder => builder.Entity("People").Property<string>("Sum")
+                .HasComputedColumnSql($"{DelimitIdentifier("X")} + {DelimitIdentifier("Y")}", stored),
+            model =>
+            {
+                var table = Assert.Single(model.Tables);
+                var sumColumn = Assert.Single(table.Columns, c => c.Name == "Sum");
+                if (AssertComputedColumns)
+                {
+                    Assert.Contains("X", sumColumn.ComputedColumnSql);
+                    Assert.Contains("Y", sumColumn.ComputedColumnSql);
+                    if (stored != null)
+                    {
+                        Assert.Equal(stored, sumColumn.IsStored);
+                    }
+                }
+            });
     }
 
     [ConditionalFact]
