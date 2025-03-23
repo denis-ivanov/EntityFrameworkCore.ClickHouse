@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -10,15 +9,6 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
 public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
 {
-    private static readonly Dictionary<ExpressionType, string> OperatorMap = new()
-    {
-        [ExpressionType.And] = "bitAnd",
-        [ExpressionType.Or] = "bitOr",
-        [ExpressionType.ExclusiveOr] = "bitXor",
-        [ExpressionType.LeftShift] = "bitShiftLeft",
-        [ExpressionType.RightShift] = "bitShiftRight"
-    };
-
     public ClickHouseQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies)
         : base(dependencies)
     {
@@ -91,12 +81,6 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
 
     protected override Expression VisitSqlBinary(SqlBinaryExpression sqlBinaryExpression)
     {
-        if (OperatorMap.TryGetValue(sqlBinaryExpression.OperatorType, out var functionName))
-        {
-            TranslateToFunction(sqlBinaryExpression, functionName);
-            return sqlBinaryExpression;
-        }
-
         if (sqlBinaryExpression.OperatorType == ExpressionType.Add && sqlBinaryExpression.Type == typeof(string))
         {
             TranslateToFunction(sqlBinaryExpression, "concat");
