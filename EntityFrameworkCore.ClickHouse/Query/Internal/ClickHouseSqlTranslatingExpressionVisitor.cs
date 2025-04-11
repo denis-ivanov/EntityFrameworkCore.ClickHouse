@@ -45,46 +45,35 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
         return base.VisitMember(memberExpression);
     }
 
-    protected override Expression VisitMethodCall(MethodCallExpression methodCallExpression)
+    protected override Expression VisitBinary(BinaryExpression binaryExpression)
     {
-        if (IsAnyTrim(methodCallExpression, out var trimMode))
+        if (binaryExpression.NodeType == ExpressionType.Add &&
+            binaryExpression.Type == typeof(string))
         {
-            var methodArgs = methodCallExpression.Arguments;
-            SqlExpression trimArg = null;
-
-            if (methodArgs[0].Type == typeof(char))
-            {
-                trimArg = Translate(methodArgs[0]);
-            }
-            else if (methodArgs[0] is NewArrayExpression newArrayExpression)
-            {
-                trimArg = Dependencies.SqlExpressionFactory.Function(
-                    "concat",
-                    newArrayExpression.Expressions.Select(e => Translate(e)),
-                    true,
-                    Enumerable.Repeat(true, methodArgs.Count),
-                    typeof(string),
-                    Dependencies.TypeMappingSource.FindMapping(typeof(string)));
-            }
-            else
-            {
-                trimArg = Dependencies.SqlExpressionFactory.Function(
-                    "arrayStringConcat",
-                    [Translate(methodArgs[0])],
-                    true,
-                    [true],
-                    typeof(string),
-                    Dependencies.TypeMappingSource.FindMapping(typeof(string)));
-            }
-
-            var trimInstance = Translate(methodCallExpression.Object);
-
-            var trimMapping = Dependencies.TypeMappingSource.FindMapping(methodCallExpression.Method.DeclaringType);
-
-            return new ClickHouseTrimFunction([trimArg, trimInstance], trimMapping, trimMode);
+            return Dependencies.SqlExpressionFactory.Function(
+                name: "concat",
+                arguments: [Translate(binaryExpression.Left), Translate(binaryExpression.Right)],
+                nullable: true,
+                argumentsPropagateNullability: [true, true],
+                returnType: typeof(string),
+                typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(string)));
         }
 
-        return base.VisitMethodCall(methodCallExpression);
+        return base.VisitBinary(binaryExpression);
+    }
+
+    public override SqlExpression GenerateGreatest(IReadOnlyList<SqlExpression> expressions, Type resultType)
+    {
+        var resultTypeMapping = ExpressionExtensions.InferTypeMapping(expressions);
+
+        return Dependencies.SqlExpressionFactory.Function("greatest", expressions, nullable: true, Enumerable.Repeat(true, expressions.Count), resultType, resultTypeMapping);
+    }
+
+    public override SqlExpression GenerateLeast(IReadOnlyList<SqlExpression> expressions, Type resultType)
+    {
+        var resultTypeMapping = ExpressionExtensions.InferTypeMapping(expressions);
+
+        return Dependencies.SqlExpressionFactory.Function("least", expressions, nullable: true, Enumerable.Repeat(true, expressions.Count), resultType, resultTypeMapping);
     }
 
     private static bool IsDateDiffExpression(MemberExpression memberExpression, out Expression left, out Expression right, out string unit)
@@ -113,52 +102,5 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
         return type == typeof(DateOnly) ||
                type == typeof(DateTime) ||
                type == typeof(DateTimeOffset);
-    }
-
-    private static bool IsAnyTrim(MethodCallExpression methodCallExpression, out byte mode)
-    {
-        mode = byte.MaxValue;
-
-        if (methodCallExpression.Method.DeclaringType != typeof(string))
-        {
-            return false;
-        }
-
-        if (methodCallExpression.Method.Name == nameof(string.TrimStart) &&
-            methodCallExpression.Arguments.Count > 0)
-        {
-            mode = ClickHouseTrimFunction.Leading;
-            return true;
-        }
-
-        if (methodCallExpression.Method.Name == nameof(string.TrimEnd) &&
-            methodCallExpression.Arguments.Count > 0)
-        {
-            mode = ClickHouseTrimFunction.Trailing;
-            return true;
-        }
-
-        if (methodCallExpression.Method.Name == nameof(string.Trim) &&
-            methodCallExpression.Arguments.Count > 0)
-        {
-            mode = ClickHouseTrimFunction.Both;
-            return true;
-        }
-
-        return false;
-    }
-
-    public override SqlExpression GenerateGreatest(IReadOnlyList<SqlExpression> expressions, Type resultType)
-    {
-        var resultTypeMapping = ExpressionExtensions.InferTypeMapping(expressions);
-
-        return Dependencies.SqlExpressionFactory.Function("greatest", expressions, nullable: true, Enumerable.Repeat(true, expressions.Count), resultType, resultTypeMapping);
-    }
-
-    public override SqlExpression GenerateLeast(IReadOnlyList<SqlExpression> expressions, Type resultType)
-    {
-        var resultTypeMapping = ExpressionExtensions.InferTypeMapping(expressions);
-
-        return Dependencies.SqlExpressionFactory.Function("least", expressions, nullable: true, Enumerable.Repeat(true, expressions.Count), resultType, resultTypeMapping);
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ClickHouse.EntityFrameworkCore.Design.Internal;
 
-#pragma warning disable EF1001 // Internal EF Core API usage.
 public class ClickHouseCSharpRuntimeAnnotationCodeGenerator : RelationalCSharpRuntimeAnnotationCodeGenerator
 {
     public ClickHouseCSharpRuntimeAnnotationCodeGenerator(

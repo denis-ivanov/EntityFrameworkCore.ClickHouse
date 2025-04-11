@@ -1,7 +1,10 @@
-﻿using ClickHouse.EntityFrameworkCore.Storage.Internal;
+﻿using ClickHouse.EntityFrameworkCore.Query.Expressions;
+using ClickHouse.EntityFrameworkCore.Query.Expressions.Internal;
+using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -13,6 +16,14 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
         : base(dependencies)
     {
     }
+
+    protected override Expression VisitExtension(Expression extensionExpression)
+        => extensionExpression switch
+        {
+            ClickHouseTrimExpression e => VisitTrim(e),
+
+            _ => base.VisitExtension(extensionExpression)
+        };
 
     protected override void GenerateLimitOffset(SelectExpression selectExpression)
     {
@@ -55,47 +66,23 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
         return sqlParameterExpression;
     }
 
-    protected override Expression VisitSqlFunction(SqlFunctionExpression sqlFunctionExpression)
+    private Expression VisitTrim(ClickHouseTrimExpression trimExpression)
     {
-        if (sqlFunctionExpression is ClickHouseTrimFunction trimFunction)
-        {
-            Sql
-                .Append(trimFunction.Name)
-                .Append("(")
-                .Append(trimFunction.TrimModeName)
-                .Append(" ");
+        Sql.Append("trim(")
+            .Append(trimExpression.TrimMode switch
+            {
+                ClickHouseStringTrimMode.Both => "BOTH ",
+                ClickHouseStringTrimMode.Leading => "LEADING ",
+                ClickHouseStringTrimMode.Trailing => "TRAILING ",
+                _ => throw new InvalidEnumArgumentException("Invalid trim mode", (int)trimExpression.TrimMode, typeof(ClickHouseStringTrimMode))
+            });
 
-            Visit(trimFunction.Arguments[0]);
+        Visit(trimExpression.TrimCharacters);
 
-            Sql.Append(" FROM ");
+        Sql.Append(" FROM ");
+        Visit(trimExpression.InputString);
+        Sql.Append(")");
 
-            Visit(trimFunction.Arguments[1]);
-
-            Sql.Append(")");
-
-            return sqlFunctionExpression;
-        }
-
-        return base.VisitSqlFunction(sqlFunctionExpression);
-    }
-
-    protected override Expression VisitSqlBinary(SqlBinaryExpression sqlBinaryExpression)
-    {
-        if (sqlBinaryExpression.OperatorType == ExpressionType.Add && sqlBinaryExpression.Type == typeof(string))
-        {
-            TranslateToFunction(sqlBinaryExpression, "concat");
-            return sqlBinaryExpression;
-        }
-
-        return base.VisitSqlBinary(sqlBinaryExpression);
-    }
-
-    private void TranslateToFunction(SqlBinaryExpression sqlBinaryExpression, string functionName)
-    {
-        Sql.Append($" {functionName}(");
-        Visit(sqlBinaryExpression.Left);
-        Sql.Append(", ");
-        Visit(sqlBinaryExpression.Right);
-        Sql.Append(") ");
+        return trimExpression;
     }
 }

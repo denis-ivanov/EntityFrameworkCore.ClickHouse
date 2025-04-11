@@ -10,7 +10,7 @@
     <PackageIcon>Logo.png</PackageIcon>
     <RepositoryUrl>https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <NoWarn>$(NoWarn);EF1001</NoWarn>
+    <NoWarn>$(NoWarn);EF1001;EF9100</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

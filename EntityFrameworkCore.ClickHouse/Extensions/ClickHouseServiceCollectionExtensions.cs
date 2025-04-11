@@ -5,6 +5,7 @@ using ClickHouse.EntityFrameworkCore.Metadata.Conventions;
 using ClickHouse.EntityFrameworkCore.Metadata.Internal;
 using ClickHouse.EntityFrameworkCore.Migrations;
 using ClickHouse.EntityFrameworkCore.Migrations.Internal;
+using ClickHouse.EntityFrameworkCore.Query;
 using ClickHouse.EntityFrameworkCore.Query.Internal;
 using ClickHouse.EntityFrameworkCore.Storage.Internal;
 using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
@@ -52,6 +53,8 @@ public static class ClickHouseServiceCollectionExtensions
             .TryAdd<IQuerySqlGeneratorFactory, ClickHouseQuerySqlGeneratorFactory>()
             .TryAdd<IQueryableMethodTranslatingExpressionVisitorFactory, ClickHouseQueryableMethodTranslatingExpressionVisitorFactory>()
             .TryAdd<IRelationalSqlTranslatingExpressionVisitorFactory, ClickHouseSqlTranslatingExpressionVisitorFactory>()
+            .TryAdd<ISqlExpressionFactory, ClickHouseSqlExpressionFactory>()
+            .TryAdd<IRelationalParameterBasedSqlProcessorFactory, ClickHouseParameterBasedSqlProcessorFactory>()
             .TryAdd<IValueConverterSelector, ClickHouseValueConverterSelector>()
             .TryAddProviderSpecificServices(
                 b => b.TryAddScoped<IClickHouseRelationalConnection, ClickHouseRelationalConnection>());

@@ -10,16 +10,15 @@ public class ClickHouseQueryableMethodTranslatingExpressionVisitor
 {
     private readonly RelationalSqlTranslatingExpressionVisitor _sqlTranslator;
 
-    public ClickHouseQueryableMethodTranslatingExpressionVisitor(QueryableMethodTranslatingExpressionVisitorDependencies dependencies, RelationalQueryableMethodTranslatingExpressionVisitorDependencies relationalDependencies, RelationalQueryCompilationContext queryCompilationContext) : base(dependencies, relationalDependencies, queryCompilationContext)
+    public ClickHouseQueryableMethodTranslatingExpressionVisitor(
+        QueryableMethodTranslatingExpressionVisitorDependencies dependencies,
+        RelationalQueryableMethodTranslatingExpressionVisitorDependencies relationalDependencies,
+        RelationalQueryCompilationContext queryCompilationContext)
+        : base(dependencies, relationalDependencies, queryCompilationContext)
     {
         _sqlTranslator =
             relationalDependencies.RelationalSqlTranslatingExpressionVisitorFactory.Create(queryCompilationContext,
                 this);
-    }
-
-    protected override Expression VisitConstant(ConstantExpression constantExpression)
-    {
-        return base.VisitConstant(constantExpression);
     }
 
     protected override ShapedQueryExpression TranslateTake(ShapedQueryExpression source, Expression count)

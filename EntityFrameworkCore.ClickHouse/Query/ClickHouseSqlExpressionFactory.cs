@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
-
+﻿using ClickHouse.EntityFrameworkCore.Query.Expressions;
+using ClickHouse.EntityFrameworkCore.Query.Expressions.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq.Expressions;
 
 namespace ClickHouse.EntityFrameworkCore.Query;
 
@@ -38,5 +39,13 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
         }
 
         return base.MakeBinary(operatorType, left, right, typeMapping, existingExpression);
+    }
+
+    public virtual ClickHouseTrimExpression Trim(
+        SqlExpression stringExpression,
+        SqlExpression chars,
+        ClickHouseStringTrimMode mode)
+    {
+        return new ClickHouseTrimExpression(stringExpression, chars, mode);
     }
 }
