@@ -1,9 +1,12 @@
-﻿using ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
+﻿using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using BindingFlags = System.Reflection.BindingFlags;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
 
@@ -143,7 +146,6 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
 
     protected override RelationalTypeMapping FindMapping(in RelationalTypeMappingInfo mappingInfo) =>
         FindExistingMapping(mappingInfo) ??
-        FindArrayMapping(mappingInfo) ??
         FindTupleMapping(mappingInfo) ??
         FindDecimalMapping(mappingInfo) ??
         base.FindMapping(in mappingInfo);
@@ -170,22 +172,67 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         return null;
     }
 
-    private RelationalTypeMapping FindArrayMapping(in RelationalTypeMappingInfo mappingInfo)
+    protected override RelationalTypeMapping FindCollectionMapping(
+        RelationalTypeMappingInfo info,
+        Type modelType,
+        Type providerType,
+        CoreTypeMapping elementMapping)
     {
-        if (mappingInfo.StoreTypeName != null &&
-            mappingInfo.StoreTypeName.StartsWith("Array(") &&
-            mappingInfo.StoreTypeName.EndsWith(')'))
+        if (elementMapping is not null and not RelationalTypeMapping)
         {
-            var elementTypeName = mappingInfo.StoreTypeName.Substring(6, mappingInfo.StoreTypeName.Length - 7).Trim();
-            var elementTypeMapping = AliasTypeMapping[elementTypeName];
-            return new ClickHouseArrayTypeMapping(mappingInfo.StoreTypeName, elementTypeMapping);
+            return null;
         }
 
-        if (mappingInfo.ClrType is { IsArray: true })
+        if (info.StoreTypeName != null &&
+            info.StoreTypeName.StartsWith("Array(") &&
+            info.StoreTypeName.EndsWith(')'))
         {
-            var elementType = mappingInfo.ClrType.GetElementType();
-            var elementTypeMapping = ClrTypeMappings[elementType!];
-            return new ClickHouseArrayTypeMapping($"Array({elementTypeMapping.StoreType})", elementTypeMapping);
+            var elementTypeName = info.StoreTypeName.Substring(6, info.StoreTypeName.Length - 7).Trim();
+
+            if (AliasTypeMapping.TryGetValue(elementTypeName, out var elementTypeMapping))
+            {
+                var concreteCollectionType = FindTypeToInstantiate(modelType, elementTypeMapping.ClrType);
+
+                return (RelationalTypeMapping)Activator.CreateInstance(
+                    typeof(ClickHouseArrayTypeMapping<,,>).MakeGenericType(modelType, concreteCollectionType, elementTypeMapping.ClrType),
+                    elementTypeMapping);
+            }
+        }
+
+        modelType = modelType.UnwrapNullableType();
+
+        if (info.ClrType is { IsArray: true } || modelType.IsEnumerable())
+        {
+            var elementType = modelType.IsArray
+                ? modelType.GetElementType()!/*.UnwrapNullableType()*/
+                : modelType.GenericTypeArguments[0]/*.UnwrapNullableType()*/;
+
+            ValueConverter? converter = null;
+
+            if (elementType.IsEnum)
+            {
+                var enumType = elementType;
+                elementType = Enum.GetUnderlyingType(elementType);
+                converter = (ValueConverter)Activator.CreateInstance(typeof(EnumToNumberConverter<,>).MakeGenericType(enumType, elementType));
+            }
+
+            var elementTypeMapping = FindMapping(elementType);
+
+            if (elementTypeMapping == null && !ClrTypeMappings.TryGetValue(elementType, out elementTypeMapping))
+            {
+                return null;
+            }
+
+            var concreteCollectionType = FindTypeToInstantiate(modelType, elementType);
+
+            if (converter != null)
+            {
+                elementTypeMapping = (RelationalTypeMapping)elementTypeMapping.WithComposedConverter(converter);
+            }
+
+            return (RelationalTypeMapping)Activator.CreateInstance(
+                typeof(ClickHouseArrayTypeMapping<,,>).MakeGenericType(modelType, concreteCollectionType, elementType),
+                elementTypeMapping);
         }
 
         return null;
@@ -222,5 +269,31 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         }
 
         return null;
+    }
+
+    private static Type FindTypeToInstantiate(Type collectionType, Type elementType)
+    {
+        if (collectionType.IsArray)
+        {
+            return collectionType;
+        }
+
+        var listOfT = typeof(List<>).MakeGenericType(elementType);
+
+        if (collectionType.IsAssignableFrom(listOfT))
+        {
+            if (!collectionType.IsAbstract)
+            {
+                var constructor = collectionType.GetConstructor(BindingFlags.Public, Type.EmptyTypes);
+                if (constructor != null)
+                {
+                    return collectionType;
+                }
+            }
+
+            return listOfT;
+        }
+
+        return collectionType;
     }
 }

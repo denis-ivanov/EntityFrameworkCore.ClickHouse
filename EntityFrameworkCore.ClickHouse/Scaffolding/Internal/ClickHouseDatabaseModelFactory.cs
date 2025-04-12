@@ -290,9 +290,6 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
         }
     }
 
-    private static Type UnwrapNullableType(Type type)
-        => Nullable.GetUnderlyingType(type) ?? type;
-
     private static (bool IsNullable, string StoreType) ParseType(string storeType)
     {
         return storeType.StartsWith("Nullable(")
@@ -302,7 +299,7 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
 
     private static bool IsInteger(Type type)
     {
-        type = UnwrapNullableType(type);
+        type = type.UnwrapNullableType();
 
         return type == typeof(int)
                || type == typeof(long)

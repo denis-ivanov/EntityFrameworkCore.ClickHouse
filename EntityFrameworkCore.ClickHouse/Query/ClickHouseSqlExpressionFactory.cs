@@ -3,6 +3,7 @@ using ClickHouse.EntityFrameworkCore.Query.Expressions.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Linq.Expressions;
 
 namespace ClickHouse.EntityFrameworkCore.Query;
@@ -39,6 +40,26 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
         }
 
         return base.MakeBinary(operatorType, left, right, typeMapping, existingExpression);
+    }
+
+    public override SqlExpression MakeUnary(
+        ExpressionType operatorType,
+        SqlExpression operand,
+        Type type,
+        RelationalTypeMapping typeMapping = null,
+        SqlExpression existingExpression = null)
+    {
+        if (operatorType == ExpressionType.ArrayLength)
+        {
+            return Function(
+                name: "length",
+                arguments: [operand],
+                nullable: true,
+                [true],
+                returnType: typeof(int));
+        }
+
+        return base.MakeUnary(operatorType, operand, type, typeMapping, existingExpression);
     }
 
     public virtual ClickHouseTrimExpression Trim(

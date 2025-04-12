@@ -62,6 +62,21 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
         return base.VisitBinary(binaryExpression);
     }
 
+    protected override Expression VisitUnary(UnaryExpression unaryExpression)
+    {
+        if (unaryExpression.NodeType == ExpressionType.ArrayLength)
+        {
+            return Dependencies.SqlExpressionFactory.Function(
+                name: "length",
+                arguments: [Translate(unaryExpression)],
+                nullable: true,
+                [true],
+                returnType: typeof(int));
+        }
+
+        return base.VisitUnary(unaryExpression);
+    }
+
     public override SqlExpression GenerateGreatest(IReadOnlyList<SqlExpression> expressions, Type resultType)
     {
         var resultTypeMapping = ExpressionExtensions.InferTypeMapping(expressions);

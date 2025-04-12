@@ -1,53 +1,99 @@
 ﻿using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Data.Common;
 using System.Diagnostics;
-using System.Text;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
-public class ClickHouseArrayTypeMapping : RelationalTypeMapping
+public class ClickHouseArrayTypeMapping<TCollection, TConcreteCollection, TElement> : RelationalTypeMapping
 {
-    public RelationalTypeMapping ElementMapping { get; }
+    public ClickHouseArrayTypeMapping(RelationalTypeMapping elementTypeMapping)
+        : this($"Array(Nullable({elementTypeMapping.StoreType}))", elementTypeMapping)
+    {
+    }
 
-    public ClickHouseArrayTypeMapping(string storeType, RelationalTypeMapping elementMapping)
-        : this(storeType, elementMapping, elementMapping.ClrType.MakeArrayType()) {}
+    public ClickHouseArrayTypeMapping(string storeType, RelationalTypeMapping elementTypeMapping)
+        : this(CreateParameters(storeType, elementTypeMapping))
+    {
+    }
 
-    public ClickHouseArrayTypeMapping(RelationalTypeMapping elementMapping, Type arrayType)
-        : this(elementMapping.StoreType + "[]", elementMapping, arrayType) {}
-
-    ClickHouseArrayTypeMapping(string storeType, RelationalTypeMapping elementMapping, Type arrayType)
-        : this(new RelationalTypeMappingParameters(
-            new CoreTypeMappingParameters(arrayType, null, CreateComparer(elementMapping, arrayType)), storeType
-        ), elementMapping) {}
-
-    protected ClickHouseArrayTypeMapping(RelationalTypeMappingParameters parameters, RelationalTypeMapping elementMapping)
+    protected ClickHouseArrayTypeMapping(RelationalTypeMappingParameters parameters)
         : base(parameters)
-        => ElementMapping = elementMapping;
+    {
+    }
+
+    private static RelationalTypeMappingParameters CreateParameters(
+        string storeType,
+        RelationalTypeMapping elementMapping)
+    {
+        ValueConverter? converter = null;
+        var elementType = elementMapping.ClrType;
+
+        if (elementMapping.Converter is { } elementConverter)
+        {
+            var providerElementType = elementConverter.ProviderClrType;
+
+            converter = (ValueConverter)Activator.CreateInstance(
+                typeof(ClickHouseArrayConverter<,,>).MakeGenericType(
+                    typeof(TCollection),
+                    typeof(TConcreteCollection),
+                    providerElementType.MakeArrayType()),
+                elementConverter)!;
+        }
+        else if (typeof(TCollection) != typeof(TConcreteCollection))
+        {
+            converter = (ValueConverter)Activator.CreateInstance(
+                typeof(ClickHouseArrayConverter<,,>).MakeGenericType(
+                    typeof(TCollection),
+                    typeof(TConcreteCollection),
+                    elementType.MakeArrayType()),
+                elementMapping.Converter)!;
+        }
+
+        var comparer = typeof(TCollection).IsArray && typeof(TCollection).GetArrayRank() > 1
+            ? null // TODO: Value comparer for multidimensional arrays
+            : (ValueComparer?)Activator.CreateInstance(
+                elementType.IsNullableValueType()
+                    ? typeof(ListOfNullableValueTypesComparer<,>)
+                        .MakeGenericType(typeof(TConcreteCollection), elementType.UnwrapNullableType())
+                    : elementType.IsValueType
+                        ? typeof(ListOfValueTypesComparer<,>).MakeGenericType(typeof(TConcreteCollection), elementType)
+                        : typeof(ListOfReferenceTypesComparer<,>).MakeGenericType(typeof(TConcreteCollection), elementType),
+                elementMapping.Comparer.ToNullableComparer(elementType)!);
+
+        return new RelationalTypeMappingParameters(
+            new CoreTypeMappingParameters(
+                typeof(TCollection), converter, comparer, elementMapping: elementMapping),
+            storeType);
+    }
 
     protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-        => new ClickHouseArrayTypeMapping(parameters, ElementMapping);
+        => new ClickHouseArrayTypeMapping<TCollection, TConcreteCollection, TElement>(parameters);
 
     protected override string GenerateNonNullSqlLiteral(object value)
     {
-        var arr = (Array)value;
-
-        if (arr.Rank != 1)
-            throw new NotSupportedException("Multidimensional array literals aren't supported");
-
-        var sb = new StringBuilder();
-        sb.Append('[');
-        for (var i = 0; i < arr.Length; i++)
-        {
-            sb.Append(ElementMapping.GenerateSqlLiteral(arr.GetValue(i)));
-            if (i < arr.Length - 1)
-                sb.Append(',');
-        }
-
-        sb.Append(']');
-        return sb.ToString();
+        throw new NotImplementedException();
+        // var arr = (Array)value;
+        //
+        // if (arr.Rank != 1)
+        //     throw new NotSupportedException("Multidimensional array literals aren't supported");
+        //
+        // var sb = new StringBuilder();
+        // sb.Append('[');
+        // for (var i = 0; i < arr.Length; i++)
+        // {
+        //     sb.Append(ElementMapping.GenerateSqlLiteral(arr.GetValue(i)));
+        //     if (i < arr.Length - 1)
+        //         sb.Append(',');
+        // }
+        //
+        // sb.Append(']');
+        // return sb.ToString();
     }
 
     protected override void ConfigureParameter(DbParameter parameter)

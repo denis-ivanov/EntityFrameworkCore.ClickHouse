@@ -38,4 +38,9 @@ public class ClickHouseQueryableMethodTranslatingExpressionVisitor
 
         return null;
     }
+
+    protected override ShapedQueryExpression TranslateCount(ShapedQueryExpression source, LambdaExpression predicate)
+    {
+        return base.TranslateCount(source, predicate);
+    }
 }
