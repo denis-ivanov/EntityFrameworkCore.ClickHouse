@@ -525,12 +525,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         return base.Can_insert_and_read_back_with_null_string_foreign_key();
     }
 
-    [Fact(Skip = "TBD")]
-    public override Task Can_query_with_null_parameters_using_any_nullable_data_type()
-    {
-        return base.Can_query_with_null_parameters_using_any_nullable_data_type();
-    }
-
     private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)
         where TEntity : BuiltInDataTypesBase
     {
