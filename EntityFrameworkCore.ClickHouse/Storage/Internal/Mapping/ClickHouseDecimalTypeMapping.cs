@@ -33,7 +33,7 @@ public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        var clickHouseParameter = (Client.ADO.Parameters.ClickHouseDbParameter)parameter;
+        var clickHouseParameter = (Driver.ADO.Parameters.ClickHouseDbParameter)parameter;
         clickHouseParameter.Precision = (byte)(Precision ?? DefaultPrecision);
         clickHouseParameter.Scale = (byte)(Scale ?? DefaultScale);
         parameter.SetStoreType(StoreType);

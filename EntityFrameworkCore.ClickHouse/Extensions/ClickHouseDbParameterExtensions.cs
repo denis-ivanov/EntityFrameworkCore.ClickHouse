@@ -1,4 +1,4 @@
-using ClickHouse.Client.ADO.Parameters;
+using ClickHouse.Driver.ADO.Parameters;
 using System;
 using System.Data.Common;
 

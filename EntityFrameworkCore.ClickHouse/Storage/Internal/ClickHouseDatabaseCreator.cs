@@ -1,17 +1,14 @@
-﻿using System;
-
-using ClickHouse.Client;
+﻿using ClickHouse.Driver;
+using ClickHouse.Driver.ADO;
 using ClickHouse.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
-using ClickHouse.Client.ADO;
-using ClickHouse.Client.ADO.Parameters;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
 

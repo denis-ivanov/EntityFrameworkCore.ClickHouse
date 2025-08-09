@@ -1,4 +1,4 @@
-using ClickHouse.Client.Numerics;
+using ClickHouse.Driver.Numerics;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
