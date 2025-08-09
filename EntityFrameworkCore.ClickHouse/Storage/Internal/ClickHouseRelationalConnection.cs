@@ -1,4 +1,4 @@
-﻿using ClickHouse.Client.ADO;
+﻿using ClickHouse.Driver.ADO;
 using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;

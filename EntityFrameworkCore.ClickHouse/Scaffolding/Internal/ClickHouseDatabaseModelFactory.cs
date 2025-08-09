@@ -1,4 +1,4 @@
-﻿using ClickHouse.Client.ADO;
+﻿using ClickHouse.Driver.ADO;
 using ClickHouse.EntityFrameworkCore.Extensions;
 using ClickHouse.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;

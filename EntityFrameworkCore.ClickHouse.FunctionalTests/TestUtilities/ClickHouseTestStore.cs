@@ -1,5 +1,5 @@
-using ClickHouse.Client.ADO;
-using ClickHouse.Client.Utility;
+using ClickHouse.Driver.ADO;
+using ClickHouse.Driver.Utility;
 using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.TestUtilities;
