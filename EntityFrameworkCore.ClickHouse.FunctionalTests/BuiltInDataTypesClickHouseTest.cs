@@ -508,12 +508,6 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     }
 
     [ConditionalFact(Skip = "TBD")]
-    public override Task Can_query_using_any_nullable_data_type_as_literal()
-    {
-        return base.Can_query_using_any_nullable_data_type_as_literal();
-    }
-
-    [ConditionalFact(Skip = "TBD")]
     public override Task Can_read_back_mapped_enum_from_collection_first_or_default()
     {
         return base.Can_read_back_mapped_enum_from_collection_first_or_default();
