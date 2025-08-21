@@ -243,13 +243,6 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Where_comparison_to_nullable_bool(bool async)
-    {
-        return base.Where_comparison_to_nullable_bool(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Where_contains_on_navigation(bool async)
     {
         return base.Where_contains_on_navigation(async);
