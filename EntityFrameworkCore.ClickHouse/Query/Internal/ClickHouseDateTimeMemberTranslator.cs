@@ -28,7 +28,8 @@ public class ClickHouseDateTimeMemberTranslator : IMemberTranslator
     private static readonly Dictionary<PropertyInfo, string> ClassMembers = new()
     {
         { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.UtcNow))!, "UTCTimestamp" },
-        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Now))!, "now" }
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Now))!, "now" },
+        { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Today))!, "today" },
     };
 
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
