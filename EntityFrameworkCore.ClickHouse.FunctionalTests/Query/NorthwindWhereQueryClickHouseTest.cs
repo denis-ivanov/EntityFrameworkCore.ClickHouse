@@ -250,13 +250,6 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Where_datetime_millisecond_component(bool async)
-    {
-        return base.Where_datetime_millisecond_component(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Where_datetimeoffset_now_component(bool async)
     {
         return base.Where_datetimeoffset_now_component(async);
