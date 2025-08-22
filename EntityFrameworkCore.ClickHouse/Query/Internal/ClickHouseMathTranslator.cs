@@ -96,6 +96,26 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
                 returnType: method.ReturnType);
         }
 
+        if ((method.DeclaringType == typeof(Math) || method.DeclaringType == typeof(MathF)) &&
+            method.Name == nameof(Math.Log) &&
+            arguments.Count == 2)
+        {
+            return _sqlExpressionFactory.Divide(
+                _sqlExpressionFactory.Function(
+                    "log",
+                    arguments: [arguments[0]],
+                    nullable: true,
+                    argumentsPropagateNullability: [true],
+                    returnType: method.ReturnType),
+                _sqlExpressionFactory.Function(
+                    "log",
+                    arguments: [arguments[1]],
+                    nullable: true,
+                    argumentsPropagateNullability: [true],
+                    returnType: method.ReturnType)
+            );
+        }
+
         return null;
     }
 
