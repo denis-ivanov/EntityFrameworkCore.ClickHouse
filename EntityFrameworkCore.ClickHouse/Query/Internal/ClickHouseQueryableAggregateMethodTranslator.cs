@@ -101,16 +101,11 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     && source.Selector is SqlExpression minSqlExpression:
                     minSqlExpression = CombineTerms(source, minSqlExpression);
 
-                    var minFunction = _sqlExpressionFactory.Function(
+                    return _sqlExpressionFactory.Function(
                         "MIN",
                         [minSqlExpression],
                         nullable: true,
                         argumentsPropagateNullability: [false],
-                        minSqlExpression.Type,
-                        minSqlExpression.TypeMapping);
-
-                    return _sqlExpressionFactory.Convert(
-                        minFunction,
                         minSqlExpression.Type,
                         minSqlExpression.TypeMapping);
 
