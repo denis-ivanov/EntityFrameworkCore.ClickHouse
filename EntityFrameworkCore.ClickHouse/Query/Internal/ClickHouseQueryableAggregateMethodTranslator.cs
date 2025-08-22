@@ -68,17 +68,12 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     || methodInfo == QueryableMethods.LongCountWithPredicate:
                     var longCountSqlExpression = (source.Selector as SqlExpression) ?? _sqlExpressionFactory.Fragment("*");
                     longCountSqlExpression = CombineTerms(source, longCountSqlExpression);
-                    var longCountFunction = _sqlExpressionFactory.Function(
+                    return _sqlExpressionFactory.Function(
                         "COUNT",
                         [longCountSqlExpression],
                         nullable: false,
                         argumentsPropagateNullability: [false],
                         typeof(long));
-
-                    return _sqlExpressionFactory.Convert(
-                        longCountFunction,
-                        longCountSqlExpression.Type,
-                        longCountSqlExpression.TypeMapping);
 
                 case nameof(Queryable.Max)
                     when (methodInfo == QueryableMethods.MaxWithoutSelector
