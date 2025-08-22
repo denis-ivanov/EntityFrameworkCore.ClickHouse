@@ -87,16 +87,11 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                         || methodInfo == QueryableMethods.MaxWithSelector)
                     && source.Selector is SqlExpression maxSqlExpression:
                     maxSqlExpression = CombineTerms(source, maxSqlExpression);
-                    var maxFunction = _sqlExpressionFactory.Function(
+                    return _sqlExpressionFactory.Function(
                         "MAX",
                         [maxSqlExpression],
                         nullable: true,
                         argumentsPropagateNullability: [false],
-                        maxSqlExpression.Type,
-                        maxSqlExpression.TypeMapping);
-
-                    return _sqlExpressionFactory.Convert(
-                        maxFunction,
                         maxSqlExpression.Type,
                         maxSqlExpression.TypeMapping);
 
