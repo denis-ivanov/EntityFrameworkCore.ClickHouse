@@ -387,11 +387,4 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
     {
         return base.Where_subquery_FirstOrDefault_is_null(async);
     }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Skip_and_Where_evaluation_order(bool async)
-    {
-        return base.Skip_and_Where_evaluation_order(async);
-    }
 }
