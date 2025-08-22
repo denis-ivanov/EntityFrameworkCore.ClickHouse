@@ -108,16 +108,13 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     && source.Selector is SqlExpression sumSqlExpression:
                     sumSqlExpression = CombineTerms(source, sumSqlExpression);
                     var sumInputType = sumSqlExpression.Type;
-                    return _sqlExpressionFactory.Convert(
-                            _sqlExpressionFactory.Function(
-                                "SUM",
-                                [sumSqlExpression],
-                                nullable: true,
-                                argumentsPropagateNullability: [false],
-                                sumInputType,
-                                sumSqlExpression.TypeMapping),
-                            sumInputType,
-                            sumSqlExpression.TypeMapping);
+                    return _sqlExpressionFactory.Function(
+                        "SUM",
+                        [sumSqlExpression],
+                        nullable: true,
+                        argumentsPropagateNullability: [false],
+                        sumInputType,
+                        sumSqlExpression.TypeMapping);
             }
         }
 
