@@ -28,24 +28,24 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
 
     protected override void GenerateLimitOffset(SelectExpression selectExpression)
     {
-        if (selectExpression.Limit != null || selectExpression.Offset != null)
+        switch (selectExpression)
         {
-            Sql.AppendLine().Append("LIMIT ");
+            case { Limit: not null, Offset: not null }:
+                Sql.AppendLine().Append("LIMIT ");
+                Visit(selectExpression.Limit);
+                Sql.Append(" OFFSET ");
+                Visit(selectExpression.Offset);
+                break;
 
-            if (selectExpression.Offset != null && selectExpression.Limit != null)
-            {
-                Visit(selectExpression.Offset);
-                Sql.Append(", ");
+            case { Limit: not null }:
+                Sql.AppendLine().Append("LIMIT ");
                 Visit(selectExpression.Limit);
-            }
-            else if (selectExpression.Offset != null)
-            {
+                break;
+
+            case { Offset: not null }:
+                Sql.AppendLine().Append($"LIMIT {uint.MaxValue} OFFSET ");
                 Visit(selectExpression.Offset);
-            }
-            else if (selectExpression.Limit != null)
-            {
-                Visit(selectExpression.Limit);
-            }
+                break;
         }
     }
 
