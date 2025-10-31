@@ -1,6 +1,7 @@
 ﻿using ClickHouse.EntityFrameworkCore.Query.Expressions;
 using ClickHouse.EntityFrameworkCore.Query.Expressions.Internal;
 using ClickHouse.EntityFrameworkCore.Storage.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -46,6 +47,16 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
                 Visit(selectExpression.Offset);
                 break;
         }
+    }
+
+    protected override Expression VisitUnary(UnaryExpression node)
+    {
+        if (node.NodeType == ExpressionType.ArrayLength)
+        {
+            return node;
+        }
+
+        return base.VisitUnary(node);
     }
 
     protected override Expression VisitSqlParameter(SqlParameterExpression sqlParameterExpression)

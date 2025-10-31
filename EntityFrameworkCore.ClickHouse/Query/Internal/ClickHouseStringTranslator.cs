@@ -406,37 +406,5 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
             _ => _sqlExpressionFactory.ApplyDefaultTypeMapping(chars)
         };
-
-        // if (chars.Type == typeof(char))
-        // {
-        //     return chars;
-        // }
-        //
-        // if (chars is NewArrayExpression newArrayExpression)
-        // {
-        //     return _sqlExpressionFactory.Function(
-        //         "concat",
-        //         newArrayExpression.Expressions,
-        //         true,
-        //         Enumerable.Repeat(true, methodArgs.Count),
-        //         typeof(string),
-        //         Dependencies.TypeMappingSource.FindMapping(typeof(string)));
-        // }
-        // else
-        // {
-        //     trimArg = Dependencies.SqlExpressionFactory.Function(
-        //         "arrayStringConcat",
-        //         [Translate(methodArgs[0])],
-        //         true,
-        //         [true],
-        //         typeof(string),
-        //         Dependencies.TypeMappingSource.FindMapping(typeof(string)));
-        // }
-        //
-        // var trimInstance = Translate(methodCallExpression.Object);
-        //
-        // var trimMapping = Dependencies.TypeMappingSource.FindMapping(methodCallExpression.Method.DeclaringType);
-        //
-        // return new ClickHouseTrimFunction([trimArg, trimInstance], trimMapping, trimMode);
     }
 }

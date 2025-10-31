@@ -80,6 +80,11 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
 
     public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
+        if (method.DeclaringType != typeof(Array))
+        {
+            return null;
+        }
+
         if (method.Equals(EmptyArrayUInt8))
         {
             return _sqlExpressionFactory.Function(
@@ -198,6 +203,17 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
                 nullable: false,
                 argumentsPropagateNullability: [true],
                 returnType: typeof(string[]));
+        }
+
+        if (method.Name == nameof(Array.IndexOf))
+        {
+            return _sqlExpressionFactory.Subtract(_sqlExpressionFactory.Function(
+                name: "indexOf",
+                arguments: [arguments[0], arguments[1]],
+                nullable: true,
+                argumentsPropagateNullability: [true, true],
+                returnType: typeof(int)),
+                _sqlExpressionFactory.Constant(1));
         }
 
         return null;
