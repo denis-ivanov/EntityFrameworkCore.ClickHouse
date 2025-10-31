@@ -250,13 +250,6 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Where_datetime_millisecond_component(bool async)
-    {
-        return base.Where_datetime_millisecond_component(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Where_datetimeoffset_now_component(bool async)
     {
         return base.Where_datetimeoffset_now_component(async);
@@ -386,19 +379,5 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
     public override Task Where_subquery_FirstOrDefault_is_null(bool async)
     {
         return base.Where_subquery_FirstOrDefault_is_null(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Skip_and_Where_evaluation_order(bool async)
-    {
-        return base.Skip_and_Where_evaluation_order(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_string_indexof(bool async)
-    {
-        return base.Where_string_indexof(async);
     }
 }

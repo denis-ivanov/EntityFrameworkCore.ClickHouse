@@ -56,13 +56,11 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     || methodInfo == QueryableMethods.CountWithPredicate:
                     var countSqlExpression = (source.Selector as SqlExpression) ?? _sqlExpressionFactory.Fragment("*");
                     countSqlExpression = CombineTerms(source, countSqlExpression);
-                    return _sqlExpressionFactory.Convert(
-                        _sqlExpressionFactory.Function(
-                            "COUNT",
-                            [countSqlExpression],
-                            nullable: false,
-                            argumentsPropagateNullability: [false],
-                            typeof(int)),
+                    return _sqlExpressionFactory.Function(
+                        "COUNT",
+                        [countSqlExpression],
+                        nullable: false,
+                        argumentsPropagateNullability: [false],
                         typeof(int));
 
                 case nameof(Queryable.LongCount)
@@ -70,33 +68,23 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     || methodInfo == QueryableMethods.LongCountWithPredicate:
                     var longCountSqlExpression = (source.Selector as SqlExpression) ?? _sqlExpressionFactory.Fragment("*");
                     longCountSqlExpression = CombineTerms(source, longCountSqlExpression);
-                    var longCountFunction = _sqlExpressionFactory.Function(
+                    return _sqlExpressionFactory.Function(
                         "COUNT",
                         [longCountSqlExpression],
                         nullable: false,
                         argumentsPropagateNullability: [false],
                         typeof(long));
 
-                    return _sqlExpressionFactory.Convert(
-                        longCountFunction,
-                        longCountSqlExpression.Type,
-                        longCountSqlExpression.TypeMapping);
-
                 case nameof(Queryable.Max)
                     when (methodInfo == QueryableMethods.MaxWithoutSelector
                         || methodInfo == QueryableMethods.MaxWithSelector)
                     && source.Selector is SqlExpression maxSqlExpression:
                     maxSqlExpression = CombineTerms(source, maxSqlExpression);
-                    var maxFunction = _sqlExpressionFactory.Function(
+                    return _sqlExpressionFactory.Function(
                         "MAX",
                         [maxSqlExpression],
                         nullable: true,
                         argumentsPropagateNullability: [false],
-                        maxSqlExpression.Type,
-                        maxSqlExpression.TypeMapping);
-
-                    return _sqlExpressionFactory.Convert(
-                        maxFunction,
                         maxSqlExpression.Type,
                         maxSqlExpression.TypeMapping);
 
@@ -106,16 +94,11 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     && source.Selector is SqlExpression minSqlExpression:
                     minSqlExpression = CombineTerms(source, minSqlExpression);
 
-                    var minFunction = _sqlExpressionFactory.Function(
+                    return _sqlExpressionFactory.Function(
                         "MIN",
                         [minSqlExpression],
                         nullable: true,
                         argumentsPropagateNullability: [false],
-                        minSqlExpression.Type,
-                        minSqlExpression.TypeMapping);
-
-                    return _sqlExpressionFactory.Convert(
-                        minFunction,
                         minSqlExpression.Type,
                         minSqlExpression.TypeMapping);
 
@@ -125,16 +108,13 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     && source.Selector is SqlExpression sumSqlExpression:
                     sumSqlExpression = CombineTerms(source, sumSqlExpression);
                     var sumInputType = sumSqlExpression.Type;
-                    return _sqlExpressionFactory.Convert(
-                            _sqlExpressionFactory.Function(
-                                "SUM",
-                                [sumSqlExpression],
-                                nullable: true,
-                                argumentsPropagateNullability: [false],
-                                sumInputType,
-                                sumSqlExpression.TypeMapping),
-                            sumInputType,
-                            sumSqlExpression.TypeMapping);
+                    return _sqlExpressionFactory.Function(
+                        "SUM",
+                        [sumSqlExpression],
+                        nullable: true,
+                        argumentsPropagateNullability: [false],
+                        sumInputType,
+                        sumSqlExpression.TypeMapping);
             }
         }
 

@@ -722,13 +722,6 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Select_constant_int(bool async)
-    {
-        return base.Select_constant_int(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Select_nested_collection_count_using_anonymous_type(bool async)
     {
         return base.Select_nested_collection_count_using_anonymous_type(async);
@@ -774,13 +767,6 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
     public override Task Select_nested_collection_multi_level6(bool async)
     {
         return base.Select_nested_collection_multi_level6(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Select_short_constant(bool async)
-    {
-        return base.Select_short_constant(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]

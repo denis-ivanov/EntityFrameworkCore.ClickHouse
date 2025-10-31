@@ -31,20 +31,6 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Where_math_log_new_base(bool async)
-    {
-        return base.Where_math_log_new_base(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_mathf_log_new_base(bool async)
-    {
-        return base.Where_mathf_log_new_base(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Sum_over_round_works_correctly_in_projection(bool async)
     {
         return base.Sum_over_round_works_correctly_in_projection(async);
