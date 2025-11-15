@@ -364,18 +364,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     }
 
     [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_Max_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_Max_without_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_Min_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_Min_without_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
     public override Task Contains_inside_Sum_without_GroupBy(bool async)
     {
         return base.Contains_inside_Sum_without_GroupBy(async);
