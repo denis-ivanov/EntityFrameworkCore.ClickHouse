@@ -199,25 +199,28 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
         return base.Where_collection_navigation_ToList_Count_member(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_compare_constructed_equal(bool async)
+    public override async Task Where_compare_constructed_equal(bool async)
     {
-        return base.Where_compare_constructed_equal(async);
+        //  Anonymous type to constant comparison. Issue #14672.
+        await AssertTranslationFailed(() => base.Where_compare_constructed_equal(async));
+
+        AssertSql();
     }
 
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_compare_constructed_multi_value_equal(bool async)
+    public override async Task Where_compare_constructed_multi_value_equal(bool async)
     {
-        return base.Where_compare_constructed_multi_value_equal(async);
+        //  Anonymous type to constant comparison. Issue #14672.
+        await AssertTranslationFailed(() => base.Where_compare_constructed_multi_value_equal(async));
+
+        AssertSql();
     }
 
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_compare_constructed_multi_value_not_equal(bool async)
+    public override async Task Where_compare_constructed_multi_value_not_equal(bool async)
     {
-        return base.Where_compare_constructed_multi_value_not_equal(async);
+        //  Anonymous type to constant comparison. Issue #14672.
+        await AssertTranslationFailed(() => base.Where_compare_constructed_multi_value_not_equal(async));
+
+        AssertSql();
     }
 
     [ConditionalTheory(Skip = "TBD")]
@@ -401,4 +404,7 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
     {
         return base.Where_Contains_or_comparison(async);
     }
+
+    private void AssertSql(params string[] expected)
+        => Fixture.TestSqlLoggerFactory.AssertBaseline(expected);
 }
