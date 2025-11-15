@@ -173,13 +173,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Min_no_data_nullable(bool async)
-    {
-        return base.Min_no_data_nullable(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Min_no_data_subquery(bool async)
     {
         return base.Min_no_data_subquery(async);
@@ -204,13 +197,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     public override Task Max_no_data_cast_to_nullable(bool async)
     {
         return base.Max_no_data_cast_to_nullable(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Max_no_data_nullable(bool async)
-    {
-        return base.Max_no_data_nullable(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
