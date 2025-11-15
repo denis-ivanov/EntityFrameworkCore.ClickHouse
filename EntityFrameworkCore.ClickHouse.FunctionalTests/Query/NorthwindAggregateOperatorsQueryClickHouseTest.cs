@@ -68,13 +68,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_LongCount_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_LongCount_without_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Contains_over_entityType_should_materialize_when_composite(bool async)
     {
         return base.Contains_over_entityType_should_materialize_when_composite(async);
@@ -349,24 +342,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     public override Task Contains_inside_aggregate_function_with_GroupBy(bool async)
     {
         return base.Contains_inside_aggregate_function_with_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_Average_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_Average_without_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_Count_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_Count_without_GroupBy(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Contains_inside_Sum_without_GroupBy(bool async)
-    {
-        return base.Contains_inside_Sum_without_GroupBy(async);
     }
 
     [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
