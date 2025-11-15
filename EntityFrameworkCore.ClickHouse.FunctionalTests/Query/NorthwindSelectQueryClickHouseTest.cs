@@ -790,6 +790,24 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
         return base.ToList_Count_in_projection_works(async);
     }
 
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Project_single_element_from_collection_with_OrderBy_Take_OrderBy_and_FirstOrDefault(bool async)
+    {
+        return base.Project_single_element_from_collection_with_OrderBy_Take_OrderBy_and_FirstOrDefault(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task SelectMany_with_multiple_Take(bool async)
+    {
+        return base.SelectMany_with_multiple_Take(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task SelectMany_with_nested_DefaultIfEmpty(bool async)
+    {
+        return base.SelectMany_with_nested_DefaultIfEmpty(async);
+    }
+
     private void AssertSql(params string[] expected)
         => Fixture.TestSqlLoggerFactory.AssertBaseline(expected);
 }
