@@ -136,12 +136,12 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
         return base.Where_as_queryable_expression(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
-    [InlineData(false)]
-    public override Task Where_bitwise_xor(bool async)
-    {
-        return base.Where_bitwise_xor(async);
-    }
+    // [ConditionalTheory(Skip = "TBD")]
+    // [InlineData(false)]
+    // public override Task Where_bitwise_xor(bool async)
+    // {
+    //     return base.Where_bitwise_xor(async);
+    // }
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
@@ -246,27 +246,6 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
     public override Task Where_contains_on_navigation(bool async)
     {
         return base.Where_contains_on_navigation(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_datetimeoffset_now_component(bool async)
-    {
-        return base.Where_datetimeoffset_now_component(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_datetimeoffset_utcnow(bool async)
-    {
-        return base.Where_datetimeoffset_utcnow(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_datetimeoffset_utcnow_component(bool async)
-    {
-        return base.Where_datetimeoffset_utcnow_component(async);
     }
 
     [ConditionalTheory(Skip = "TBD")]
@@ -379,5 +358,47 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
     public override Task Where_subquery_FirstOrDefault_is_null(bool async)
     {
         return base.Where_subquery_FirstOrDefault_is_null(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Parameter_array_Contains_OrElse_comparison_with_constant(bool async)
+    {
+        return base.Parameter_array_Contains_OrElse_comparison_with_constant(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Parameter_array_Contains_OrElse_comparison_with_parameter_with_overlap(bool async)
+    {
+        return base.Parameter_array_Contains_OrElse_comparison_with_parameter_with_overlap(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Two_parameters_with_same_case_insensitive_name_get_uniquified(bool async)
+    {
+        return base.Two_parameters_with_same_case_insensitive_name_get_uniquified(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Using_same_parameter_twice_in_query_generates_one_sql_parameter(bool async)
+    {
+        return base.Using_same_parameter_twice_in_query_generates_one_sql_parameter(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Where_array_of_object_contains_over_value_type(bool async)
+    {
+        return base.Where_array_of_object_contains_over_value_type(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Where_Contains_and_comparison(bool async)
+    {
+        return base.Where_Contains_and_comparison(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Where_Contains_or_comparison(bool async)
+    {
+        return base.Where_Contains_or_comparison(async);
     }
 }

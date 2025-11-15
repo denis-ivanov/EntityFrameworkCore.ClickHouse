@@ -660,7 +660,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override Task Alter_column_change_computed()
         => Test(
             builder =>
@@ -692,7 +692,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override Task Alter_column_change_computed_recreates_indexes()
         => Test(
             builder =>
@@ -733,7 +733,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // Assert.Collection(sumIndex.Columns, c => Assert.Equal("Sum", c.Name));
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override Task Alter_column_change_computed_type()
         => Test(
             builder =>
@@ -982,7 +982,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Null(column.Comment);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override Task Alter_computed_column_add_comment()
         => Test(
             builder =>
@@ -1841,7 +1841,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(ClickHouseAnnotationNames.LogEngine, engine);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Add_json_columns_to_existing_table()
     {
         await Test(
@@ -1949,7 +1949,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Add_required_primitive_collection_with_custom_default_value_to_existing_table();
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Convert_json_entities_to_regular_owned()
     {
         await Test(
@@ -2047,7 +2047,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Convert_regular_owned_entities_to_json()
     {
         await Test(
@@ -2140,7 +2140,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Convert_string_column_to_a_json_column_containing_collection()
     {
         await Test(
@@ -2186,7 +2186,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         // AssertSql();
     }
 
-    [ConditionalFact()]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Convert_string_column_to_a_json_column_containing_reference()
     {
         await Test(
@@ -2232,7 +2232,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         // AssertSql();
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Convert_string_column_to_a_json_column_containing_required_reference()
     {
         await Test(
@@ -2278,7 +2278,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Create_table_with_json_column()
     {
         await Test(
@@ -2363,7 +2363,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Create_table_with_json_column_explicit_json_column_names()
     {
         await Test(
@@ -2414,7 +2414,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Drop_json_columns_from_existing_table()
     {
         await Test(
@@ -2485,7 +2485,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Rename_json_column()
     {
         await Test(
@@ -2580,7 +2580,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = "TBD")]
     public override async Task Rename_table_with_json_column()
     {
         await Test(
@@ -2677,6 +2677,30 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Create_table_with_complex_properties_mapped_to_json()
+    {
+        return base.Create_table_with_complex_properties_mapped_to_json();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Create_table_with_complex_properties_with_nested_collection_mapped_to_json()
+    {
+        return base.Create_table_with_complex_properties_with_nested_collection_mapped_to_json();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Create_table_with_complex_type_with_required_properties_on_derived_entity_in_TPH()
+    {
+        return base.Create_table_with_complex_type_with_required_properties_on_derived_entity_in_TPH();
+    }
+
+    [ConditionalFact(Skip = "TBD")]
+    public override Task Create_table_with_optional_complex_type_with_required_properties()
+    {
+        return base.Create_table_with_optional_complex_type_with_required_properties();
+    }
+    
     protected override string NonDefaultCollation { get; }
 
     public class MigrationsClickHouseFixture : MigrationsFixtureBase

@@ -19,13 +19,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task Average_after_default_if_empty_does_not_throw(bool async)
-    {
-        return base.Average_after_default_if_empty_does_not_throw(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Average_no_data_subquery(bool async)
     {
         return base.Average_no_data_subquery(async);
@@ -344,5 +337,107 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     public override Task Type_casting_inside_sum(bool async)
     {
         return base.Type_casting_inside_sum(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Average_after_DefaultIfEmpty_does_not_throw(bool async)
+    {
+        return base.Average_after_DefaultIfEmpty_does_not_throw(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_inside_aggregate_function_with_GroupBy(bool async)
+    {
+        return base.Contains_inside_aggregate_function_with_GroupBy(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_inside_Average_without_GroupBy(bool async)
+    {
+        return base.Contains_inside_Average_without_GroupBy(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_inside_Count_without_GroupBy(bool async)
+    {
+        return base.Contains_inside_Count_without_GroupBy(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_inside_Max_without_GroupBy(bool async)
+    {
+        return base.Contains_inside_Max_without_GroupBy(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_inside_Min_without_GroupBy(bool async)
+    {
+        return base.Contains_inside_Min_without_GroupBy(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_inside_Sum_without_GroupBy(bool async)
+    {
+        return base.Contains_inside_Sum_without_GroupBy(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_array_closure(bool async)
+    {
+        return base.Contains_with_local_array_closure(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_collection_complex_predicate_and(bool async)
+    {
+        return base.Contains_with_local_collection_complex_predicate_and(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_collection_complex_predicate_not_matching_ins1(bool async)
+    {
+        return base.Contains_with_local_collection_complex_predicate_not_matching_ins1(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_collection_complex_predicate_not_matching_ins2(bool async)
+    {
+        return base.Contains_with_local_collection_complex_predicate_not_matching_ins2(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_collection_complex_predicate_or(bool async)
+    {
+        return base.Contains_with_local_collection_complex_predicate_or(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_collection_false(bool async)
+    {
+        return base.Contains_with_local_collection_false(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_collection_sql_injection(bool async)
+    {
+        return base.Contains_with_local_collection_sql_injection(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_nullable_uint_array_closure(bool async)
+    {
+        return base.Contains_with_local_nullable_uint_array_closure(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Contains_with_local_uint_array_closure(bool async)
+    {
+        return base.Contains_with_local_uint_array_closure(async);
+    }
+
+    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
+    public override Task Where_subquery_where_any(bool async)
+    {
+        return base.Where_subquery_where_any(async);
     }
 }

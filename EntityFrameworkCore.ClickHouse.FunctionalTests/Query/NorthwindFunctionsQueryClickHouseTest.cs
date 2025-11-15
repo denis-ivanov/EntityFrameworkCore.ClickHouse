@@ -22,12 +22,12 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
         return base.Order_by_length_twice_followed_by_projection_of_naked_collection_navigation(async);
     }
 
-    [ConditionalTheory]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Regex_IsMatch_MethodCall_constant_input(bool async)
-        => AssertQuery(
-            async,
-            ss => ss.Set<Customer>().Where(o => Regex.IsMatch(o.CustomerID, "ALFKI")));
+    // [ConditionalTheory]
+    // [MemberData(nameof(IsAsyncData))]
+    // public override Task Regex_IsMatch_MethodCall_constant_input(bool async)
+    //     => AssertQuery(
+    //         async,
+    //         ss => ss.Set<Customer>().Where(o => Regex.IsMatch(o.CustomerID, "ALFKI")));
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
@@ -57,10 +57,10 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
         return base.Sum_over_truncate_works_correctly_in_projection_2(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task String_Join_non_aggregate(bool async)
-    {
-        return base.String_Join_non_aggregate(async);
-    }
+    // [ConditionalTheory(Skip = "TBD")]
+    // [MemberData(nameof(IsAsyncData))]
+    // public override Task String_Join_non_aggregate(bool async)
+    // {
+    //     return base.String_Join_non_aggregate(async);
+    // }
 }

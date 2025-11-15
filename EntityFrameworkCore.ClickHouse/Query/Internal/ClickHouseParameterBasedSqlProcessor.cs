@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Internal;
@@ -13,12 +12,8 @@ public class ClickHouseParameterBasedSqlProcessor : RelationalParameterBasedSqlP
     {
     }
 
-    protected override Expression ProcessSqlNullability(
-        Expression selectExpression,
-        IReadOnlyDictionary<string, object> parametersValues,
-        out bool canCache)
+    protected override Expression ProcessSqlNullability(Expression queryExpression, ParametersCacheDecorator Decorator)
     {
-        return new ClickHouseSqlNullabilityProcessor(Dependencies, Parameters).Process(
-            selectExpression, parametersValues, out canCache);
+        return new ClickHouseSqlNullabilityProcessor(Dependencies, Parameters).Process(queryExpression, Decorator);
     }
 }
