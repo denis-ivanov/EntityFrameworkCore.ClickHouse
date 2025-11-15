@@ -10,38 +10,49 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
 public class ClickHouseArrayTypeMapping : RelationalTypeMapping
 {
-    public RelationalTypeMapping ElementMapping { get; }
-
     public ClickHouseArrayTypeMapping(string storeType, RelationalTypeMapping elementMapping)
-        : this(storeType, elementMapping, elementMapping.ClrType.MakeArrayType()) {}
-
-    public ClickHouseArrayTypeMapping(RelationalTypeMapping elementMapping, Type arrayType)
-        : this(elementMapping.StoreType + "[]", elementMapping, arrayType) {}
+        : this(storeType, elementMapping, elementMapping.ClrType.MakeArrayType())
+    {
+    }
 
     ClickHouseArrayTypeMapping(string storeType, RelationalTypeMapping elementMapping, Type arrayType)
-        : this(new RelationalTypeMappingParameters(
-            new CoreTypeMappingParameters(arrayType, null, CreateComparer(elementMapping, arrayType)), storeType
-        ), elementMapping) {}
+        : this(
+            new RelationalTypeMappingParameters(
+                new CoreTypeMappingParameters(
+                    arrayType,
+                    null,
+                    CreateComparer(elementMapping, arrayType),
+                    elementMapping: elementMapping),
+                storeType),
+            elementMapping)
+    {
+    }
 
     protected ClickHouseArrayTypeMapping(RelationalTypeMappingParameters parameters, RelationalTypeMapping elementMapping)
         : base(parameters)
-        => ElementMapping = elementMapping;
+    {
+    }
 
     protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-        => new ClickHouseArrayTypeMapping(parameters, ElementMapping);
+        => new ClickHouseArrayTypeMapping(parameters, (RelationalTypeMapping)parameters.CoreParameters.ElementTypeMapping);
 
     protected override string GenerateNonNullSqlLiteral(object value)
     {
         var arr = (Array)value;
 
         if (arr.Rank != 1)
+        {
             throw new NotSupportedException("Multidimensional array literals aren't supported");
+        }
+
+        var elementTypeMapping = (RelationalTypeMapping)ElementTypeMapping;
 
         var sb = new StringBuilder();
         sb.Append('[');
+        
         for (var i = 0; i < arr.Length; i++)
         {
-            sb.Append(ElementMapping.GenerateSqlLiteral(arr.GetValue(i)));
+            sb.Append(elementTypeMapping.GenerateSqlLiteral(arr.GetValue(i)));
             if (i < arr.Length - 1)
                 sb.Append(',');
         }
@@ -118,8 +129,7 @@ public class ClickHouseArrayTypeMapping : RelationalTypeMapping
         }
     }
 
-    class SingleDimComparerWithIEquatable<TElem> : ValueComparer<TElem[]>
-        where TElem : IEquatable<TElem>
+    class SingleDimComparerWithIEquatable<TElem> : ValueComparer<TElem[]> where TElem : IEquatable<TElem>
     {
         public SingleDimComparerWithIEquatable() : base(
             (a, b) => Compare(a, b),
