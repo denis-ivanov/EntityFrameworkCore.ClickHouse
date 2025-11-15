@@ -185,13 +185,6 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override async Task Select_datetime_Ticks_component(bool async)
-    {
-        await base.Select_datetime_Ticks_component(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override async Task Select_datetime_TimeOfDay_component(bool async)
     {
         await base.Select_datetime_TimeOfDay_component(async);

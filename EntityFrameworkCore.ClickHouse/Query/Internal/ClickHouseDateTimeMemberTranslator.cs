@@ -32,6 +32,8 @@ public class ClickHouseDateTimeMemberTranslator : IMemberTranslator
         { typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Today))!, "today" },
     };
 
+    private static readonly PropertyInfo Ticks = typeof(DateTime).GetRuntimeProperty(nameof(DateTime.Ticks))!;
+
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
 
     public ClickHouseDateTimeMemberTranslator([NotNull] ISqlExpressionFactory sqlExpressionFactory)
@@ -57,6 +59,24 @@ public class ClickHouseDateTimeMemberTranslator : IMemberTranslator
             return function.Item2
                 ? _sqlExpressionFactory.Convert(expression, returnType)
                 : expression;
+        }
+
+        if (member.Equals(Ticks))
+        {
+            var unixSeconds = _sqlExpressionFactory.Function(
+                "toUnixTimestamp",
+                [instance],
+                nullable: true,
+                argumentsPropagateNullability: [true],
+                typeof(long));
+
+            var ticksFromUnix = _sqlExpressionFactory.Multiply(
+                unixSeconds,
+                _sqlExpressionFactory.Constant(10000000L));
+
+            return _sqlExpressionFactory.Add(
+                ticksFromUnix,
+                _sqlExpressionFactory.Constant(621355968000000000L));
         }
 
         if (member is PropertyInfo pi && ClassMembers.TryGetValue(pi, out var f))
