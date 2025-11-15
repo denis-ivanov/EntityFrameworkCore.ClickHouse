@@ -393,18 +393,6 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
         return base.Where_array_of_object_contains_over_value_type(async);
     }
 
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Where_Contains_and_comparison(bool async)
-    {
-        return base.Where_Contains_and_comparison(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Where_Contains_or_comparison(bool async)
-    {
-        return base.Where_Contains_or_comparison(async);
-    }
-
     private void AssertSql(params string[] expected)
         => Fixture.TestSqlLoggerFactory.AssertBaseline(expected);
 }
