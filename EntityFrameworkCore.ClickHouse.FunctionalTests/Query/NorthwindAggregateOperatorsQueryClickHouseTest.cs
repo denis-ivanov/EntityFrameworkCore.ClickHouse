@@ -339,18 +339,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     }
 
     [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Contains_with_local_collection_complex_predicate_not_matching_ins1(bool async)
-    {
-        return base.Contains_with_local_collection_complex_predicate_not_matching_ins1(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Contains_with_local_collection_complex_predicate_not_matching_ins2(bool async)
-    {
-        return base.Contains_with_local_collection_complex_predicate_not_matching_ins2(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
     public override Task Contains_with_local_collection_false(bool async)
     {
         return base.Contains_with_local_collection_false(async);
