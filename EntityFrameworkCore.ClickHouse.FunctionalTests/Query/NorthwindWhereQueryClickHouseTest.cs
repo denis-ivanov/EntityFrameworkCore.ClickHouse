@@ -216,27 +216,6 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
         AssertSql();
     }
 
-    [ConditionalTheory]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_compare_tuple_constructed_equal(bool async)
-    {
-        return base.Where_compare_tuple_constructed_equal(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_compare_tuple_constructed_multi_value_equal(bool async)
-    {
-        return base.Where_compare_tuple_constructed_multi_value_equal(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
-    public override Task Where_compare_tuple_constructed_multi_value_not_equal(bool async)
-    {
-        return base.Where_compare_tuple_constructed_multi_value_not_equal(async);
-    }
-
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
     public override Task Where_contains_on_navigation(bool async)
