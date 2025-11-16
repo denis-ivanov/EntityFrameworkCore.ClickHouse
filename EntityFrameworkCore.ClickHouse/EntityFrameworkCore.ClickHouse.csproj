@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>ClickHouse.EntityFrameworkCore</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
-    <PackageVersion>2.0.1</PackageVersion>
+    <PackageVersion>3.0.0</PackageVersion>
     <Authors>Denis Ivanov</Authors>
     <Description>ClickHouse provider for Entity Framework Core.</Description>
     <PackageTags>ClickHouse; Entity Framework Core</PackageTags>
@@ -11,6 +11,19 @@
     <RepositoryUrl>https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <NoWarn>$(NoWarn);EF1001;EF9100</NoWarn>
+    <PackageReleaseNotes>
+## v3.0.0
+
+New Features:
+- .NET 10 support
+- Row value comparisons support in LINQ queries
+- Tuple comparison operators: ==, !=, >, &lt;, &gt;=, &lt;=
+- Generates optimized ClickHouse tuple syntax
+
+Example: `.Where(c => (c.City, c.Country) == ("London", "UK"))`
+
+Full release notes: https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse/releases/tag/v3.0.0
+    </PackageReleaseNotes>  
   </PropertyGroup>
 
   <ItemGroup>
