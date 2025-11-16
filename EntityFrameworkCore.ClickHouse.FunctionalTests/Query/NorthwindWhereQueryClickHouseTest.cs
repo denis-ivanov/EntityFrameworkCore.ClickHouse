@@ -336,18 +336,6 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
     }
 
     [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Parameter_array_Contains_OrElse_comparison_with_constant(bool async)
-    {
-        return base.Parameter_array_Contains_OrElse_comparison_with_constant(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Parameter_array_Contains_OrElse_comparison_with_parameter_with_overlap(bool async)
-    {
-        return base.Parameter_array_Contains_OrElse_comparison_with_parameter_with_overlap(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
     public override Task Two_parameters_with_same_case_insensitive_name_get_uniquified(bool async)
     {
         return base.Two_parameters_with_same_case_insensitive_name_get_uniquified(async);
