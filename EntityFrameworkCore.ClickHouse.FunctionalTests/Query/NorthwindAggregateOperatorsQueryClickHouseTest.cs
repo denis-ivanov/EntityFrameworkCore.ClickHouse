@@ -201,13 +201,6 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
 
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
-    public override Task OrderBy_Skip_Last_gives_correct_result(bool async)
-    {
-        return base.OrderBy_Skip_Last_gives_correct_result(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD")]
-    [MemberData(nameof(IsAsyncData))]
     public override Task Sum_on_float_column_in_subquery(bool async)
     {
         return base.Sum_on_float_column_in_subquery(async);
@@ -328,11 +321,5 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
     public override Task Contains_with_local_nullable_uint_array_closure(bool async)
     {
         return base.Contains_with_local_nullable_uint_array_closure(async);
-    }
-
-    [ConditionalTheory(Skip = "TBD"), MemberData(nameof(IsAsyncData))]
-    public override Task Where_subquery_where_any(bool async)
-    {
-        return base.Where_subquery_where_any(async);
     }
 }
