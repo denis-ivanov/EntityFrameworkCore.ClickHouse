@@ -136,13 +136,6 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
         return base.Where_as_queryable_expression(async);
     }
 
-    // [ConditionalTheory(Skip = "TBD")]
-    // [InlineData(false)]
-    // public override Task Where_bitwise_xor(bool async)
-    // {
-    //     return base.Where_bitwise_xor(async);
-    // }
-
     [ConditionalTheory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
     public override Task Where_collection_navigation_AsEnumerable_Contains(bool async)
@@ -223,7 +216,7 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
         AssertSql();
     }
 
-    [ConditionalTheory(Skip = "TBD")]
+    [ConditionalTheory]
     [MemberData(nameof(IsAsyncData))]
     public override Task Where_compare_tuple_constructed_equal(bool async)
     {

@@ -21,6 +21,7 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
         => extensionExpression switch
         {
             ClickHouseTrimExpression e => VisitTrim(e),
+            ClickHouseRowValueExpression e => VisitRowValue(e),
 
             _ => base.VisitExtension(extensionExpression)
         };
@@ -66,7 +67,7 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
         return sqlParameterExpression;
     }
 
-    private Expression VisitTrim(ClickHouseTrimExpression trimExpression)
+    protected virtual Expression VisitTrim(ClickHouseTrimExpression trimExpression)
     {
         Sql.Append("trim(")
             .Append(trimExpression.TrimMode switch
@@ -84,5 +85,27 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
         Sql.Append(")");
 
         return trimExpression;
+    }
+
+    protected virtual Expression VisitRowValue(ClickHouseRowValueExpression rowValueExpression)
+    {
+        Sql.Append("(");
+
+        var values = rowValueExpression.Values;
+        var count = values.Count;
+
+        for (var i = 0; i < count; i++)
+        {
+            Visit(values[i]);
+
+            if (i < count - 1)
+            {
+                Sql.Append(", ");
+            }
+        }
+
+        Sql.Append(")");
+
+        return rowValueExpression;
     }
 }

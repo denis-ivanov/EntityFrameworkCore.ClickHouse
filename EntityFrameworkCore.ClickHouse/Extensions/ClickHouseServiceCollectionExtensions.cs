@@ -50,6 +50,7 @@ public static class ClickHouseServiceCollectionExtensions
             .TryAdd<IMethodCallTranslatorProvider, ClickHouseMethodCallTranslatorProvider>()
             .TryAdd<IAggregateMethodCallTranslatorProvider, ClickHouseAggregateMethodCallTranslatorProvider>()
             .TryAdd<IMemberTranslatorProvider, ClickHouseMemberTranslatorProvider>()
+            .TryAdd<IEvaluatableExpressionFilter, ClickHouseEvaluatableExpressionFilter>()
             .TryAdd<IQuerySqlGeneratorFactory, ClickHouseQuerySqlGeneratorFactory>()
             .TryAdd<IQueryableMethodTranslatingExpressionVisitorFactory, ClickHouseQueryableMethodTranslatingExpressionVisitorFactory>()
             .TryAdd<IRelationalSqlTranslatingExpressionVisitorFactory, ClickHouseSqlTranslatingExpressionVisitorFactory>()
