@@ -74,7 +74,8 @@ public class ClickHouseMigrationsSqlGeneratorTest : MigrationsSqlGeneratorTestBa
     [ConditionalFact]
     public override void AddForeignKeyOperation_without_principal_columns()
     {
-        base.AddForeignKeyOperation_without_principal_columns();
+        var exception = Assert.Throws<NotSupportedException>(() => base.AddForeignKeyOperation_without_principal_columns());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportForeignKeys, exception.Message);
     }
 
     [ConditionalFact]
