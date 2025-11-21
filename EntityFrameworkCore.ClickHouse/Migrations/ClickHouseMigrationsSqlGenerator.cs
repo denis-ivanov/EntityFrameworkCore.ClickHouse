@@ -156,8 +156,9 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     {
         var oldComputedSql = operation.OldColumn?.ComputedColumnSql;
         var newComputedSql = operation.ComputedColumnSql;
-    
-        if (!string.IsNullOrEmpty(oldComputedSql) && !string.IsNullOrEmpty(newComputedSql) && oldComputedSql != newComputedSql)
+
+        if (!string.IsNullOrEmpty(oldComputedSql) && !string.IsNullOrEmpty(newComputedSql) &&
+            (oldComputedSql != newComputedSql || operation.OldColumn.IsStored != operation.IsStored))
         {
             builder
                 .Append("ALTER TABLE ")
