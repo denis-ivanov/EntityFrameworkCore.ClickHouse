@@ -734,7 +734,6 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // Assert.Collection(sumIndex.Columns, c => Assert.Equal("Sum", c.Name));
             });
 
-    [ConditionalFact(Skip = "TBD")]
     public override Task Alter_column_change_computed_type()
         => Test(
             builder =>
