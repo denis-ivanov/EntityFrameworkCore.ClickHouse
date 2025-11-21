@@ -6,11 +6,9 @@ public class ClickHouseDbConnection : ClickHouseConnection
 {
     public ClickHouseDbConnection()
     {
-        SetFormDataParameters(true);
     }
 
     public ClickHouseDbConnection(string connectionString) : base(connectionString)
     {
-        SetFormDataParameters(true);
     }
 }
