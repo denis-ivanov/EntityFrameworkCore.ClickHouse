@@ -154,6 +154,29 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 
     protected override void Generate(AlterColumnOperation operation, IModel model, MigrationCommandListBuilder builder)
     {
+        var oldComputedSql = operation.OldColumn?.ComputedColumnSql;
+        var newComputedSql = operation.ComputedColumnSql;
+    
+        if (!string.IsNullOrEmpty(oldComputedSql) && !string.IsNullOrEmpty(newComputedSql) && oldComputedSql != newComputedSql)
+        {
+            builder
+                .Append("ALTER TABLE ")
+                .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+                .Append(" DROP COLUMN ")
+                .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name));
+            EndStatement(builder);
+
+            builder
+                .Append("ALTER TABLE ")
+                .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+                .Append(" ADD COLUMN ");
+
+            ColumnDefinition(operation.Schema, operation.Table, operation.Name, operation, model, builder);
+            EndStatement(builder);
+
+            return;
+        }
+
         builder
             .Append("ALTER TABLE ")
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))

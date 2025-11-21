@@ -661,7 +661,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact]
     public override Task Alter_column_change_computed()
         => Test(
             builder =>
@@ -693,7 +693,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact]
     public override Task Alter_column_change_computed_recreates_indexes()
         => Test(
             builder =>
