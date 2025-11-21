@@ -40,16 +40,16 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Rename_index();
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
-    public override Task Add_foreign_key()
+    public override async Task Add_foreign_key()
     {
-        return base.Add_foreign_key();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_foreign_key());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportForeignKeys, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
-    public override Task Add_foreign_key_with_name()
+    public override async Task Add_foreign_key_with_name()
     {
-        return base.Add_foreign_key_with_name();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_foreign_key_with_name());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportForeignKeys, exception.Message);
     }
 
     public override async Task Create_schema()
@@ -1326,10 +1326,10 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Drop_column_primary_key();
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
-    public override Task Drop_foreign_key()
+    public override async Task Drop_foreign_key()
     {
-        return base.Drop_foreign_key();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Drop_foreign_key());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportForeignKeys, exception.Message);
     }
 
     public override async Task Move_sequence()

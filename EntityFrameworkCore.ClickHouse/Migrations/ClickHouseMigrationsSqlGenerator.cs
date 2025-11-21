@@ -364,4 +364,22 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         
         base.Generate(operation, model, builder, terminate);
     }
+
+    protected override void Generate(
+        AddForeignKeyOperation operation,
+        IModel model,
+        MigrationCommandListBuilder builder,
+        bool terminate = true)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportForeignKeys);
+    }
+
+    protected override void Generate(
+        DropForeignKeyOperation operation,
+        IModel model,
+        MigrationCommandListBuilder builder,
+        bool terminate = true)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportForeignKeys);
+    }
 }
