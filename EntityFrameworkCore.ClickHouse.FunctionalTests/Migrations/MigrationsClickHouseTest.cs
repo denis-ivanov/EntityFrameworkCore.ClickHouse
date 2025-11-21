@@ -116,16 +116,28 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // TODO: no scaffolding support for check constraints, https://github.com/aspnet/EntityFrameworkCore/issues/15408
             });
 
-    [ConditionalTheory(Skip = "ClickHouse does not support collations")]
-    public override Task Add_column_computed_with_collation(bool stored)
+    public override async Task Add_column_computed_with_collation(bool stored)
     {
-        return base.Add_column_computed_with_collation(stored);
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_column_computed_with_collation(stored));
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportColumnCollations, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support collations")]
-    public override Task Add_column_with_collation()
+    public override async Task Add_column_with_collation()
     {
-        return base.Add_column_with_collation();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_column_with_collation());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportColumnCollations, exception.Message);
+    }
+
+    public override async Task Alter_column_reset_collation()
+    {
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_column_reset_collation());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportColumnCollations, exception.Message);
+    }
+
+    public override async Task Alter_column_set_collation()
+    {
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_column_set_collation());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportColumnCollations, exception.Message);
     }
 
     [ConditionalFact]
@@ -2700,8 +2712,8 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
     {
         return base.Create_table_with_optional_complex_type_with_required_properties();
     }
-    
-    protected override string NonDefaultCollation { get; }
+
+    protected override string NonDefaultCollation => "en_US.utf8";
 
     public class MigrationsClickHouseFixture : MigrationsFixtureBase
     {
