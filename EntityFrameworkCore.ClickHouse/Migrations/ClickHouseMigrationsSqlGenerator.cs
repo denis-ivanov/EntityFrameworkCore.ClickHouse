@@ -33,6 +33,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         builder
             .Append(" ")
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
+            .Append(" ")
             .Append(operation.IsNullable && !operation.ClrType.IsArray ? columnType.GetNullableType() : columnType)
             .Append(defaultValueType)
             .Append(operation.ComputedColumnSql!);
@@ -46,6 +47,11 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         IModel model,
         MigrationCommandListBuilder builder)
     {
+        if (operation.Collation != null)
+        {
+            throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportColumnCollations);
+        }
+
         if (!string.IsNullOrEmpty(operation.ComputedColumnSql))
         {
             ComputedColumnDefinition(schema, table, name, operation, model, builder);
