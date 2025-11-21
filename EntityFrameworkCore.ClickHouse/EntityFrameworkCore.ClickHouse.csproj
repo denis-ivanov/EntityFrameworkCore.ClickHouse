@@ -36,6 +36,7 @@ Full release notes: https://github.com/denis-ivanov/EntityFrameworkCore.ClickHou
   <ItemGroup>
     <None Include="..\Logo.png" Pack="true" PackagePath="" />
     <None Include="..\README.md" Pack="true" PackagePath="" />
+    <InternalsVisibleTo Include="EntityFrameworkCore.ClickHouse.FunctionalTests" />
   </ItemGroup>
 
 </Project>

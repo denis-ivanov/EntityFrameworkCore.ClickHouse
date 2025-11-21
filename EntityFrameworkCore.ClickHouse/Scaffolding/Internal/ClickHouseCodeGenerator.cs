@@ -22,7 +22,7 @@ public class ClickHouseCodeGenerator : ProviderCodeGenerator
 
     public override MethodCallCodeFragment GenerateUseProvider(
         string connectionString,
-        MethodCallCodeFragment? providerOptions)
+        MethodCallCodeFragment providerOptions)
         => new(
             UseClickHouseMethodInfo,
             providerOptions == null

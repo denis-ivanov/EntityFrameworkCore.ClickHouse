@@ -1,9 +1,11 @@
-﻿using ClickHouse.EntityFrameworkCore.Infrastructure;
+﻿using ClickHouse.EntityFrameworkCore;
+using ClickHouse.EntityFrameworkCore.Infrastructure;
 using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using Xunit;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Migrations;
@@ -223,10 +225,10 @@ public class ClickHouseMigrationsSqlGeneratorTest : MigrationsSqlGeneratorTestBa
         base.DefaultValue_with_line_breaks_2(isUnicode);
     }
 
-    [ConditionalTheory(Skip = "ClickHouse does not support sequences")]
     public override void Sequence_restart_operation(long? startsAt)
     {
-        base.Sequence_restart_operation(startsAt);
+        var exception = Assert.Throws<NotSupportedException>(() => base.Sequence_restart_operation(startsAt));
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
     protected override string GetGeometryCollectionStoreType()

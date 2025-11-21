@@ -1,4 +1,5 @@
-﻿using ClickHouse.EntityFrameworkCore.Extensions;
+﻿using ClickHouse.EntityFrameworkCore;
+using ClickHouse.EntityFrameworkCore.Extensions;
 using ClickHouse.EntityFrameworkCore.Metadata;
 using ClickHouse.EntityFrameworkCore.Scaffolding.Internal;
 using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
@@ -51,16 +52,16 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Add_foreign_key_with_name();
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support schemas")]
-    public override Task Create_schema()
+    public override async Task Create_schema()
     {
-        return base.Create_schema();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_schema());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSchemas, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Create_sequence()
+    public override async Task Create_sequence()
     {
-        return base.Create_sequence();
+        var exception = await Assert.ThrowsAnyAsync<NotSupportedException>(() => base.Create_sequence());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
     [ConditionalFact]
@@ -567,16 +568,16 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(customersTable.PrimaryKey!.Columns));
             });
 
-    [ConditionalFact(Skip = "ClickHouse does not support unique constraints")]
-    public override Task Add_unique_constraint()
+    public override async Task Add_unique_constraint()
     {
-        return base.Add_unique_constraint();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_unique_constraint());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueConstraints, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support unique constraints")]
-    public override Task Add_unique_constraint_composite_with_name()
+    public override async Task Add_unique_constraint_composite_with_name()
     {
-        return base.Add_unique_constraint_composite_with_name();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_unique_constraint_composite_with_name());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueConstraints, exception.Message);
     }
 
     [ConditionalFact]
@@ -1014,28 +1015,28 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Alter_index_change_sort_order();
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support unique indexes")]
-    public override Task Alter_index_make_unique()
+    public override async Task Alter_index_make_unique()
     {
-        return base.Alter_index_make_unique();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_index_make_unique());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueIndexes, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Alter_sequence_all_settings()
+    public override async Task Alter_sequence_all_settings()
     {
-        return base.Alter_sequence_all_settings();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_sequence_all_settings());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Alter_sequence_increment_by()
+    public override async Task Alter_sequence_increment_by()
     {
-        return base.Alter_sequence_increment_by();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_sequence_increment_by());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Alter_sequence_restart_with()
+    public override async Task Alter_sequence_restart_with()
     {
-        return base.Alter_sequence_restart_with();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_sequence_restart_with());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
     [ConditionalFact(Skip = "ClickHouse does not support table schemas")]
@@ -1062,10 +1063,10 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Create_index_descending_mixed();
     }
 
-    [ConditionalFact(Skip = "TBD")]
-    public override Task Create_index_unique()
+    public override async Task Create_index_unique()
     {
-        return base.Create_index_unique();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_index_unique());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueIndexes, exception.Message);
     }
 
     [ConditionalFact(Skip = "TBD")]
@@ -1074,22 +1075,22 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Create_index_with_filter();
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Create_sequence_all_settings()
+    public override async Task Create_sequence_all_settings()
     {
-        return base.Create_sequence_all_settings();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_sequence_all_settings());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSchemas, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Create_sequence_short()
+    public override async Task Create_sequence_short()
     {
-        return base.Create_sequence_short();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_sequence_short());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Create_sequence_long()
+    public override async Task Create_sequence_long()
     {
-        return base.Create_sequence_long();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_sequence_long());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
     [ConditionalFact]
@@ -1184,10 +1185,10 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(customersTable.PrimaryKey!.Columns));
             });
 
-    [ConditionalFact(Skip = "ClickHouse does not support unique indexes")]
-    public override Task Create_unique_index_with_filter()
+    public override async Task Create_unique_index_with_filter()
     {
-        return base.Create_unique_index_with_filter();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_unique_index_with_filter());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueIndexes, exception.Message);
     }
 
     [ConditionalFact]
@@ -1320,16 +1321,16 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Drop_foreign_key();
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Move_sequence()
+    public override async Task Move_sequence()
     {
-        return base.Move_sequence();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Move_sequence());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support table schemas")]
-    public override Task Move_table()
+    public override async Task Move_table()
     {
-        return base.Move_table();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Move_table());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSchemas, exception.Message);
     }
 
     [ConditionalFact]
@@ -1353,10 +1354,10 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Single(table.Columns, c => c.Name == "SomeOtherColumn");
             });
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Rename_sequence()
+    public override async Task Rename_sequence()
     {
-        return base.Rename_sequence();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Rename_sequence());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
     [ConditionalFact]
@@ -1395,16 +1396,16 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Drop_primary_key_string();
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support sequences")]
-    public override Task Drop_sequence()
+    public override async Task Drop_sequence()
     {
-        return base.Drop_sequence();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Drop_sequence());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support unique constraints")]
-    public override Task Drop_unique_constraint()
+    public override async Task Drop_unique_constraint()
     {
-        return base.Drop_unique_constraint();
+        var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Drop_unique_constraint());
+        Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueConstraints, exception.Message);
     }
 
     [ConditionalFact(Skip = "TBD")]

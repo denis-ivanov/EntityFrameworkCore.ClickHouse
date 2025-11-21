@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Text;
 
 namespace ClickHouse.EntityFrameworkCore.Migrations;
@@ -276,5 +277,61 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
             .Append(_stringTypeMapping.GenerateSqlLiteral(operation.Comment ?? string.Empty));
 
         EndStatement(builder);
+    }
+
+    protected override void Generate(DropSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
+    }
+
+    protected override void Generate(AlterSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
+    }
+
+    protected override void Generate(CreateSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
+    }
+
+    protected override void Generate(RenameSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
+    }
+
+    protected override void Generate(RestartSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
+    }
+
+    protected override void Generate(EnsureSchemaOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSchemas);
+    }
+
+    protected override void Generate(DropSchemaOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSchemas);
+    }
+
+    protected override void Generate(AddUniqueConstraintOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportUniqueConstraints);
+    }
+
+    protected override void Generate(DropUniqueConstraintOperation operation, IModel model, MigrationCommandListBuilder builder)
+    {
+        throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportUniqueConstraints);
+    }
+
+    protected override void Generate(CreateIndexOperation operation, IModel model, MigrationCommandListBuilder builder,
+        bool terminate = true)
+    {
+        if (operation.IsUnique)
+        {
+            throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportUniqueIndexes);
+        }
+        
+        base.Generate(operation, model, builder, terminate);
     }
 }
