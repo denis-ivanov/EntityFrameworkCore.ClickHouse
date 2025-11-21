@@ -251,7 +251,24 @@ public class NorthwindWhereQueryClickHouseTest : NorthwindWhereQueryRelationalTe
         return base.Where_Queryable_AsEnumerable_Count(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
+    /*
+     * Re-write to
+SELECT "c"."CustomerID",
+       "o0"."CustomerID",
+       "o0"."OrderID"
+  FROM "Customers" AS "c"
+ INNER
+  JOIN
+     ( SELECT DISTINCT "CustomerID"
+         FROM "Orders" WHERE "CustomerID" = 'ALFKI'
+     ) AS "subq"
+    ON "c"."CustomerID" = "subq"."CustomerID"
+  LEFT
+  JOIN "Orders" AS "o0"
+    ON "c"."CustomerID" = "o0"."CustomerID"
+ ORDER BY "c"."CustomerID";
+     */
+    [ConditionalTheory(Skip = "")]
     [MemberData(nameof(IsAsyncData))]
     public override Task Where_Queryable_ToArray_Contains(bool async)
     {
