@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EntityFrameworkCore.ClickHouse.NTS\EntityFrameworkCore.ClickHouse.NTS.csproj" />
     <ProjectReference Include="..\EntityFrameworkCore.ClickHouse\EntityFrameworkCore.ClickHouse.csproj" />
   </ItemGroup>
 
