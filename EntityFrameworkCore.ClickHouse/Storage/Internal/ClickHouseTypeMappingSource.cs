@@ -26,6 +26,8 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     private static readonly RelationalTypeMapping Float32TypeMapping = new ClickHouseFloat32TypeMapping();
     private static readonly RelationalTypeMapping UuidTypeMapping = new ClickHouseUuidTypeMapping();
     private static readonly RelationalTypeMapping JsonTypeMapping = new ClickHouseJsonTypeMapping();
+    private static readonly RelationalTypeMapping TimeTypeMapping = new ClickHouseTimeTypeMapping(ClickHouseTimeTypeMapping.Time);
+    private static readonly RelationalTypeMapping Time64TypeMapping = new ClickHouseTimeTypeMapping(ClickHouseTimeTypeMapping.Time64);
 
     private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new()
     {
@@ -45,7 +47,8 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         { typeof(double), Float64TypeMapping },
         { typeof(float), Float32TypeMapping },
         { typeof(Guid), UuidTypeMapping },
-        { typeof(JsonElement), JsonTypeMapping }
+        { typeof(JsonElement), JsonTypeMapping },
+        { typeof(TimeSpan), TimeTypeMapping }
     };
 
     private static readonly Dictionary<string, RelationalTypeMapping> AliasTypeMapping = new(StringComparer.InvariantCultureIgnoreCase)
@@ -128,7 +131,9 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         ["Date32"] = DateTypeMapping,
         ["DateTime"] = DateTimeTypeMapping,
         ["DateTime64"] = DateTimeTypeMapping,
-        ["Json"] = JsonTypeMapping
+        ["Json"] = JsonTypeMapping,
+        [ClickHouseTimeTypeMapping.Time] = TimeTypeMapping,
+        [ClickHouseTimeTypeMapping.Time64] = TimeTypeMapping
     };
 
     public ClickHouseTypeMappingSource(TypeMappingSourceDependencies dependencies, RelationalTypeMappingSourceDependencies relationalDependencies)
