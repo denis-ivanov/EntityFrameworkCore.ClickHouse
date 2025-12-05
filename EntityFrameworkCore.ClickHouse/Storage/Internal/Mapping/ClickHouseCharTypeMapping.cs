@@ -14,7 +14,7 @@ public class ClickHouseCharTypeMapping : CharTypeMapping
                 new CoreTypeMappingParameters(
                     typeof(char),
                     new ClickHouseCharValueConverter()),
-                "FixedString(1)",
+                "String",
                 StoreTypePostfix.None,
                 System.Data.DbType.StringFixedLength,
                 true,
