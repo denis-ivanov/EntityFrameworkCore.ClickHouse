@@ -1,8 +1,10 @@
 ﻿using ClickHouse.Driver.ADO.Parameters;
+using ClickHouse.EntityFrameworkCore.Extensions;
 using EntityFrameworkCore.ClickHouse.NTS.Storage.Json;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using System.Data.Common;
 
 namespace EntityFrameworkCore.ClickHouse.NTS.Storage.Internal.Mapping;
@@ -25,21 +27,19 @@ public class ClickHouseRingTypeMapping : RelationalGeometryTypeMapping<MultiPoin
 
     protected override string AsText(object value)
     {
-        throw new NotImplementedException();
+        return ((MultiPoint)value).AsText();
     }
 
     protected override int GetSrid(object value)
     {
-        throw new NotImplementedException();
+        return ((MultiPoint)value).SRID;
     }
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        if (parameter is ClickHouseDbParameter p)
-        {
-            p.ClickHouseType = StoreType;
-        }
+        base.ConfigureParameter(parameter);
+        parameter.SetStoreType(StoreType);
     }
 
-    protected override Type WktReaderType { get; }
+    protected override Type WktReaderType => typeof(WKTReader);
 }

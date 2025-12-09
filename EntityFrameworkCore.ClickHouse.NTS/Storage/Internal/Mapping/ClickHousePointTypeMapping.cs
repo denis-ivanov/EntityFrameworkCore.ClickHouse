@@ -1,4 +1,5 @@
 ﻿using ClickHouse.Driver.ADO.Parameters;
+using ClickHouse.EntityFrameworkCore.Extensions;
 using EntityFrameworkCore.ClickHouse.NTS.Storage.Json;
 using EntityFrameworkCore.ClickHouse.NTS.Storage.ValueConversion.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -12,7 +13,7 @@ namespace EntityFrameworkCore.ClickHouse.NTS.Storage.Internal.Mapping;
 public class ClickHousePointTypeMapping : RelationalGeometryTypeMapping<Point, Tuple<double, double>>
 {
     public ClickHousePointTypeMapping()
-        : base(new ClickHousePointValueConverter(), "Point", ClickHouseJsonGeometryWktReaderWriter.Instance)
+        : base(new ClickHousePointValueConverter(), Geometry.TypeNamePoint, ClickHouseJsonGeometryWktReaderWriter.Instance)
     {
     }
 
@@ -27,19 +28,17 @@ public class ClickHousePointTypeMapping : RelationalGeometryTypeMapping<Point, T
     }
 
     protected override string AsText(object value)
-        => ((Geometry)value).AsText();
+        => ((Point)value).AsText();
 
     protected override int GetSrid(object value)
-        => ((Geometry)value).SRID;
+        => ((Point)value).SRID;
 
     protected override Type WktReaderType
         => typeof(WKTReader);
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        if (parameter is ClickHouseDbParameter p)
-        {
-            p.ClickHouseType = StoreType;
-        }
+        base.ConfigureParameter(parameter);
+        parameter.SetStoreType(StoreType);
     }
 }

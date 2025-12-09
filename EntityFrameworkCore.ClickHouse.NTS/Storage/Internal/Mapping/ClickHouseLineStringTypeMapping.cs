@@ -10,37 +10,43 @@ using System.Data.Common;
 
 namespace EntityFrameworkCore.ClickHouse.NTS.Storage.Internal.Mapping;
 
-public class ClickHousePolygonTypeMapping : RelationalGeometryTypeMapping<Polygon, byte[]>
+public class ClickHouseLineStringTypeMapping : RelationalGeometryTypeMapping<LineString, Tuple<double, double>[]>
 {
-    public ClickHousePolygonTypeMapping()
-        : base(new ClickHousePolygonValueConverter(), Geometry.TypeNamePolygon, ClickHouseJsonGeometryWktReaderWriter.Instance)
+    public ClickHouseLineStringTypeMapping()
+        : base(
+            ClickHouseLineStringValueConverter.Instance,
+            Geometry.TypeNameLineString,
+            ClickHouseJsonGeometryWktReaderWriter.Instance)
     {
     }
 
-    protected ClickHousePolygonTypeMapping(RelationalTypeMappingParameters parameters, ValueConverter<Polygon, byte[]>? converter) : base(parameters, converter)
+    protected ClickHouseLineStringTypeMapping(RelationalTypeMappingParameters parameters, ValueConverter<LineString, Tuple<double, double>[]>? converter)
+        : base(parameters, converter)
     {
     }
 
     protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
     {
-        return new ClickHousePolygonTypeMapping(parameters, SpatialConverter);
+        return new ClickHouseLineStringTypeMapping(
+            parameters,
+            (ValueConverter<LineString, Tuple<double, double>[]>)Converter!);
     }
 
     protected override string AsText(object value)
     {
-        return ((Polygon)value).AsText();
+        return ((LineString)value).AsText();
     }
 
     protected override int GetSrid(object value)
     {
-        return ((Polygon)value).SRID;
+        return ((LineString)value).SRID;
     }
+
+    protected override Type WktReaderType => typeof(WKTReader);
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
         base.ConfigureParameter(parameter);
         parameter.SetStoreType(StoreType);
     }
-
-    protected override Type WktReaderType => typeof(WKTReader);
 }

@@ -14,4 +14,13 @@
     <PackageReference Include="NetTopologySuite" Version="2.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\EntityFrameworkCore.ClickHouse\Extensions\ClickHouseDbParameterExtensions.cs">
+      <Link>Extensions\ClickHouseDbParameterExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\EntityFrameworkCore.ClickHouse\Extensions\StringExtensions.cs">
+      <Link>Extensions\StringExtensions.cs</Link>
+    </Compile>
+  </ItemGroup>
+
 </Project>

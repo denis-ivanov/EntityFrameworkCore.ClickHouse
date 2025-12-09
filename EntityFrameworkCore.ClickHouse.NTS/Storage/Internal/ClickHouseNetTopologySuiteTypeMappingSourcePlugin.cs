@@ -11,6 +11,7 @@ public class ClickHouseNetTopologySuiteTypeMappingSourcePlugin : IRelationalType
     private static readonly RelationalTypeMapping PolygonTypeMapping = new ClickHousePolygonTypeMapping();
     private static readonly RelationalTypeMapping MultiPolygonTypeMapping = new ClickHouseMultiPolygonTypeMapping();
     private static readonly RelationalTypeMapping GeometryTypeMapping = new ClickHouseGeometryTypeMapping();
+    private static readonly RelationalTypeMapping LineStringTypeMapping = new ClickHouseLineStringTypeMapping();
 
     private static readonly Dictionary<string, RelationalTypeMapping> StoreTypeMappings = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -18,7 +19,8 @@ public class ClickHouseNetTopologySuiteTypeMappingSourcePlugin : IRelationalType
         { "Ring", RingTypeMapping },
         { "Polygon", PolygonTypeMapping },
         { "MultiPolygon", MultiPolygonTypeMapping },
-        { "Geometry", GeometryTypeMapping }
+        { "Geometry", GeometryTypeMapping },
+        { "LineString", LineStringTypeMapping }
     };
 
     private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new()
@@ -27,7 +29,8 @@ public class ClickHouseNetTopologySuiteTypeMappingSourcePlugin : IRelationalType
         { typeof(MultiPoint), RingTypeMapping },
         { typeof(Polygon), PolygonTypeMapping },
         { typeof(MultiPolygon), MultiPolygonTypeMapping },
-        { typeof(Geometry), GeometryTypeMapping }
+        { typeof(Geometry), GeometryTypeMapping },
+        { typeof(LineString), LineStringTypeMapping }
     };
 
     public RelationalTypeMapping? FindMapping(in RelationalTypeMappingInfo mappingInfo)
