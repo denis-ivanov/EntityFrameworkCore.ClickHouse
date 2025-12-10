@@ -48,7 +48,7 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         { typeof(float), Float32TypeMapping },
         { typeof(Guid), UuidTypeMapping },
         { typeof(JsonElement), JsonTypeMapping },
-        { typeof(TimeSpan), TimeTypeMapping }
+        { typeof(TimeSpan), Time64TypeMapping }
     };
 
     private static readonly Dictionary<string, RelationalTypeMapping> AliasTypeMapping = new(StringComparer.InvariantCultureIgnoreCase)
