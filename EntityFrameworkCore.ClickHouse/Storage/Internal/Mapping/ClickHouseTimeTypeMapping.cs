@@ -11,7 +11,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 public class ClickHouseTimeTypeMapping : TimeSpanTypeMapping
 {
     internal const string Time = nameof(Time);
-    internal const string Time64 = nameof(Time64);
+    internal const string Time64 = "Time64(9)";
 
     public ClickHouseTimeTypeMapping(string storeType)
         : base(
