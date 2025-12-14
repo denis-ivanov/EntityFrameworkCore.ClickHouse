@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using System;
+using System.Buffers.Binary;
 using System.Collections;
 using System.Diagnostics;
 using System.Linq;
@@ -517,6 +518,54 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
     public override Task Can_insert_and_read_back_with_null_string_foreign_key()
     {
         return base.Can_insert_and_read_back_with_null_string_foreign_key();
+    }
+
+    [ConditionalFact]
+    public async Task ByteSwap()
+    {
+        var entity = new BuiltInDataTypes
+        {
+            Id = 101,
+            PartitionId = 101,
+            TestSignedByte = -128,
+            TestInt16 = -32768,
+            TestInt32 = -2147483648,
+            TestInt64 = -9223372036854775808L,
+            TestByte = 255,
+            TestUnsignedInt16 = 65535,
+            TestUnsignedInt32 = 4294967295U,
+            TestUnsignedInt64 = 18446744073709551615UL,
+        };
+        
+        await using var context = CreateContext();
+        context.Set<BuiltInDataTypes>().Add(entity);
+
+        Assert.Equal(1, await context.SaveChangesAsync());
+        
+        var swaped = await context.Set<BuiltInDataTypes>()
+            .Where(e => e.Id == 101)
+            .Select(e => new
+            {
+                Int8 = BinaryPrimitives.ReverseEndianness(e.TestSignedByte),
+                Int16 = BinaryPrimitives.ReverseEndianness(e.TestInt16),
+                Int32 = BinaryPrimitives.ReverseEndianness(e.TestInt32),
+                Int64 = BinaryPrimitives.ReverseEndianness(e.TestInt64),
+                UInt8 = BinaryPrimitives.ReverseEndianness(e.TestByte),
+                UInt16 = BinaryPrimitives.ReverseEndianness(e.TestUnsignedInt16),
+                UInt32 = BinaryPrimitives.ReverseEndianness(e.TestUnsignedInt32),
+                UInt64 = BinaryPrimitives.ReverseEndianness(e.TestUnsignedInt64)
+            })
+            .SingleAsync();
+
+        Assert.Equal(BinaryPrimitives.ReverseEndianness(entity.TestSignedByte), swaped.Int8);
+        Assert.Equal(BinaryPrimitives.ReverseEndianness(entity.TestInt16), swaped.Int16);
+        Assert.Equal(BinaryPrimitives.ReverseEndianness(entity.TestInt32), swaped.Int32);
+        Assert.Equal(BinaryPrimitives.ReverseEndianness(entity.TestInt64), swaped.Int64);
+
+        Assert.Equal(BinaryPrimitives.ReverseEndianness(entity.TestByte), swaped.UInt8);
+        Assert.Equal(BinaryPrimitives.ReverseEndianness(entity.TestUnsignedInt16), swaped.UInt16);
+        Assert.Equal(BinaryPrimitives.ReverseEndianness(entity.TestUnsignedInt32), swaped.UInt32);
+        Assert.Equal(BinaryPrimitives.ReverseEndianness(entity.TestUnsignedInt64), swaped.UInt64);
     }
 
     private void QueryBuiltInDataTypesTest<TEntity>(EntityEntry<TEntity> source)
