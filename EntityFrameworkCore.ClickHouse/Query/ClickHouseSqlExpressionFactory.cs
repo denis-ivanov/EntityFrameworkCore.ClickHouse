@@ -353,6 +353,70 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     }
 
     #endregion
+
+    #region Int8
+
+    public SqlExpression ToInt8(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt8",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(sbyte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(sbyte)));
+    }
+
+    public SqlExpression ToInt8OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt8OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(sbyte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(sbyte)));
+    }
+
+    public SqlExpression ToInt8OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt8OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(sbyte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(sbyte)));
+    }
+
+    public SqlExpression ToInt8OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt8OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(sbyte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(sbyte)));
+    }
+
+    public SqlExpression ToInt8OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: sbyte })
+        {
+            defaultValue = ToInt8(defaultValue);
+        }
+
+        return Function(
+            name: "toInt8OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(sbyte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(sbyte)));
+    }
+
+    #endregion
     
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
