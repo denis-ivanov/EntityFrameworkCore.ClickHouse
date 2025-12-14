@@ -339,6 +339,21 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
 
     #endregion
 
+    #region Bool
+
+    public SqlExpression ToBool(SqlExpression expression)
+    {
+        return Function(
+            name: "toBool",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(bool),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(bool)));
+    }
+
+    #endregion
+    
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
         RelationalTypeMapping typeMapping)
