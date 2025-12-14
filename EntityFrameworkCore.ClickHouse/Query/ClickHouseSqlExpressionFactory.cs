@@ -545,7 +545,71 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     }
 
     #endregion
+
+    #region Int64
+
+    public SqlExpression ToInt64(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt64",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(long),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(long)));
+    }
+
+    public SqlExpression ToInt64OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt64OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(long),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(long)));
+    }
+
+    public SqlExpression ToInt64OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt64OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(long),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(long)));
+    }
+
+    public SqlExpression ToInt64OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt64OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(long),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(long)));
+    }
     
+    public SqlExpression ToInt64OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: long })
+        {
+            defaultValue = ToInt64(defaultValue);
+        }
+
+        return Function(
+            name: "toInt64OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(long),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(long)));
+    }
+
+    #endregion
+
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
         RelationalTypeMapping typeMapping)
