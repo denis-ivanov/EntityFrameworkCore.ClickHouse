@@ -14,6 +14,18 @@ namespace ClickHouse.EntityFrameworkCore.Query;
 
 public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
 {
+    private const byte DecimalPrecision32 = 9;
+    private const byte DecimalMaxScale32 = 9;
+
+    private const byte DecimalPrecision64 = 18;
+    private const byte DecimalMaxScale64 = 18;
+
+    private const byte DecimalPrecision128 = 38;
+    private const byte DecimalMaxScale128 = 38;
+
+    private const byte DecimalPrecision256 = 76;
+    private const byte DecimalMaxScale256 = 76;
+
     public ClickHouseSqlExpressionFactory(SqlExpressionFactoryDependencies dependencies) : base(dependencies)
     {
     }
@@ -70,7 +82,263 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     {
         return new ClickHouseTrimExpression(stringExpression, chars, mode);
     }
+
+    #region Decimal
+
+    public SqlExpression ToDecimal32(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal32",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision32, DecimalMaxScale32, scale));
+    }
+
+    public SqlExpression ToDecimal32OrZero(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal32OrZero",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision32, DecimalMaxScale32, scale));
+    }
+
+    public SqlExpression ToDecimal32OrNull(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal32OrNull",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision32, DecimalMaxScale32, scale));
+    }
+
+    public SqlExpression ToDecimal32OrDefault(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal32OrDefault",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision32, DecimalMaxScale32, scale));
+    }
+
+    public SqlExpression ToDecimal32OrDefault(SqlExpression number, SqlExpression scale, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: decimal })
+        {
+            defaultValue = ToDecimal32(defaultValue, scale);
+        }
+
+        return Function(
+            name: "toDecimal32OrDefault",
+            arguments: [number, scale, defaultValue],
+            nullable: true,
+            argumentsPropagateNullability: [true, true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision32, DecimalMaxScale32, scale));
+    }
+
+    public SqlExpression ToDecimal64(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal64",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision64, DecimalMaxScale64, scale));
+    }
+
+    public SqlExpression ToDecimal64OrZero(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal64OrZero",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision64, DecimalMaxScale64, scale));
+    }
+
+    public SqlExpression ToDecimal64OrNull(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal64OrNull",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision64, DecimalMaxScale64, scale));
+    }
+
+    public SqlExpression ToDecimal64OrDefault(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal64OrDefault",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision64, DecimalMaxScale64, scale));
+    }
+
+    public SqlExpression ToDecimal64OrDefault(SqlExpression number, SqlExpression scale, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: decimal })
+        {
+            defaultValue = ToDecimal64(defaultValue, scale);
+        }
+
+        return Function(
+            name: "toDecimal64OrDefault",
+            arguments: [number, scale, defaultValue],
+            nullable: true,
+            argumentsPropagateNullability: [true, true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision64, DecimalMaxScale64, scale));
+    }
     
+    public SqlExpression ToDecimal128(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal128",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision128, DecimalMaxScale128, scale));
+    }
+
+    public SqlExpression ToDecimal128OrZero(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal128OrZero",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision128, DecimalMaxScale128, scale));
+    }
+
+    public SqlExpression ToDecimal128OrNull(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal128OrNull",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision128, DecimalMaxScale128, scale));
+    }
+
+    public SqlExpression ToDecimal128OrDefault(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal128OrDefault",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision128, DecimalMaxScale128, scale));
+    }
+
+    public SqlExpression ToDecimal128OrDefault(SqlExpression number, SqlExpression scale, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: decimal })
+        {
+            defaultValue = ToDecimal128(defaultValue, scale);
+        }
+
+        return Function(
+            name: "toDecimal128OrDefault",
+            arguments: [number, scale, defaultValue],
+            nullable: true,
+            argumentsPropagateNullability: [true, true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision128, DecimalMaxScale128, scale));
+    }
+
+    public SqlExpression ToDecimal256(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal256",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, scale));
+    }
+
+    public SqlExpression ToDecimal256OrZero(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal256OrZero",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, scale));
+    }
+
+    public SqlExpression ToDecimal256OrNull(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal256OrNull",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, scale));
+    }
+
+    public SqlExpression ToDecimal256OrDefault(SqlExpression number, SqlExpression scale)
+    {
+        return Function(
+            name: "toDecimal256OrDefault",
+            arguments: [number, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, scale));
+    }
+
+    public SqlExpression ToDecimal256OrDefault(SqlExpression number, SqlExpression scale, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: decimal })
+        {
+            defaultValue = ToDecimal256(defaultValue, scale);
+        }
+
+        return Function(
+            name: "toDecimal256OrDefault",
+            arguments: [number, scale, defaultValue],
+            nullable: true,
+            argumentsPropagateNullability: [true, true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, scale));
+    }
+
+    private RelationalTypeMapping GetDecimalTypaMapping(byte precision, byte maxScale, SqlExpression scale)
+    {
+        if (scale is SqlConstantExpression { Value: byte scaleValue })
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(scaleValue, maxScale);
+
+            return Dependencies.TypeMappingSource.FindMapping($"Decimal({precision}, {scaleValue})");
+        }
+
+        return null;
+    }
+
+    #endregion
+
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
         RelationalTypeMapping typeMapping)

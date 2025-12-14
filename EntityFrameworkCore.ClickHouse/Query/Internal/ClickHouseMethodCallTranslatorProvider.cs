@@ -19,7 +19,8 @@ public sealed class ClickHouseMethodCallTranslatorProvider : RelationalMethodCal
             new ClickHouseDateOnlyMethodTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseRegexMethodTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseBinaryPrimitivesMethodTranslator(dependencies.SqlExpressionFactory, dependencies.RelationalTypeMappingSource),
-            new ClickHouseArithmeticMethodTranslator(dependencies.SqlExpressionFactory, dependencies.RelationalTypeMappingSource)
+            new ClickHouseArithmeticMethodTranslator(dependencies.SqlExpressionFactory, dependencies.RelationalTypeMappingSource),
+            new ClickHouseDecimalMethodTranslator(dependencies.SqlExpressionFactory)
         ]);
     }
 }
