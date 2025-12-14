@@ -610,6 +610,70 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
 
     #endregion
 
+    #region Int128
+
+    public SqlExpression ToInt128(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt128",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(Int128),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Int128)));
+    }
+
+    public SqlExpression ToInt128OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt128OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(Int128),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Int128)));
+    }
+
+    public SqlExpression ToInt128OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt128OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(Int128),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Int128)));
+    }
+
+    public SqlExpression ToInt128OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toInt128OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(Int128),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Int128)));
+    }
+    
+    public SqlExpression ToInt128OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: Int128 })
+        {
+            defaultValue = ToInt128(defaultValue);
+        }
+
+        return Function(
+            name: "toInt128OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(Int128),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Int128)));
+    }
+
+    #endregion
+    
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
         RelationalTypeMapping typeMapping)
