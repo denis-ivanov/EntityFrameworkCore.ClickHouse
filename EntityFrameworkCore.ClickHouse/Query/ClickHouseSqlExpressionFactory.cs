@@ -738,6 +738,70 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
 
     #endregion
     
+    #region UInt16
+
+    public SqlExpression ToUInt16(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt16",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(ushort),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ushort)));
+    }
+
+    public SqlExpression ToUInt16OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt16OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(ushort),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ushort)));
+    }
+
+    public SqlExpression ToUInt16OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt16OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(ushort),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ushort)));
+    }
+
+    public SqlExpression ToUInt16OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt16OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(ushort),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ushort)));
+    }
+
+    public SqlExpression ToUInt16OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: ushort })
+        {
+            defaultValue = ToUInt16(defaultValue);
+        }
+
+        return Function(
+            name: "toUInt16OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(byte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ushort)));
+    }
+
+    #endregion
+    
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
         RelationalTypeMapping typeMapping)
