@@ -796,8 +796,72 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             arguments: [expression, defaultValue],
             argumentsPropagateNullability: [true, true],
             nullable: true,
-            returnType: typeof(byte),
+            returnType: typeof(ushort),
             typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ushort)));
+    }
+
+    #endregion
+    
+    #region UInt32
+
+    public SqlExpression ToUInt32(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt32",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(uint),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(uint)));
+    }
+
+    public SqlExpression ToUInt32OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt32OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(uint),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(uint)));
+    }
+
+    public SqlExpression ToUInt32OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt32OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(uint),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(uint)));
+    }
+
+    public SqlExpression ToUInt32OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt32OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(uint),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(uint)));
+    }
+
+    public SqlExpression ToUInt32OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: uint })
+        {
+            defaultValue = ToUInt32(defaultValue);
+        }
+
+        return Function(
+            name: "toUInt32OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(uint),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(uint)));
     }
 
     #endregion
