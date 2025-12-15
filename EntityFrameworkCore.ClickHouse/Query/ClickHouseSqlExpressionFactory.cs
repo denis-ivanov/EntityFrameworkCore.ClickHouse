@@ -674,6 +674,70 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
 
     #endregion
     
+    #region UInt8
+
+    public SqlExpression ToUInt8(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt8",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(byte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(byte)));
+    }
+
+    public SqlExpression ToUInt8OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt8OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(byte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(byte)));
+    }
+
+    public SqlExpression ToUInt8OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt8OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(byte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(byte)));
+    }
+
+    public SqlExpression ToUInt8OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt8OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(byte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(byte)));
+    }
+
+    public SqlExpression ToUInt8OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: byte })
+        {
+            defaultValue = ToUInt8(defaultValue);
+        }
+
+        return Function(
+            name: "toUInt8OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(byte),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(byte)));
+    }
+
+    #endregion
+    
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
         RelationalTypeMapping typeMapping)
