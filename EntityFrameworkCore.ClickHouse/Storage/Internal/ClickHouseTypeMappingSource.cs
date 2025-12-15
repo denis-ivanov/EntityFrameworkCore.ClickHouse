@@ -13,14 +13,15 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     private static readonly RelationalTypeMapping BoolTypeMapping = new ClickHouseBoolTypeMapping();
     private static readonly RelationalTypeMapping ByteTypeMapping = new ClickHouseByteTypeMapping();
     private static readonly RelationalTypeMapping CharTypeMapping = new ClickHouseCharTypeMapping();
-    private static readonly RelationalTypeMapping UInt64TypeMapping = new ClickHouseUInt64TypeMapping();
     private static readonly RelationalTypeMapping Int8TypeMapping = new ClickHouseInt8TypeMapping();
     private static readonly RelationalTypeMapping Int16TypeMapping = new ClickHouseInt16TypeMapping();
     private static readonly RelationalTypeMapping Int32TypeMapping = new ClickHouseInt32TypeMapping();
     private static readonly RelationalTypeMapping Int64TypeMapping = new ClickHouseInt64TypeMapping();
     private static readonly RelationalTypeMapping Int128TypeMapping = new ClickHouseInt128TypeMapping();
-    private static readonly RelationalTypeMapping UInt32TypeMapping = new ClickHouseUInt32TypeMapping();
     private static readonly RelationalTypeMapping UInt16TypeMapping = new ClickHouseUInt16TypeMapping();
+    private static readonly RelationalTypeMapping UInt32TypeMapping = new ClickHouseUInt32TypeMapping();
+    private static readonly RelationalTypeMapping UInt64TypeMapping = new ClickHouseUInt64TypeMapping();
+    private static readonly RelationalTypeMapping UInt128TypeMapping = new ClickHouseUInt128TypeMapping();
     private static readonly RelationalTypeMapping DateTimeTypeMapping = new ClickHouseDateTimeTypeMapping();
     private static readonly RelationalTypeMapping DateTypeMapping = new ClickHouseDateTypeMapping();
     private static readonly RelationalTypeMapping Float64TypeMapping = new ClickHouseFloat64TypeMapping();
@@ -36,6 +37,7 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         { typeof(char), CharTypeMapping },
         { typeof(int), Int32TypeMapping },
         { typeof(ulong), UInt64TypeMapping },
+        { typeof(UInt128), UInt128TypeMapping },
         { typeof(long), Int64TypeMapping },
         { typeof(Int128), Int128TypeMapping },
         { typeof(sbyte), Int8TypeMapping },
@@ -105,12 +107,12 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         ["INTEGER UNSIGNED"] = UInt32TypeMapping,
 
         ["UInt64"] = UInt64TypeMapping,
+        ["UInt128"] = UInt128TypeMapping,
         ["UNSIGNED"] = UInt64TypeMapping,
         ["BIGINT UNSIGNED"] = UInt64TypeMapping,
         ["BIT"] = UInt64TypeMapping,
         ["SET"] = UInt64TypeMapping,
 
-        // UInt128
         // UInt256
 
         // https://clickhouse.com/docs/en/sql-reference/data-types/float
