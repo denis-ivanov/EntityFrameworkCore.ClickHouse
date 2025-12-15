@@ -29,7 +29,8 @@ public sealed class ClickHouseMethodCallTranslatorProvider : RelationalMethodCal
             new ClickHouseInt128MethodTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseUInt8MethodTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseUInt16MethodTranslator(dependencies.SqlExpressionFactory),
-            new ClickHouseUInt32MethodTranslator(dependencies.SqlExpressionFactory)
+            new ClickHouseUInt32MethodTranslator(dependencies.SqlExpressionFactory),
+            new ClickHouseUInt64MethodTranslator(dependencies.SqlExpressionFactory)
         ]);
     }
 }
