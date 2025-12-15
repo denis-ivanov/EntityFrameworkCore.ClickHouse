@@ -866,6 +866,70 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
 
     #endregion
     
+    #region UInt64
+
+    public SqlExpression ToUInt64(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt64",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(ulong),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ulong)));
+    }
+
+    public SqlExpression ToUInt64OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt64OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(ulong),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ulong)));
+    }
+
+    public SqlExpression ToUInt64OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt64OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(ulong),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ulong)));
+    }
+
+    public SqlExpression ToUInt64OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toUInt64OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(ulong),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ulong)));
+    }
+
+    public SqlExpression ToUInt64OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: ulong })
+        {
+            defaultValue = ToUInt64(defaultValue);
+        }
+
+        return Function(
+            name: "toUInt64OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(ulong),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(ulong)));
+    }
+
+    #endregion
+    
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
         RelationalTypeMapping typeMapping)
