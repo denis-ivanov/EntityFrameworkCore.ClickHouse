@@ -5,6 +5,7 @@
 [![GitHub Tag](https://img.shields.io/github/tag/denis-ivanov/EntityFrameworkCore.ClickHouse.svg?style=flat-square)](https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse/releases)
 [![NuGet Count](https://img.shields.io/nuget/dt/EntityFrameworkCore.ClickHouse.svg?style=flat-square)](https://www.nuget.org/packages/EntityFrameworkCore.ClickHouse/)
 [![Issues Open](https://img.shields.io/github/issues/denis-ivanov/EntityFrameworkCore.ClickHouse.svg?style=flat-square)](https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse/issues)
+[![Code Coverage](https://codecov.io/gh/denis-ivanov/EntityFrameworkCore.ClickHouse/graph/badge.svg)](https://app.codecov.io/gh/denis-ivanov/EntityFrameworkCore.ClickHouse)
 
 # Quick start
 
