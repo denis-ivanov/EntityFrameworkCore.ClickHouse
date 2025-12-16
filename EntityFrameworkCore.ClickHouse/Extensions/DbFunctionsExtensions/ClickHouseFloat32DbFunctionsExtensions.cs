@@ -21,7 +21,7 @@ public static class ClickHouseFloat32DbFunctionsExtensions
         throw new InvalidOperationException();
     }
 
-    public static float ToFloat32OrNull(this DbFunctions _, string expr)
+    public static float? ToFloat32OrNull(this DbFunctions _, string expr)
     {
         throw new InvalidOperationException();
     }
