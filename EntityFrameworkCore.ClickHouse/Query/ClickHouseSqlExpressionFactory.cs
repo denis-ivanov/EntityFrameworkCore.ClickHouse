@@ -737,7 +737,7 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     }
 
     #endregion
-    
+
     #region UInt16
 
     public SqlExpression ToUInt16(SqlExpression expression)
@@ -801,7 +801,7 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     }
 
     #endregion
-    
+
     #region UInt32
 
     public SqlExpression ToUInt32(SqlExpression expression)
@@ -865,7 +865,7 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     }
 
     #endregion
-    
+
     #region UInt64
 
     public SqlExpression ToUInt64(SqlExpression expression)
@@ -929,7 +929,7 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     }
 
     #endregion
-    
+
     #region UInt128
 
     public SqlExpression ToUInt128(SqlExpression expression)
@@ -993,7 +993,422 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     }
 
     #endregion
+
+    #region Guid
+
+    public SqlExpression GenerateUuidV4()
+    {
+        return NiladicFunction(
+            name: "generateUUIDv4",
+            nullable: false,
+            returnType: typeof(Guid),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Guid)));
+    }
+
+    public SqlExpression ToUuid(SqlExpression expression)
+    {
+        return Function(
+            name: "toUUID",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(Guid),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Guid)));
+    }
+
+    public SqlExpression ToUuidOrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toUUIDOrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(Guid),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Guid)));
+    }
+
+    public SqlExpression ToUuidOrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toUUIDOrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(Guid),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Guid)));
+    }
     
+    public SqlExpression ToUuidOrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toUUIDOrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(Guid),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Guid)));
+    }
+    
+    public SqlExpression ToUuidOrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: Guid })
+        {
+            defaultValue = ToUuid(defaultValue);
+        }
+        
+        return Function(
+            name: "toUUIDOrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(Guid),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(Guid)));
+    }
+    
+    #endregion
+
+    #region Float32
+
+    public SqlExpression ToFloat32(SqlExpression expression)
+    {
+        return Function(
+            name: "toFloat32",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+
+    public SqlExpression ToFloat32OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toFloat32OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+    
+    public SqlExpression ToFloat32OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toFloat32OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+    
+    public SqlExpression ToFloat32OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toFloat32OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+    
+    public SqlExpression ToFloat32OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: float })
+        {
+            defaultValue = ToFloat32(defaultValue);
+        }
+        
+        return Function(
+            name: "toFloat32OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+    
+    #endregion
+
+    #region Float64
+
+    public SqlExpression ToFloat64(SqlExpression expression)
+    {
+        return Function(
+            name: "toFloat64",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+
+    public SqlExpression ToFloat64OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toFloat64OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+    
+    public SqlExpression ToFloat64OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toFloat64OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+    
+    public SqlExpression ToFloat64OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toFloat64OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+    
+    public SqlExpression ToFloat64OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: float })
+        {
+            defaultValue = ToFloat64(defaultValue);
+        }
+        
+        return Function(
+            name: "toFloat64OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(float),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+    }
+    
+    #endregion
+
+    #region Date
+
+    public SqlExpression ToDate(SqlExpression expression)
+    {
+        return Function(
+            name: "toDate",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+    
+    public SqlExpression ToDate(SqlExpression expression, SqlExpression timeZone)
+    {
+        return Function(
+            name: "toDate",
+            arguments: [expression, timeZone],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+
+    public SqlExpression ToDateOrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toDateOrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+    
+    public SqlExpression ToDateOrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toDateOrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+    
+    public SqlExpression ToDateOrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toDateOrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+    
+    public SqlExpression ToDateOrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: DateOnly })
+        {
+            defaultValue = ToDate(defaultValue);
+        }
+        
+        return Function(
+            name: "toDateOrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+    
+    #endregion
+
+    #region DateTime
+
+    public SqlExpression ToDateTime(SqlExpression expression)
+    {
+        return Function(
+            name: "toDateTime",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateTime),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
+    }
+
+    public SqlExpression ToDateTime(SqlExpression expression, SqlExpression timeZone)
+    {
+        return Function(
+            name: "toDateTime",
+            arguments: [expression, timeZone],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(DateTime),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
+    }
+
+    public SqlExpression ToDateTimeOrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toDateTimeOrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateTime),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
+    }
+
+    public SqlExpression ToDateTimeOrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toDateTimeOrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateTime),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
+    }
+
+    public SqlExpression ToDateTimeOrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toDateTimeOrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateTime),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
+    }
+
+    public SqlExpression ToDateTimeOrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: DateTime })
+        {
+            defaultValue = ToDateTime(defaultValue);
+        }
+        
+        return Function(
+            name: "toDateTimeOrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(DateTime),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
+    }
+
+    #endregion
+
+    #region Date32
+
+    public SqlExpression ToDate32(SqlExpression expression)
+    {
+        return Function(
+            name: "toDate32",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+
+    public SqlExpression ToDate32OrZero(SqlExpression expression)
+    {
+        return Function(
+            name: "toDate32OrZero",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+
+    public SqlExpression ToDate32OrNull(SqlExpression expression)
+    {
+        return Function(
+            name: "toDate32OrNull",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+
+    public SqlExpression ToDate32OrDefault(SqlExpression expression)
+    {
+        return Function(
+            name: "toDate32OrDefault",
+            arguments: [expression],
+            argumentsPropagateNullability: [true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+
+    public SqlExpression ToDate32OrDefault(SqlExpression expression, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: DateOnly })
+        {
+            defaultValue = ToDate32(defaultValue);
+        }
+        
+        return Function(
+            name: "toDate32OrDefault",
+            arguments: [expression, defaultValue],
+            argumentsPropagateNullability: [true, true],
+            nullable: true,
+            returnType: typeof(DateOnly),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateOnly)));
+    }
+
+    #endregion
+
     private SqlExpression ApplyTypeMappingOnRowValue(
         ClickHouseRowValueExpression rowValueExpression,
         RelationalTypeMapping typeMapping)
@@ -1007,7 +1422,7 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
 
         return new ClickHouseRowValueExpression(updatedValues, rowValueExpression.Type, typeMapping);
     }
-    
+
     private SqlBinaryExpression ApplyTypeMappingOnSqlBinary(SqlBinaryExpression binary, RelationalTypeMapping typeMapping)
     {
         if (IsComparison(binary.OperatorType)

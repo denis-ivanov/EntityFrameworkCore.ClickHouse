@@ -17,7 +17,7 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
     protected override void AppendDeleteCommand(
         StringBuilder commandStringBuilder,
         string name,
-        string? schema,
+        string schema,
         IReadOnlyList<IColumnModification> readOperations,
         IReadOnlyList<IColumnModification> conditionOperations,
         bool appendReturningOneClause = false)

@@ -21,11 +21,11 @@ public class ClickHouseDateTimeMethodTranslator : IMethodCallTranslator
         { typeof(DateTime).GetRuntimeMethod(nameof(DateTime.AddSeconds), [typeof(double)])!, "addSeconds" },
     };
 
-    private readonly ISqlExpressionFactory _sqlExpressionFactory;
+    private readonly ClickHouseSqlExpressionFactory _sqlExpressionFactory;
 
     public ClickHouseDateTimeMethodTranslator(ISqlExpressionFactory sqlExpressionFactory)
     {
-        _sqlExpressionFactory = sqlExpressionFactory;
+        _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
 
     public SqlExpression Translate(
@@ -44,6 +44,22 @@ public class ClickHouseDateTimeMethodTranslator : IMethodCallTranslator
                 returnType: method.ReturnType);
         }
 
-        return null;
+        // TODO Add functional tests.
+        return method.Name switch
+        {
+            nameof(ClickHouseDateTimeDbFunctionsExtensions.ToDateTime) when method.DeclaringType == typeof(ClickHouseDateTimeDbFunctionsExtensions)
+                => arguments.Count == 2
+                    ? _sqlExpressionFactory.ToDateTime(arguments[1])
+                    : _sqlExpressionFactory.ToDateTime(arguments[1], arguments[2]),
+            nameof(ClickHouseDateTimeDbFunctionsExtensions.ToDateTimeOrZero) when method.DeclaringType == typeof(ClickHouseDateTimeDbFunctionsExtensions)
+                => _sqlExpressionFactory.ToDateTimeOrZero(arguments[1]),
+            nameof(ClickHouseDateTimeDbFunctionsExtensions.ToDateTimeOrNull) when method.DeclaringType == typeof(ClickHouseDateTimeDbFunctionsExtensions)
+                => _sqlExpressionFactory.ToDateTimeOrNull(arguments[1]),
+            nameof(ClickHouseDateTimeDbFunctionsExtensions.ToDateTimeOrDefault) when method.DeclaringType == typeof(ClickHouseDateTimeDbFunctionsExtensions)
+                => arguments.Count == 2
+                    ? _sqlExpressionFactory.ToDateTimeOrDefault(arguments[1])
+                    : _sqlExpressionFactory.ToDateTimeOrDefault(arguments[1], arguments[2]),
+            _ => null
+        };
     }
 }

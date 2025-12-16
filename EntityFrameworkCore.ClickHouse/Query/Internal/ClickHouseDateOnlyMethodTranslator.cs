@@ -10,11 +10,13 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
 public class ClickHouseDateOnlyMethodTranslator : IMethodCallTranslator
 {
-    private readonly ISqlExpressionFactory _sqlExpressionFactory;
+    private static readonly Type DateFunctions = typeof(ClickHouseDateDbFunctionsExtensions);
+
+    private readonly ClickHouseSqlExpressionFactory _sqlExpressionFactory;
 
     public ClickHouseDateOnlyMethodTranslator(ISqlExpressionFactory sqlExpressionFactory)
     {
-        _sqlExpressionFactory = sqlExpressionFactory;
+        _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
 
     public SqlExpression Translate(
@@ -23,18 +25,22 @@ public class ClickHouseDateOnlyMethodTranslator : IMethodCallTranslator
         IReadOnlyList<SqlExpression> arguments,
         IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
-        if (method.DeclaringType == typeof(DateOnly)
-            && method.Name == nameof(DateOnly.FromDateTime)
-            && arguments.Count == 1)
+        return method.Name switch
         {
-            return _sqlExpressionFactory.Function(
-                "toDate",
-                arguments,
-                true,
-                [true],
-                typeof(DateOnly));
-        }
-
-        return null;
+            nameof(DateOnly.FromDateTime) when method.DeclaringType == typeof(DateOnly) => _sqlExpressionFactory.ToDate(arguments[0]),
+            nameof(ClickHouseDateDbFunctionsExtensions.ToDate) when method.DeclaringType == DateFunctions
+                => arguments.Count == 2
+                    ? _sqlExpressionFactory.ToDate(arguments[1])
+                    : _sqlExpressionFactory.ToDate(arguments[1], arguments[2]),
+            nameof(ClickHouseDateDbFunctionsExtensions.ToDateOrZero) when method.DeclaringType == DateFunctions
+                => _sqlExpressionFactory.ToDateOrZero(arguments[1]),
+            nameof(ClickHouseDateDbFunctionsExtensions.ToDateOrNull) when method.DeclaringType == DateFunctions
+                => _sqlExpressionFactory.ToDateOrNull(arguments[1]),
+            nameof(ClickHouseDateDbFunctionsExtensions.ToDateOrDefault) when method.DeclaringType == DateFunctions
+                => arguments.Count == 2
+                    ? _sqlExpressionFactory.ToDateOrDefault(arguments[1])
+                    : _sqlExpressionFactory.ToDateOrDefault(arguments[1], arguments[2]),
+            _ => null
+        };
     }
 }
