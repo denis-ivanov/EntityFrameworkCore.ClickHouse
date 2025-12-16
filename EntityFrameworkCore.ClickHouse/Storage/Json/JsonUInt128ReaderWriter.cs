@@ -44,7 +44,7 @@ public sealed class JsonUInt128ReaderWriter : JsonValueReaderWriter<UInt128>
                 break;
 
             default:
-                throw new JsonException($"Unexpected token parsing Int128. TokenType: {reader.TokenType}");
+                throw new JsonException($"Unexpected token parsing UInt128. TokenType: {reader.TokenType}");
         }
 
         return UInt128.Parse(valueString, NumberStyles.Integer, CultureInfo.InvariantCulture);
