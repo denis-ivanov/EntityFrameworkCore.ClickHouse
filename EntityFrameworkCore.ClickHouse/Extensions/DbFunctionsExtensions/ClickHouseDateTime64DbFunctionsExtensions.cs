@@ -144,7 +144,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
-    /// <param name="scale">Tick size</param>
+    /// <param name="scale">Tick size (precision).</param>
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise the minimum value of DateTime64: 1970-01-01 01:00:00.000</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrZero(DbFunctions, string, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -160,7 +160,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
-    /// <param name="scale">Tick size</param>
+    /// <param name="scale">Tick size (precision).</param>
     /// <param name="timeZone">Time zone of the specified datetime64 object.</param>
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise the minimum value of DateTime64: 1970-01-01 01:00:00.000</returns>
     /// <exception cref="InvalidOperationException">
@@ -177,7 +177,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
-    /// <param name="scale">Tick size</param>
+    /// <param name="scale">Tick size (precision).</param>
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise the minimum value of DateTime64: 1970-01-01 01:00:00.000</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrZero(DbFunctions, uint, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -193,7 +193,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
-    /// <param name="scale">Tick size</param>
+    /// <param name="scale">Tick size (precision).</param>
     /// <param name="timeZone">Time zone of the specified DateTime64 object.</param>
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise the minimum value of DateTime64: 1970-01-01 01:00:00.000</returns>
     /// <exception cref="InvalidOperationException">
@@ -210,7 +210,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
-    /// <param name="scale">Tick size</param>
+    /// <param name="scale">Tick size (precision).</param>
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise the minimum value of DateTime64: 1970-01-01 01:00:00.000</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrZero(DbFunctions, DateTime, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -226,7 +226,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
-    /// <param name="scale">Tick size</param>
+    /// <param name="scale">Tick size (precision).</param>
     /// <param name="timeZone">Time zone of the specified DateTime64 object.</param>
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise the minimum value of DateTime64: 1970-01-01 01:00:00.000</returns>
     /// <exception cref="InvalidOperationException">
@@ -243,7 +243,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
-    /// <param name="scale">Tick size</param>
+    /// <param name="scale">Tick size (precision).</param>
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise the minimum value of DateTime64: 1970-01-01 01:00:00.000</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrZero(DbFunctions, float, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -259,7 +259,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
-    /// <param name="scale">Tick size</param>
+    /// <param name="scale">Tick size (precision).</param>
     /// <param name="timeZone">Time zone of the specified DateTime64 object.</param>
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise the minimum value of DateTime64: 1970-01-01 01:00:00.000</returns>
     /// <exception cref="InvalidOperationException">
@@ -270,41 +270,125 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
         throw new InvalidOperationException();
     }
 
+    /// <summary>
+    /// Like <see cref="ToDateTime64(DbFunctions, string, byte)"/>, this function converts an input value to a value of type DateTime64
+    /// but returns <c>null</c> if an invalid argument is received.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="scale">Tick size (precision).</param>
+    /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTime64OrNull(DbFunctions, string, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
     public static DateTime? ToDateTime64OrNull(this DbFunctions _, string expr, [Range(0, 9)] byte scale)
     {
         throw new InvalidOperationException();
     }
 
+    /// <summary>
+    /// Like <see cref="ToDateTime64(DbFunctions, string, byte)"/>, this function converts an input value to a value of type DateTime64
+    /// but returns <c>null</c> if an invalid argument is received.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="scale">Tick size (precision).</param>
+    /// <param name="timeZone">Time zone of the specified DateTime64 object.</param>
+    /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTime64OrNull(DbFunctions, string, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
     public static DateTime ToDateTime64OrNull(this DbFunctions _, string expr, [Range(0, 9)] byte scale, string timeZone)
     {
         throw new InvalidOperationException();
     }
 
+    /// <summary>
+    /// Like <see cref="ToDateTime64(DbFunctions, string, byte)"/>, this function converts an input value to a value of type DateTime64
+    /// but returns <c>null</c> if an invalid argument is received.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="scale">Tick size (precision).</param>
+    /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTime64OrNull(DbFunctions, uint, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
     public static DateTime ToDateTime64OrNull(this DbFunctions _, uint expr, [Range(0, 9)] byte scale)
     {
         throw new InvalidOperationException();
     }
 
+    /// <summary>
+    /// Like <see cref="ToDateTime64(DbFunctions, string, byte)"/>, this function converts an input value to a value of type DateTime64
+    /// but returns <c>null</c> if an invalid argument is received.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="scale">Tick size (precision).</param>
+    /// <param name="timeZone">Time zone of the specified DateTime64 object.</param>
+    /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTime64OrNull(DbFunctions, uint, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
     public static DateTime ToDateTime64OrNull(this DbFunctions _, uint expr, [Range(0, 9)] byte scale, string timeZone)
     {
         throw new InvalidOperationException();
     }
 
+    /// <summary>
+    /// Like <see cref="ToDateTime64(DbFunctions, string, byte)"/>, this function converts an input value to a value of type DateTime64
+    /// but returns <c>null</c> if an invalid argument is received.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="scale">Tick size (precision).</param>
+    /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTime64OrNull(DbFunctions, DateTime, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
     public static DateTime ToDateTime64OrNull(this DbFunctions _, DateTime expr, [Range(0, 9)] byte scale)
     {
         throw new InvalidOperationException();
     }
 
+    /// <summary>
+    /// Like <see cref="ToDateTime64(DbFunctions, string, byte)"/>, this function converts an input value to a value of type DateTime64
+    /// but returns <c>null</c> if an invalid argument is received.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="scale">Tick size (precision).</param>
+    /// <param name="timeZone">Time zone of the specified DateTime64 object.</param>
+    /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTime64OrNull(DbFunctions, DateTime, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
     public static DateTime ToDateTime64OrNull(this DbFunctions _, DateTime expr, [Range(0, 9)] byte scale, string timeZone)
     {
         throw new InvalidOperationException();
     }
     
+    /// <summary>
+    /// Like <see cref="ToDateTime64(DbFunctions, string, byte)"/>, this function converts an input value to a value of type DateTime64
+    /// but returns <c>null</c> if an invalid argument is received.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="scale">Tick size (precision).</param>
+    /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTime64OrNull(DbFunctions, float, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
     public static DateTime ToDateTime64OrNull(this DbFunctions _, float expr, [Range(0, 9)] byte scale)
     {
         throw new InvalidOperationException();
     }
 
+    /// <summary>
+    /// Like <see cref="ToDateTime64(DbFunctions, string, byte)"/>, this function converts an input value to a value of type DateTime64
+    /// but returns <c>null</c> if an invalid argument is received.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="scale">Tick size (precision).</param>
+    /// <param name="timeZone">Time zone of the specified DateTime64 object.</param>
+    /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTime64OrNull(DbFunctions, float, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
     public static DateTime ToDateTime64OrNull(this DbFunctions _, float expr, [Range(0, 9)] byte scale, string timeZone)
     {
         throw new InvalidOperationException();
