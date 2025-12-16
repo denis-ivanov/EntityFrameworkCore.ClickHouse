@@ -1140,8 +1140,8 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             arguments: [expression],
             argumentsPropagateNullability: [true],
             nullable: true,
-            returnType: typeof(float),
-            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+            returnType: typeof(double),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(double)));
     }
 
     public SqlExpression ToFloat64OrZero(SqlExpression expression)
@@ -1151,8 +1151,8 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             arguments: [expression],
             argumentsPropagateNullability: [true],
             nullable: true,
-            returnType: typeof(float),
-            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+            returnType: typeof(double),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(double)));
     }
     
     public SqlExpression ToFloat64OrNull(SqlExpression expression)
@@ -1162,8 +1162,8 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             arguments: [expression],
             argumentsPropagateNullability: [true],
             nullable: true,
-            returnType: typeof(float),
-            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+            returnType: typeof(double),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(double)));
     }
     
     public SqlExpression ToFloat64OrDefault(SqlExpression expression)
@@ -1173,13 +1173,13 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             arguments: [expression],
             argumentsPropagateNullability: [true],
             nullable: true,
-            returnType: typeof(float),
-            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+            returnType: typeof(double),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(double)));
     }
     
     public SqlExpression ToFloat64OrDefault(SqlExpression expression, SqlExpression defaultValue)
     {
-        if (defaultValue is SqlConstantExpression { Value: float })
+        if (defaultValue is SqlConstantExpression { Value: double })
         {
             defaultValue = ToFloat64(defaultValue);
         }
@@ -1189,8 +1189,8 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             arguments: [expression, defaultValue],
             argumentsPropagateNullability: [true, true],
             nullable: true,
-            returnType: typeof(float),
-            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(float)));
+            returnType: typeof(double),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(double)));
     }
     
     #endregion
