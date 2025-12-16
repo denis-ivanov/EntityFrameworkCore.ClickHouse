@@ -11,7 +11,7 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Json;
 
 public sealed class JsonUInt128ReaderWriter : JsonValueReaderWriter<UInt128>
 {
-    private static readonly PropertyInfo InstanceProperty = typeof(JsonInt128ReaderWriter).GetProperty(nameof(Instance))!;
+    private static readonly PropertyInfo InstanceProperty = typeof(JsonUInt128ReaderWriter).GetProperty(nameof(Instance))!;
 
     public static JsonUInt128ReaderWriter Instance { get; } = new();
 
