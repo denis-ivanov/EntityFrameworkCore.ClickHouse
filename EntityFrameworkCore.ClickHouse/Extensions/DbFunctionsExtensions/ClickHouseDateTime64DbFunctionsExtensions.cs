@@ -296,7 +296,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrNull(DbFunctions, string, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
-    public static DateTime ToDateTime64OrNull(this DbFunctions _, string expr, [Range(0, 9)] byte scale, string timeZone)
+    public static DateTime? ToDateTime64OrNull(this DbFunctions _, string expr, [Range(0, 9)] byte scale, string timeZone)
     {
         throw new InvalidOperationException();
     }
@@ -311,7 +311,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrNull(DbFunctions, uint, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
-    public static DateTime ToDateTime64OrNull(this DbFunctions _, uint expr, [Range(0, 9)] byte scale)
+    public static DateTime? ToDateTime64OrNull(this DbFunctions _, uint expr, [Range(0, 9)] byte scale)
     {
         throw new InvalidOperationException();
     }
@@ -327,7 +327,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrNull(DbFunctions, uint, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
-    public static DateTime ToDateTime64OrNull(this DbFunctions _, uint expr, [Range(0, 9)] byte scale, string timeZone)
+    public static DateTime? ToDateTime64OrNull(this DbFunctions _, uint expr, [Range(0, 9)] byte scale, string timeZone)
     {
         throw new InvalidOperationException();
     }
@@ -342,7 +342,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrNull(DbFunctions, DateTime, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
-    public static DateTime ToDateTime64OrNull(this DbFunctions _, DateTime expr, [Range(0, 9)] byte scale)
+    public static DateTime? ToDateTime64OrNull(this DbFunctions _, DateTime expr, [Range(0, 9)] byte scale)
     {
         throw new InvalidOperationException();
     }
@@ -358,7 +358,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrNull(DbFunctions, DateTime, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
-    public static DateTime ToDateTime64OrNull(this DbFunctions _, DateTime expr, [Range(0, 9)] byte scale, string timeZone)
+    public static DateTime? ToDateTime64OrNull(this DbFunctions _, DateTime expr, [Range(0, 9)] byte scale, string timeZone)
     {
         throw new InvalidOperationException();
     }
@@ -373,7 +373,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// <returns>A calendar date and time of day, with sub-second precision, otherwise <c>null</c>.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrNull(DbFunctions, float, byte)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.</exception>
-    public static DateTime ToDateTime64OrNull(this DbFunctions _, float expr, [Range(0, 9)] byte scale)
+    public static DateTime? ToDateTime64OrNull(this DbFunctions _, float expr, [Range(0, 9)] byte scale)
     {
         throw new InvalidOperationException();
     }
@@ -390,7 +390,7 @@ public static class ClickHouseDateTime64DbFunctionsExtensions
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime64OrNull(DbFunctions, float, byte, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
-    public static DateTime ToDateTime64OrNull(this DbFunctions _, float expr, [Range(0, 9)] byte scale, string timeZone)
+    public static DateTime? ToDateTime64OrNull(this DbFunctions _, float expr, [Range(0, 9)] byte scale, string timeZone)
     {
         throw new InvalidOperationException();
     }
