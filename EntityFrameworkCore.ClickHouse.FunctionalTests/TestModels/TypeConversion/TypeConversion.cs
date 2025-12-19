@@ -1,4 +1,6 @@
-﻿namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestModels.TypeConversion;
+﻿using System;
+
+namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestModels.TypeConversion;
 
 public class TypeConversion
 {
@@ -47,4 +49,10 @@ public class TypeConversion
     public string UInt128AsStringValid { get; set; }
 
     public string GuidAsStringValid { get; set; }
+
+    public float DateAsFloat32 { get; set; }
+
+    public string DateAsStringValid { get; set; }
+    
+    public DateTime DateAsDateTime { get; set; }
 }
