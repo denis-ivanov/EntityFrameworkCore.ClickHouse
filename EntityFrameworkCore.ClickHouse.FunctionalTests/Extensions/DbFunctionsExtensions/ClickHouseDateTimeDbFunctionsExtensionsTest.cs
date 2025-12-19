@@ -61,8 +61,14 @@ public sealed class ClickHouseDateTimeDbFunctionsExtensionsTest
     }
 
     [Fact]
-    public void ToDateTimeOrDefault_StringWithDefault_ThrowsException()
+    public void ToDateTimeOrDefault_StringWithTimeZone_ThrowsException()
     {
-        Assert.Throws<InvalidOperationException>(() => EF.Functions.ToDateTimeOrDefault("2025-12-16", new DateTime(2025, 12, 16)));
+        Assert.Throws<InvalidOperationException>(() => EF.Functions.ToDateTimeOrDefault("2025-12-16", "Asia/Nicosia"));
+    }
+    
+    [Fact]
+    public void ToDateTimeOrDefault_StringWithDefaultValue_ThrowsException()
+    {
+        Assert.Throws<InvalidOperationException>(() => EF.Functions.ToDateTimeOrDefault("2025-12-16", "Asia/Nicosia", DateTime.Now));
     }
 }

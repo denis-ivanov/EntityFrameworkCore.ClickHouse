@@ -155,13 +155,31 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// </summary>
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
+    /// <param name="timeZone">Time zone.</param>
+    /// <returns>Returns a date time.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
+    /// </exception>
+    /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTimeOrDefault</remarks>
+    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string expr, string timeZone)
+    {
+        throw new InvalidOperationException();
+    }
+
+    /// <summary>
+    /// Like toDateTime but if unsuccessful, returns a default value which is either the third argument (if specified),
+    /// or otherwise the lower boundary of DateTime.
+    /// </summary>
+    /// <param name="_">DbFunctions instance.</param>
+    /// <param name="expr">The value.</param>
+    /// <param name="timeZone">Time zone.</param>
     /// <param name="defaultValue">The default value to return if parsing is unsuccessful.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTimeOrDefault</remarks>
-    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string expr, DateTime defaultValue)
+    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string expr, string timeZone, DateTime defaultValue)
     {
         throw new InvalidOperationException();
     }

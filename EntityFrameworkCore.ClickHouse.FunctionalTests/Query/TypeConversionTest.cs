@@ -1083,7 +1083,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToUInt128_Float_ShouldConvert()
     {
@@ -1833,7 +1833,186 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             """);
 
     }
+
+    [Fact]
+    public async Task ToDateTime_Float32_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToDateTime = EF.Functions.ToDateTime(e.DateTimeAsFloat32) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toDateTime("t"."DateTimeAsFloat32") AS "ToDateTime"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTime_String_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new { ToDateTime = EF.Functions.ToDateTime(e.DateTimeAsStringValid) })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDateTime("t"."DateTimeAsStringValid") AS "ToDateTime"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTime_DateOnly_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new { ToDateTime = EF.Functions.ToDateTime(e.DateTimeAsDateOnly) })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDateTime("t"."DateTimeAsDateOnly") AS "ToDateTime"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTime_Float32WithTimeZone_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToDateTime = EF.Functions.ToDateTime(e.DateTimeAsFloat32, "Asia/Nicosia") })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toDateTime("t"."DateTimeAsFloat32", 'Asia/Nicosia') AS "ToDateTime"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTime_StringWithTimeZone_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new { ToDateTime = EF.Functions.ToDateTime(e.DateTimeAsStringValid, "Asia/Nicosia") })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDateTime("t"."DateTimeAsStringValid", 'Asia/Nicosia') AS "ToDateTime"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTime_DateOnlyWithTimeZone_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new { ToDateTime = EF.Functions.ToDateTime(e.DateTimeAsDateOnly, "Asia/Nicosia") })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDateTime("t"."DateTimeAsDateOnly", 'Asia/Nicosia') AS "ToDateTime"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTimeOrZero_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToDateTimeOrZero = EF.Functions.ToDateTimeOrZero(e.DateTimeAsStringValid) })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDateTimeOrZero("t"."DateTimeAsStringValid") AS "ToDateTimeOrZero"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTimeOrNull_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToDateTimeOrNull = EF.Functions.ToDateTimeOrNull(e.DateTimeAsStringValid) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toDateTimeOrNull("t"."DateTimeAsStringValid") AS "ToDateTimeOrNull"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTimeOrDefault_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToDateTimeOrDefault = EF.Functions.ToDateTimeOrDefault(e.DateTimeAsStringValid) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toDateTimeOrDefault("t"."DateTimeAsStringValid") AS "ToDateTimeOrDefault"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
     
+    [Fact]
+    public async Task ToDateTimeOrDefault_StringWithTimeZone_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new { ToDateTimeOrDefault = EF.Functions.ToDateTimeOrDefault(e.DateTimeAsStringValid, "Asia/Nicosia") })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDateTimeOrDefault("t"."DateTimeAsStringValid", 'Asia/Nicosia') AS "ToDateTimeOrDefault"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDateTimeOrDefault_StringWithDefault_ShouldConvert()
+    {
+        var context = CreateContext();
+        var defaultValue = new DateTime(2025, 1, 1);
+
+        await context.TypeConversions
+            .Select(e => new { ToDateTimeOrDefault = EF.Functions.ToDateTimeOrDefault(e.DateTimeAsStringValid, "Asia/Nicosia", defaultValue) })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            defaultValue='2025-01-01T00:00:00.0000000' (DbType = DateTime)
+
+            SELECT toDateTimeOrDefault("t"."DateTimeAsStringValid", 'Asia/Nicosia', {defaultValue:DateTime}) AS "ToDateTimeOrDefault"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
     private TypeConversionQueryFixtureBase<NoopModelCustomizer> Fixture { get; }
 
     private void AssertSql(params string[] expected) => Fixture.TestSqlLoggerFactory.AssertBaseline(expected);

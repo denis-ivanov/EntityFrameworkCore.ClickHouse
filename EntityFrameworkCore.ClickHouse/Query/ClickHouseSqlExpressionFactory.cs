@@ -1327,22 +1327,33 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
     }
 
-    public SqlExpression ToDateTimeOrDefault(SqlExpression expression, SqlExpression defaultValue)
+    public SqlExpression ToDateTimeOrDefault(SqlExpression expression, SqlExpression timeZone)
     {
-        if (defaultValue is SqlConstantExpression { Value: DateTime })
-        {
-            defaultValue = ToDateTime(defaultValue);
-        }
-        
         return Function(
             name: "toDateTimeOrDefault",
-            arguments: [expression, defaultValue],
+            arguments: [expression, timeZone],
             argumentsPropagateNullability: [true, true],
             nullable: true,
             returnType: typeof(DateTime),
             typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
     }
 
+    public SqlExpression ToDateTimeOrDefault(SqlExpression expression, SqlExpression timeZone, SqlExpression defaultValue)
+    {
+        if (defaultValue is SqlConstantExpression { Value: DateTime })
+        {
+            defaultValue = ToDateTime(defaultValue);
+        }
+
+        return Function(
+            name: "toDateTimeOrDefault",
+            arguments: [expression, timeZone, defaultValue],
+            argumentsPropagateNullability: [true, true, true],
+            nullable: true,
+            returnType: typeof(DateTime),
+            typeMapping: Dependencies.TypeMappingSource.FindMapping(typeof(DateTime)));
+    }
+    
     #endregion
 
     #region Date32
