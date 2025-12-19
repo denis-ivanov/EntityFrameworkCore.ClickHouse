@@ -15,7 +15,7 @@ public class ClickHouseFloat32MethodTranslator : IMethodCallTranslator
     {
         _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
-    
+
     public SqlExpression Translate(
         SqlExpression instance,
         MethodInfo method,
@@ -31,18 +31,18 @@ public class ClickHouseFloat32MethodTranslator : IMethodCallTranslator
         {
             case { Name: nameof(ClickHouseFloat32DbFunctionsExtensions.ToFloat32) }:
                 return _sqlExpressionFactory.ToFloat32(arguments[1]);
-            
+
             case { Name: nameof(ClickHouseFloat32DbFunctionsExtensions.ToFloat32OrZero) }:
                 return _sqlExpressionFactory.ToFloat32OrZero(arguments[1]);
-            
+
             case { Name: nameof(ClickHouseFloat32DbFunctionsExtensions.ToFloat32OrNull) }:
                 return _sqlExpressionFactory.ToFloat32OrNull(arguments[1]);
-            
+
             case { Name: nameof(ClickHouseFloat32DbFunctionsExtensions.ToFloat32OrDefault) }:
                 return arguments.Count == 2
                     ? _sqlExpressionFactory.ToFloat32OrDefault(arguments[1])
                     : _sqlExpressionFactory.ToFloat32OrDefault(arguments[1], arguments[2]);
-            
+
             default:
                 return null;
         }

@@ -31,13 +31,13 @@ public class ClickHouseFloat64MethodTranslator : IMethodCallTranslator
         {
             case nameof(ClickHouseFloat64DbFunctionsExtensions.ToFloat64):
                 return _sqlExpressionFactory.ToFloat64(arguments[1]);
-            
+
             case nameof(ClickHouseFloat64DbFunctionsExtensions.ToFloat64OrZero):
                 return _sqlExpressionFactory.ToFloat64OrZero(arguments[1]);
-            
+
             case nameof(ClickHouseFloat64DbFunctionsExtensions.ToFloat64OrNull):
                 return _sqlExpressionFactory.ToFloat64OrNull(arguments[1]);
-            
+
             case nameof(ClickHouseFloat64DbFunctionsExtensions.ToFloat64OrDefault):
                 return arguments.Count == 2
                     ? _sqlExpressionFactory.ToFloat64OrDefault(arguments[1])

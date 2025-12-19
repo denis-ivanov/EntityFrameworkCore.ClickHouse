@@ -47,6 +47,9 @@ public class TypeConversionQueryFixtureBase<TModelCustomizer> : SharedStoreFixtu
             DateAsDateTime = DateTime.Now,
             DateTimeAsFloat32 = 20089.0f,
             DateTimeAsStringValid = "2008-09-01 00:00:00",
+            DateTimeAsDateOnly = DateOnly.FromDateTime(DateTime.Now),
+            FloatAsInt32 = 123456789,
+            FloatAsStringValid = "123456789.0"
         };
 
         await context.TypeConversions.AddAsync(entity);
