@@ -41,7 +41,10 @@ public class TypeConversionQueryFixtureBase<TModelCustomizer> : SharedStoreFixtu
             UInt32AsStringValid = uint.MinValue.ToString(CultureInfo.InvariantCulture),
             UInt64AsFloat = Convert.ToSingle(ulong.MaxValue),
             UInt64AsStringValid = ulong.MinValue.ToString(CultureInfo.InvariantCulture),
-            GuidAsStringValid = Guid.NewGuid().ToString()
+            GuidAsStringValid = Guid.NewGuid().ToString(),
+            DateAsFloat32 = 20089.0f,
+            DateAsStringValid = "2008-09-01",
+            DateAsDateTime = DateTime.Now
         };
 
         await context.TypeConversions.AddAsync(entity);

@@ -21,7 +21,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     {
         throw new InvalidOperationException();
     }
-    
+
     /// <summary>
     /// Converts an input value to type Date. Supports conversion from String, FixedString, DateTime, or numeric types.
     /// </summary>
@@ -100,7 +100,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     {
         throw new InvalidOperationException();
     }
-    
+
     /// <summary>
     /// Converts an input value to a value of type Date but returns the lower boundary of Date if an invalid argument
     /// is received. The same as toDate but returns lower boundary of Date if an invalid argument is received.
@@ -132,7 +132,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     {
         throw new InvalidOperationException();
     }
-    
+
     /// <summary>
     /// Like <see cref="ToDate(DbFunctions, string)"/> but if unsuccessful, returns a default value which is either
     /// the second argument (if specified), or otherwise the lower boundary of Date.
