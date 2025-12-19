@@ -2013,6 +2013,102 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             """);
     }
 
+    [Fact]
+    public async Task ToFloat32_Int32_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToFloat32 = EF.Functions.ToFloat32(e.Int32AsFloat) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toFloat32("t"."Int32AsFloat") AS "ToFloat32"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToFloat64_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToFloat64 = EF.Functions.ToFloat64(e.FloatAsStringValid) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toFloat64("t"."FloatAsStringValid") AS "ToFloat64"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToFloat64OrZero_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToFloat64OrZero = EF.Functions.ToFloat64OrZero(e.FloatAsStringValid) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toFloat64OrZero("t"."FloatAsStringValid") AS "ToFloat64OrZero"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+    
+    [Fact]
+    public async Task ToFloat64OrNull_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToFloat64OrNull = EF.Functions.ToFloat64OrNull(e.Nan) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toFloat64OrNull("t"."Nan") AS "ToFloat64OrNull"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToFloat64OrDefault_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToFloat64OrDefault = EF.Functions.ToFloat64OrDefault(e.Nan) })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toFloat64OrDefault("t"."Nan") AS "ToFloat64OrDefault"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToFloat64OrDefault_StringWithDefault_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToFloat64OrDefault = EF.Functions.ToFloat64OrDefault(e.Nan, 42.0) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toFloat64OrDefault("t"."Nan", toFloat64(42.0)) AS "ToFloat64OrDefault"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+    
     private TypeConversionQueryFixtureBase<NoopModelCustomizer> Fixture { get; }
 
     private void AssertSql(params string[] expected) => Fixture.TestSqlLoggerFactory.AssertBaseline(expected);

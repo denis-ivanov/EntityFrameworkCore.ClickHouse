@@ -61,4 +61,8 @@ public class TypeConversion
     public string DateTimeAsStringValid { get; set; }
     
     public DateOnly DateTimeAsDateOnly { get; set; }
+    
+    public int FloatAsInt32 { get; set; }
+    
+    public string FloatAsStringValid { get; set; }
 }
