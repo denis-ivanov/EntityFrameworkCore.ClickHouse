@@ -10,8 +10,7 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 public class NorthwindQueryClickHouseFixture<TModelCustomizer> : NorthwindQueryRelationalFixture<TModelCustomizer>
     where TModelCustomizer : ITestModelCustomizer, new()
 {
-    protected override ITestStoreFactory TestStoreFactory
-        => ClickHouseNorthwindTestStoreFactory.Instance;
+    protected override ITestStoreFactory TestStoreFactory => ClickHouseNorthwindTestStoreFactory.Instance;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder, DbContext context)
     {
