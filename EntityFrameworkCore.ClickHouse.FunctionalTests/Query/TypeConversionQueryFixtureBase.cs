@@ -44,7 +44,9 @@ public class TypeConversionQueryFixtureBase<TModelCustomizer> : SharedStoreFixtu
             GuidAsStringValid = Guid.NewGuid().ToString(),
             DateAsFloat32 = 20089.0f,
             DateAsStringValid = "2008-09-01",
-            DateAsDateTime = DateTime.Now
+            DateAsDateTime = DateTime.Now,
+            DateTimeAsFloat32 = 20089.0f,
+            DateTimeAsStringValid = "2008-09-01 00:00:00",
         };
 
         await context.TypeConversions.AddAsync(entity);

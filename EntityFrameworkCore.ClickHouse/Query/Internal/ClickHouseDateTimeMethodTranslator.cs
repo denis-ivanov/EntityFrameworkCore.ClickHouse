@@ -44,7 +44,6 @@ public class ClickHouseDateTimeMethodTranslator : IMethodCallTranslator
                 returnType: method.ReturnType);
         }
 
-        // TODO Add functional tests.
         return method.Name switch
         {
             nameof(ClickHouseDateTimeDbFunctionsExtensions.ToDateTime) when method.DeclaringType == typeof(ClickHouseDateTimeDbFunctionsExtensions)
@@ -56,9 +55,12 @@ public class ClickHouseDateTimeMethodTranslator : IMethodCallTranslator
             nameof(ClickHouseDateTimeDbFunctionsExtensions.ToDateTimeOrNull) when method.DeclaringType == typeof(ClickHouseDateTimeDbFunctionsExtensions)
                 => _sqlExpressionFactory.ToDateTimeOrNull(arguments[1]),
             nameof(ClickHouseDateTimeDbFunctionsExtensions.ToDateTimeOrDefault) when method.DeclaringType == typeof(ClickHouseDateTimeDbFunctionsExtensions)
-                => arguments.Count == 2
-                    ? _sqlExpressionFactory.ToDateTimeOrDefault(arguments[1])
-                    : _sqlExpressionFactory.ToDateTimeOrDefault(arguments[1], arguments[2]),
+                => arguments.Count switch
+                {
+                    2 => _sqlExpressionFactory.ToDateTimeOrDefault(arguments[1]),
+                    3 => _sqlExpressionFactory.ToDateTimeOrDefault(arguments[1], arguments[2]),
+                    _ => _sqlExpressionFactory.ToDateTimeOrDefault(arguments[1], arguments[2], arguments[3])
+                },
             _ => null
         };
     }
