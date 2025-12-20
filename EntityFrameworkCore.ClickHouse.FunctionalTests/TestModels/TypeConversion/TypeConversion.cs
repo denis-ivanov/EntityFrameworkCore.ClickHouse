@@ -62,7 +62,11 @@ public class TypeConversion
     
     public DateOnly DateTimeAsDateOnly { get; set; }
     
-    public int FloatAsInt32 { get; set; }
+    public int Float32AsInt32 { get; set; }
     
-    public string FloatAsStringValid { get; set; }
+    public string Float32AsStringValid { get; set; }
+    
+    public int Float64AsInt32 { get; set; }
+    
+    public string Float64AsStringValid { get; set; }
 }
