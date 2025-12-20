@@ -2060,19 +2060,19 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToFloat32OrNull_String_ShouldConvert()
     {
         var context = CreateContext();
         
         await context.TypeConversions
-            .Select(e => new { ToFloat64OrNull = EF.Functions.ToFloat64OrNull(e.Nan) })
+            .Select(e => new { ToFloat32OrNull = EF.Functions.ToFloat32OrNull(e.Nan) })
             .ToArrayAsync();
         
         AssertSql(
             """
-            SELECT toFloat64OrNull("t"."Nan") AS "ToFloat64OrNull"
+            SELECT toFloat32OrNull("t"."Nan") AS "ToFloat32OrNull"
             FROM "TypeConversions" AS "t"
             """);
     }
