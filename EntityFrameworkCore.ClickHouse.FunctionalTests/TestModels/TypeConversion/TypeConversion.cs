@@ -69,4 +69,8 @@ public class TypeConversion
     public int Float64AsInt32 { get; set; }
     
     public string Float64AsStringValid { get; set; }
+    
+    public uint Date32AsUInt32 { get; set; }
+    
+    public string Date32AsStringValid { get; set; }
 }

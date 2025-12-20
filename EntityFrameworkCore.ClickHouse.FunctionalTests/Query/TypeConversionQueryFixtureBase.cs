@@ -52,6 +52,8 @@ public class TypeConversionQueryFixtureBase<TModelCustomizer> : SharedStoreFixtu
             Float32AsStringValid = "123456789.0",
             Float64AsInt32 = 123456789,
             Float64AsStringValid = "123456789.0",
+            Date32AsStringValid = "2008-09-01",
+            Date32AsUInt32 = 20089u,
         };
 
         await context.TypeConversions.AddAsync(entity);
