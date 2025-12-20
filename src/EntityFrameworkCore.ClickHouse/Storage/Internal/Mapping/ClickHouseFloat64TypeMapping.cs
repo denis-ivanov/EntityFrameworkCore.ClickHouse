@@ -39,4 +39,15 @@ public class ClickHouseFloat64TypeMapping : DoubleTypeMapping
             expression
         );
     }
+
+    protected override string GenerateNonNullSqlLiteral(object value)
+    {
+        return Convert.ToDouble(value) switch
+        {
+            var d when double.IsNaN(d) => "'NaN'::Float64",
+            var d when double.IsNegativeInfinity(d) => "'-Inf'::Float64",
+            var d when double.IsPositiveInfinity(d) => "'Inf'::Float64",
+            _ => base.GenerateNonNullSqlLiteral(value) + "::Float64"
+        };
+    }
 }

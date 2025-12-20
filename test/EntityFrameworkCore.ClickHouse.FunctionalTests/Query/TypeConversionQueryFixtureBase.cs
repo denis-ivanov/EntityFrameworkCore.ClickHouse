@@ -24,7 +24,7 @@ public class TypeConversionQueryFixtureBase<TModelCustomizer> : SharedStoreFixtu
             Id = 1,
             Int8AsFloat = Convert.ToSingle(sbyte.MaxValue),
             Int8AsStringValid = sbyte.MinValue.ToString(CultureInfo.InvariantCulture),
-            Nan = "abc",
+            NaN = "NaN",
             Int16AsFloat = Convert.ToSingle(short.MaxValue),
             Int16AsStringValid = short.MinValue.ToString(CultureInfo.InvariantCulture),
             Int32AsFloat = Convert.ToSingle(int.MaxValue),

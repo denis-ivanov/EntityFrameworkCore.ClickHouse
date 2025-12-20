@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,14 +75,24 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
         { typeof(double).GetRuntimeMethod(nameof(double.RadiansToDegrees), [typeof(double)])!, "degrees" },
         { typeof(float).GetRuntimeMethod(nameof(float.RadiansToDegrees), [typeof(float)])!, "degrees" },
         { typeof(double).GetRuntimeMethod(nameof(double.DegreesToRadians), [typeof(double)])!, "radians" },
-        { typeof(float).GetRuntimeMethod(nameof(float.DegreesToRadians), [typeof(float)])!, "radians" }
+        { typeof(float).GetRuntimeMethod(nameof(float.DegreesToRadians), [typeof(float)])!, "radians" },
+        { typeof(float).GetRuntimeMethod(nameof(float.IsNaN), [typeof(float)])!, "isNaN" },
+        { typeof(float).GetRuntimeMethod(nameof(float.IsInfinity), [typeof(float)])!, "isInfinite" },
+        { typeof(float).GetRuntimeMethod(nameof(float.IsFinite), [typeof(float)])!, "isFinite" },
+        { typeof(double).GetRuntimeMethod(nameof(double.IsNaN), [typeof(double)])!, "isNaN" },
+        { typeof(double).GetRuntimeMethod(nameof(double.IsInfinity), [typeof(double)])!, "isInfinite" },
+        { typeof(double).GetRuntimeMethod(nameof(double.IsFinite), [typeof(double)])!, "isFinite" }
     };
 
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
+    private readonly IRelationalTypeMappingSource _typeMappingSource;
 
-    public ClickHouseMathTranslator(ISqlExpressionFactory sqlExpressionFactory)
+    public ClickHouseMathTranslator(
+        ISqlExpressionFactory sqlExpressionFactory,
+        IRelationalTypeMappingSource typeMappingSource)
     {
         _sqlExpressionFactory = sqlExpressionFactory;
+        _typeMappingSource = typeMappingSource;
     }
 
     public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -113,6 +124,70 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
                     nullable: true,
                     argumentsPropagateNullability: [true],
                     returnType: method.ReturnType)
+            );
+        }
+
+        if (method.DeclaringType == typeof(float) && method.Name == nameof(float.IsNegativeInfinity))
+        {
+            return _sqlExpressionFactory.And(
+                _sqlExpressionFactory.Function(
+                    name: "isInfinite",
+                    arguments: arguments,
+                    nullable: false,
+                    argumentsPropagateNullability: [true],
+                    returnType: typeof(bool),
+                    typeMapping: _typeMappingSource.FindMapping(typeof(bool))),
+                _sqlExpressionFactory.LessThan(
+                    arguments[0],
+                    _sqlExpressionFactory.Constant(0f, _typeMappingSource.FindMapping(typeof(float))))
+            );
+        }
+
+        if (method.DeclaringType == typeof(float) && method.Name == nameof(float.IsPositiveInfinity))
+        {
+            return _sqlExpressionFactory.And(
+                _sqlExpressionFactory.Function(
+                    name: "isInfinite",
+                    arguments: arguments,
+                    nullable: false,
+                    argumentsPropagateNullability: [true],
+                    returnType: typeof(bool),
+                    typeMapping: _typeMappingSource.FindMapping(typeof(bool))),
+                _sqlExpressionFactory.GreaterThan(
+                    arguments[0],
+                    _sqlExpressionFactory.Constant(0f, _typeMappingSource.FindMapping(typeof(float))))
+            );
+        }
+
+        if (method.DeclaringType == typeof(double) && method.Name == nameof(double.IsNegativeInfinity))
+        {
+            return _sqlExpressionFactory.And(
+                _sqlExpressionFactory.Function(
+                    name: "isInfinite",
+                    arguments: arguments,
+                    nullable: false,
+                    argumentsPropagateNullability: [true],
+                    returnType: typeof(bool),
+                    typeMapping: _typeMappingSource.FindMapping(typeof(bool))),
+                _sqlExpressionFactory.LessThan(
+                    arguments[0],
+                    _sqlExpressionFactory.Constant(0d, _typeMappingSource.FindMapping(typeof(double))))
+            );
+        }
+
+        if (method.DeclaringType == typeof(double) && method.Name == nameof(double.IsPositiveInfinity))
+        {
+            return _sqlExpressionFactory.And(
+                _sqlExpressionFactory.Function(
+                    name: "isInfinite",
+                    arguments: arguments,
+                    nullable: false,
+                    argumentsPropagateNullability: [true],
+                    returnType: typeof(bool),
+                    typeMapping: _typeMappingSource.FindMapping(typeof(bool))),
+                _sqlExpressionFactory.GreaterThan(
+                    arguments[0],
+                    _sqlExpressionFactory.Constant(0d, _typeMappingSource.FindMapping(typeof(double))))
             );
         }
 
