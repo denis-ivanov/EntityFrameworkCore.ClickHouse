@@ -2156,7 +2156,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToFloat64OrNull_String_ShouldConvert()
     {
@@ -2201,6 +2201,106 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         AssertSql(
             """
             SELECT toFloat64OrDefault("t"."Nan", toFloat64(42.0)) AS "ToFloat64OrDefault"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDate32_String_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new { ToDate32 = EF.Functions.ToDate32(e.Date32AsStringValid) })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDate32("t"."Date32AsStringValid") AS "ToDate32"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDate32_Float32_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new { ToDate32 = EF.Functions.ToDate32(e.Date32AsUInt32) })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDate32("t"."Date32AsUInt32") AS "ToDate32"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDate32OrZero_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToDate32OrZero = EF.Functions.ToDate32OrZero(e.Date32AsStringValid) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toDate32OrZero("t"."Date32AsStringValid") AS "ToDate32OrZero"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDate32OrNull_String_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new { ToDate32OrNull = EF.Functions.ToDate32OrNull(e.Date32AsStringValid) })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT toDate32OrNull("t"."Date32AsStringValid") AS "ToDate32OrNull"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDate32OrDefault_String_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        await context.TypeConversions
+            .Select(e => new { ToDate32OrDefault = EF.Functions.ToDate32OrDefault(e.Date32AsStringValid) })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toDate32OrDefault("t"."Date32AsStringValid") AS "ToDate32OrDefault"
+            FROM "TypeConversions" AS "t"
+            """);
+    }
+
+    [Fact]
+    public async Task ToDate32OrDefault_StringWithDefault_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        await context.TypeConversions
+            .Select(e => new
+            {
+                ToDate32OrDefault = EF.Functions.ToDate32OrDefault(e.Date32AsStringValid,
+                    EF.Functions.ToDate32(e.Date32AsUInt32))
+            })
+            .ToArrayAsync();
+        
+        AssertSql(
+            """
+            SELECT toDate32OrDefault("t"."Date32AsStringValid", toDate32("t"."Date32AsUInt32")) AS "ToDate32OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }

@@ -33,7 +33,7 @@ public class ClickHouseDate32MethodTranslator : IMethodCallTranslator
             nameof(ClickHouseDate32DbFunctionsExtensions.ToDate32OrNull) when method.DeclaringType == typeof(ClickHouseDate32DbFunctionsExtensions)
                 => _sqlExpressionFactory.ToDate32OrNull(arguments[1]),
 
-            nameof(ClickHouseDateTimeDbFunctionsExtensions.ToDateTimeOrDefault) when method.DeclaringType == typeof(ClickHouseDate32DbFunctionsExtensions)
+            nameof(ClickHouseDate32DbFunctionsExtensions.ToDate32OrDefault) when method.DeclaringType == typeof(ClickHouseDate32DbFunctionsExtensions)
                 => arguments.Count == 2
                     ? _sqlExpressionFactory.ToDate32OrDefault(arguments[1])
                     : _sqlExpressionFactory.ToDate32OrDefault(arguments[1], arguments[2]),
