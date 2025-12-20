@@ -1,8 +1,6 @@
-﻿namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Extensions.DbFunctionsExtensions;
+﻿using Microsoft.EntityFrameworkCore;
 
-using Microsoft.EntityFrameworkCore;
-using System;
-using Xunit;
+namespace EntityFrameworkCore.ClickHouse.Tests.Extensions.DbFunctionsExtensions;
 
 public sealed class ClickHouseDate32DbFunctionsExtensionsTest
 {

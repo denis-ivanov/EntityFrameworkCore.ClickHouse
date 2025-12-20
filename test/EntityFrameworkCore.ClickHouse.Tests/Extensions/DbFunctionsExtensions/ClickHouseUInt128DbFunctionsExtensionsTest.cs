@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using Xunit;
 
-namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Extensions.DbFunctionsExtensions;
+namespace EntityFrameworkCore.ClickHouse.Tests.Extensions.DbFunctionsExtensions;
 
 public sealed class ClickHouseUInt128DbFunctionsExtensionsTest
 {

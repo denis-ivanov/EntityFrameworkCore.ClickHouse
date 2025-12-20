@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/EntityFrameworkCore.ClickHouse/EntityFrameworkCore.ClickHouse.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/EntityFrameworkCore.ClickHouse.FunctionalTests/EntityFrameworkCore.ClickHouse.FunctionalTests.csproj" />
+    <Project Path="test/EntityFrameworkCore.ClickHouse.Tests/EntityFrameworkCore.ClickHouse.Tests.csproj" />
+  </Folder>
+</Solution>
