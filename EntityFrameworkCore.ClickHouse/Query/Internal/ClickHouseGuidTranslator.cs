@@ -38,7 +38,6 @@ public class ClickHouseGuidTranslator : IMethodCallTranslator
 
         if (method.DeclaringType == typeof(ClickHouseUuidDbFunctionsExtensions))
         {
-            // TODO Write functional tests for this.
             switch (method.Name)
             {
                 case nameof(ClickHouseUuidDbFunctionsExtensions.ToUuid):
