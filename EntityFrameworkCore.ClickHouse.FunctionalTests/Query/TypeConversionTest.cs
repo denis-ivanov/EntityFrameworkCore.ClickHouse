@@ -2104,7 +2104,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
 
         AssertSql(
             """
-            SELECT toFloat32OrDefault("t"."Nan", toFloat64(42.0)) AS "ToFloat32OrDefault"
+            SELECT toFloat32OrDefault("t"."Nan", toFloat32(42)) AS "ToFloat32OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }
