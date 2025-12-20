@@ -6,7 +6,7 @@ public class TypeConversion
 {
     public int Id { get; set; }
 
-    public string Nan { get; set; }
+    public string NaN { get; set; }
 
     public float Int8AsFloat { get; set; }
 

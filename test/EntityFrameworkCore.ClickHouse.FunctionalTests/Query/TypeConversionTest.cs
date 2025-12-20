@@ -2067,12 +2067,12 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         var context = CreateContext();
         
         await context.TypeConversions
-            .Select(e => new { ToFloat32OrNull = EF.Functions.ToFloat32OrNull(e.Nan) })
+            .Select(e => new { ToFloat32OrNull = EF.Functions.ToFloat32OrNull(e.NaN) })
             .ToArrayAsync();
         
         AssertSql(
             """
-            SELECT toFloat32OrNull("t"."Nan") AS "ToFloat32OrNull"
+            SELECT toFloat32OrNull("t"."NaN") AS "ToFloat32OrNull"
             FROM "TypeConversions" AS "t"
             """);
     }
@@ -2083,12 +2083,12 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         var context = CreateContext();
         
         await context.TypeConversions
-            .Select(e => new { ToFloat32OrDefault = EF.Functions.ToFloat32OrDefault(e.Nan) })
+            .Select(e => new { ToFloat32OrDefault = EF.Functions.ToFloat32OrDefault(e.NaN) })
             .ToArrayAsync();
 
         AssertSql(
             """
-            SELECT toFloat32OrDefault("t"."Nan") AS "ToFloat32OrDefault"
+            SELECT toFloat32OrDefault("t"."NaN") AS "ToFloat32OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }
@@ -2099,12 +2099,12 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         var context = CreateContext();
         
         await context.TypeConversions
-            .Select(e => new { ToFloat32OrDefault = EF.Functions.ToFloat32OrDefault(e.Nan, 42.0f) })
+            .Select(e => new { ToFloat32OrDefault = EF.Functions.ToFloat32OrDefault(e.NaN, 42.0f) })
             .ToArrayAsync();
 
         AssertSql(
             """
-            SELECT toFloat32OrDefault("t"."Nan", toFloat32(42)) AS "ToFloat32OrDefault"
+            SELECT toFloat32OrDefault("t"."NaN", 42::Float32) AS "ToFloat32OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }
@@ -2163,12 +2163,12 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         var context = CreateContext();
         
         await context.TypeConversions
-            .Select(e => new { ToFloat64OrNull = EF.Functions.ToFloat64OrNull(e.Nan) })
+            .Select(e => new { ToFloat64OrNull = EF.Functions.ToFloat64OrNull(e.NaN) })
             .ToArrayAsync();
         
         AssertSql(
             """
-            SELECT toFloat64OrNull("t"."Nan") AS "ToFloat64OrNull"
+            SELECT toFloat64OrNull("t"."NaN") AS "ToFloat64OrNull"
             FROM "TypeConversions" AS "t"
             """);
     }
@@ -2179,12 +2179,12 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         var context = CreateContext();
         
         await context.TypeConversions
-            .Select(e => new { ToFloat64OrDefault = EF.Functions.ToFloat64OrDefault(e.Nan) })
+            .Select(e => new { ToFloat64OrDefault = EF.Functions.ToFloat64OrDefault(e.NaN) })
             .ToArrayAsync();
 
         AssertSql(
             """
-            SELECT toFloat64OrDefault("t"."Nan") AS "ToFloat64OrDefault"
+            SELECT toFloat64OrDefault("t"."NaN") AS "ToFloat64OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }
@@ -2195,12 +2195,12 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         var context = CreateContext();
         
         await context.TypeConversions
-            .Select(e => new { ToFloat64OrDefault = EF.Functions.ToFloat64OrDefault(e.Nan, 42.0) })
+            .Select(e => new { ToFloat64OrDefault = EF.Functions.ToFloat64OrDefault(e.NaN, 42.0) })
             .ToArrayAsync();
-        
+
         AssertSql(
             """
-            SELECT toFloat64OrDefault("t"."Nan", toFloat64(42.0)) AS "ToFloat64OrDefault"
+            SELECT toFloat64OrDefault("t"."NaN", 42.0::Float64) AS "ToFloat64OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }

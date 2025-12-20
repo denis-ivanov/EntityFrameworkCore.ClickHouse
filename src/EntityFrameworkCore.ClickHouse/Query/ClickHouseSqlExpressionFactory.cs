@@ -1115,11 +1115,6 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     
     public SqlExpression ToFloat32OrDefault(SqlExpression expression, SqlExpression defaultValue)
     {
-        if (defaultValue is SqlConstantExpression { Value: float })
-        {
-            defaultValue = ToFloat32(defaultValue);
-        }
-        
         return Function(
             name: "toFloat32OrDefault",
             arguments: [expression, defaultValue],
@@ -1179,11 +1174,6 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     
     public SqlExpression ToFloat64OrDefault(SqlExpression expression, SqlExpression defaultValue)
     {
-        if (defaultValue is SqlConstantExpression { Value: double })
-        {
-            defaultValue = ToFloat64(defaultValue);
-        }
-        
         return Function(
             name: "toFloat64OrDefault",
             arguments: [expression, defaultValue],

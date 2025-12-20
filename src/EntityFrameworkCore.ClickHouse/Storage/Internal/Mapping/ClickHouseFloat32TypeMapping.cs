@@ -39,4 +39,15 @@ public class ClickHouseFloat32TypeMapping : FloatTypeMapping
             expression
         );
     }
+
+    protected override string GenerateNonNullSqlLiteral(object value)
+    {
+        return Convert.ToSingle(value) switch
+        {
+            var f when float.IsNaN(f) => "'Nan'::Float32",
+            var f when float.IsNegativeInfinity(f) => "'-Inf'::Float32",
+            var f when float.IsPositiveInfinity(f) => "'Inf'::Float32",
+            _ => base.GenerateNonNullSqlLiteral(value) + "::Float32"
+        };
+    }
 }
