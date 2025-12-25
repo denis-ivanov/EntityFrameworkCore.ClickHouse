@@ -15,7 +15,7 @@ public class ClickHouseDecimal32MethodTranslator : IMethodCallTranslator
     {
         _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
-    
+
     public SqlExpression Translate(
         SqlExpression instance,
         MethodInfo method,
