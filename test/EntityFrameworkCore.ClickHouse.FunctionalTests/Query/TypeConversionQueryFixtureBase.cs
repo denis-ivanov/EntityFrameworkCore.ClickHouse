@@ -57,6 +57,7 @@ public class TypeConversionQueryFixtureBase<TModelCustomizer> : SharedStoreFixtu
         };
 
         await context.TypeConversions.AddAsync(entity);
+        await context.SaveChangesAsync();
         await base.SeedAsync(context);
     }
 }

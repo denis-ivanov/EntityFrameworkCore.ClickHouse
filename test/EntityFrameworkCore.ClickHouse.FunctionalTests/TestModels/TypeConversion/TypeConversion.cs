@@ -8,6 +8,12 @@ public class TypeConversion
 
     public string NaN { get; set; }
 
+    public string NegativeInfinity { get; set; } = "-Inf";
+
+    public string PositiveInfinity { get; set; } = "+Inf";
+
+    public string BoolAsString { get; set; } = "On";
+
     public float Int8AsFloat { get; set; }
 
     public string Int8AsStringValid { get; set; }
