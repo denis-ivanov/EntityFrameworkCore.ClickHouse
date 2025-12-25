@@ -129,7 +129,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
 
         if (method.DeclaringType == typeof(float) && method.Name == nameof(float.IsNegativeInfinity))
         {
-            return _sqlExpressionFactory.And(
+            return _sqlExpressionFactory.AndAlso(
                 _sqlExpressionFactory.Function(
                     name: "isInfinite",
                     arguments: arguments,
@@ -145,7 +145,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
 
         if (method.DeclaringType == typeof(float) && method.Name == nameof(float.IsPositiveInfinity))
         {
-            return _sqlExpressionFactory.And(
+            return _sqlExpressionFactory.AndAlso(
                 _sqlExpressionFactory.Function(
                     name: "isInfinite",
                     arguments: arguments,
@@ -161,7 +161,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
 
         if (method.DeclaringType == typeof(double) && method.Name == nameof(double.IsNegativeInfinity))
         {
-            return _sqlExpressionFactory.And(
+            return _sqlExpressionFactory.AndAlso(
                 _sqlExpressionFactory.Function(
                     name: "isInfinite",
                     arguments: arguments,
@@ -177,7 +177,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
 
         if (method.DeclaringType == typeof(double) && method.Name == nameof(double.IsPositiveInfinity))
         {
-            return _sqlExpressionFactory.And(
+            return _sqlExpressionFactory.AndAlso(
                 _sqlExpressionFactory.Function(
                     name: "isInfinite",
                     arguments: arguments,
