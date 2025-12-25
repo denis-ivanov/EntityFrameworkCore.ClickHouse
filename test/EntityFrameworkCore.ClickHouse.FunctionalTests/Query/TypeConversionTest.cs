@@ -1704,7 +1704,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToDate_DateTime_ShouldConvert()
     {
@@ -1736,7 +1736,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToDate_StringWithTimeZone_ShouldConvert()
     {
@@ -1752,7 +1752,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToDate_DateTimeWithTimeZone_ShouldConvert()
     {
@@ -1784,7 +1784,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToDateOrNull_String_ShouldConvert()
     {
@@ -1800,7 +1800,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToDateOrDefault_String_ShouldConvert()
     {
@@ -1816,7 +1816,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToDateOrDefault_StringDefault_ShouldConvert()
     {
@@ -1977,7 +1977,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToDateTimeOrDefault_StringWithTimeZone_ShouldConvert()
     {
@@ -2052,10 +2052,10 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
 
         var result = await context.TypeConversions
             .Where(e => e.Id == 1)
-            .Select(e => new { ToFloat32 = EF.Functions.ToFloat32(e.NegativeInfinity) })
+            .Select(e => new { IsNegativeInfinity = float.IsNegativeInfinity(EF.Functions.ToFloat32(e.NegativeInfinity)) })
             .SingleAsync();
 
-        Assert.Equal(float.NegativeInfinity, result.ToFloat32);
+        Assert.True(result.IsNegativeInfinity);
     }
 
     [Fact]
@@ -2065,10 +2065,10 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         
         var result = await context.TypeConversions
             .Where(e => e.Id == 1)
-            .Select(e => new { ToFloat32 = EF.Functions.ToFloat32(e.PositiveInfinity) })
+            .Select(e => new { IsPositiveInfinity = float.IsPositiveInfinity(EF.Functions.ToFloat32(e.PositiveInfinity)) })
             .SingleAsync();
 
-        Assert.Equal(float.PositiveInfinity, result.ToFloat32);
+        Assert.True(result.IsPositiveInfinity);
     }
 
     [Fact]
@@ -2174,10 +2174,10 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
 
         var result = await context.TypeConversions
             .Where(e => e.Id == 1)
-            .Select(e => new { ToFloat64 = EF.Functions.ToFloat64(e.NegativeInfinity) })
+            .Select(e => new { IsNegativeInfinity = double.IsNegativeInfinity(EF.Functions.ToFloat64(e.NegativeInfinity)) })
             .SingleAsync();
 
-        Assert.Equal(double.NegativeInfinity, result.ToFloat64);
+        Assert.True(result.IsNegativeInfinity);
     }
 
     [Fact]
@@ -2187,12 +2187,12 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         
         var result = await context.TypeConversions
             .Where(e => e.Id == 1)
-            .Select(e => new { ToFloat64 = EF.Functions.ToFloat64(e.PositiveInfinity) })
+            .Select(e => new { IsPositiveInfinity = double.IsPositiveInfinity(EF.Functions.ToFloat64(e.PositiveInfinity)) })
             .SingleAsync();
 
-        Assert.Equal(double.PositiveInfinity, result.ToFloat64);
+        Assert.True(result.IsPositiveInfinity);
     }
-    
+
     [Fact]
     public async Task ToFloat64OrZero_String_ShouldConvert()
     {
@@ -2356,7 +2356,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     private TypeConversionQueryFixtureBase<NoopModelCustomizer> Fixture { get; }
 
     private void AssertSql(params string[] expected) => Fixture.TestSqlLoggerFactory.AssertBaseline(expected);
