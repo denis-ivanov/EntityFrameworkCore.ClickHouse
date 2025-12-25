@@ -183,7 +183,7 @@ public class ClickHouseSqlNullabilityProcessor : SqlNullabilityProcessor
         bool allowOptimizedExpansion,
         out bool nullable)
     {
-        SqlExpression[]? newValues = null;
+        SqlExpression[] newValues = null;
 
         for (var i = 0; i < rowValueExpression.Values.Count; i++)
         {
