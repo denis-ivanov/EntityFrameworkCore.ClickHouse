@@ -325,6 +325,28 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, scale));
     }
 
+    public SqlExpression DivideDecimal(SqlExpression x, SqlExpression y)
+    {
+        return Function(
+            name: "divideDecimal",
+            arguments: [x, y],
+            nullable: true,
+            argumentsPropagateNullability: [true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, null));
+    }
+
+    public SqlExpression DivideDecimal(SqlExpression x, SqlExpression y, SqlExpression scale)
+    {
+        return Function(
+            name: "divideDecimal",
+            arguments: [x, y, scale],
+            nullable: true,
+            argumentsPropagateNullability: [true, true, true],
+            returnType: typeof(decimal),
+            typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, scale));
+    }
+
     private RelationalTypeMapping GetDecimalTypaMapping(byte precision, byte maxScale, SqlExpression scale)
     {
         if (scale is SqlConstantExpression { Value: byte scaleValue })

@@ -11,9 +11,9 @@ namespace ClickHouse.EntityFrameworkCore.Query.Expressions.Internal;
 
 public class ClickHouseRowValueExpression : SqlExpression, IEquatable<ClickHouseRowValueExpression>
 {
-    private static ConstructorInfo? _quotingConstructor;
+    private static ConstructorInfo _quotingConstructor;
 
-    public ClickHouseRowValueExpression(IReadOnlyList<SqlExpression> values, Type type, RelationalTypeMapping? typeMapping = null)
+    public ClickHouseRowValueExpression(IReadOnlyList<SqlExpression> values, Type type, RelationalTypeMapping typeMapping = null)
         : base(type, typeMapping)
     {
         Values = values;
@@ -23,7 +23,7 @@ public class ClickHouseRowValueExpression : SqlExpression, IEquatable<ClickHouse
 
     protected override Expression VisitChildren(ExpressionVisitor visitor)
     {
-        SqlExpression[]? newRowValues = null;
+        SqlExpression[] newRowValues = null;
 
         for (var i = 0; i < Values.Count; i++)
         {
@@ -78,10 +78,10 @@ public class ClickHouseRowValueExpression : SqlExpression, IEquatable<ClickHouse
         expressionPrinter.Append(")");
     }
 
-    public override bool Equals(object? obj)
+    public override bool Equals(object obj)
         => obj is ClickHouseRowValueExpression other && Equals(other);
 
-    public virtual bool Equals(ClickHouseRowValueExpression? other)
+    public virtual bool Equals(ClickHouseRowValueExpression other)
     {
         if (other is null || !base.Equals(other) || other.Values.Count != Values.Count)
         {
