@@ -47,13 +47,13 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         await context.TypeConversions
             .Select(e => new
             {
-                ToBool = EF.Functions.ToBool(e.Int8AsStringValid)
+                ToBool = EF.Functions.ToBool(e.BoolAsString)
             })
             .ToArrayAsync();
 
         AssertSql(
             """
-            SELECT toBool("t"."Int8AsStringValid") AS "ToBool"
+            SELECT toBool("t"."BoolAsString") AS "ToBool"
             FROM "TypeConversions" AS "t"
             """);
     }
@@ -2046,6 +2046,32 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
     }
 
     [Fact]
+    public async Task ToFloat32_NegativeInfinity_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        var result = await context.TypeConversions
+            .Where(e => e.Id == 1)
+            .Select(e => new { ToFloat32 = EF.Functions.ToFloat32(e.NegativeInfinity) })
+            .SingleAsync();
+
+        Assert.Equal(float.NegativeInfinity, result.ToFloat32);
+    }
+
+    [Fact]
+    public async Task ToFloat32_PositiveInfinity_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        var result = await context.TypeConversions
+            .Where(e => e.Id == 1)
+            .Select(e => new { ToFloat32 = EF.Functions.ToFloat32(e.PositiveInfinity) })
+            .SingleAsync();
+
+        Assert.Equal(float.PositiveInfinity, result.ToFloat32);
+    }
+
+    [Fact]
     public async Task ToFloat32OrZero_String_ShouldConvert()
     {
         var context = CreateContext();
@@ -2108,7 +2134,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             FROM "TypeConversions" AS "t"
             """);
     }
-    
+
     [Fact]
     public async Task ToFloat64_Int64_ShouldConvert()
     {
@@ -2133,7 +2159,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
         await context.TypeConversions
             .Select(e => new { ToFloat64 = EF.Functions.ToFloat64(e.Float64AsStringValid) })
             .ToArrayAsync();
-        
+
         AssertSql(
             """
             SELECT toFloat64("t"."Float64AsStringValid") AS "ToFloat64"
@@ -2141,6 +2167,32 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             """);
     }
 
+    [Fact]
+    public async Task ToFloat64_NegativeInfinity_ShouldConvert()
+    {
+        var context = CreateContext();
+
+        var result = await context.TypeConversions
+            .Where(e => e.Id == 1)
+            .Select(e => new { ToFloat64 = EF.Functions.ToFloat64(e.NegativeInfinity) })
+            .SingleAsync();
+
+        Assert.Equal(double.NegativeInfinity, result.ToFloat64);
+    }
+
+    [Fact]
+    public async Task ToFloat64_PositiveInfinity_ShouldConvert()
+    {
+        var context = CreateContext();
+        
+        var result = await context.TypeConversions
+            .Where(e => e.Id == 1)
+            .Select(e => new { ToFloat64 = EF.Functions.ToFloat64(e.PositiveInfinity) })
+            .SingleAsync();
+
+        Assert.Equal(double.PositiveInfinity, result.ToFloat64);
+    }
+    
     [Fact]
     public async Task ToFloat64OrZero_String_ShouldConvert()
     {
