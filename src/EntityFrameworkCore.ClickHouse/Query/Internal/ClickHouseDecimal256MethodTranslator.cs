@@ -35,6 +35,10 @@ public class ClickHouseDecimal256MethodTranslator : IMethodCallTranslator
             nameof(ClickHouseDecimal256DbFunctionsExtensions.ToDecimal256OrDefault) => arguments.Count == 3
                 ? _sqlExpressionFactory.ToDecimal256OrDefault(arguments[1], arguments[2])
                 : _sqlExpressionFactory.ToDecimal256OrDefault(arguments[1], arguments[2], arguments[3]),
+            nameof(ClickHouseDecimal256DbFunctionsExtensions.DivideDecimal) => 
+                arguments.Count == 3
+                    ? _sqlExpressionFactory.DivideDecimal(arguments[1], arguments[2])
+                    : _sqlExpressionFactory.DivideDecimal(arguments[1], arguments[2], arguments[3]),
             _ => null
         };
     }
