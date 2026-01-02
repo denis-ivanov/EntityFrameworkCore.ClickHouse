@@ -192,6 +192,16 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
                 mappingInfo.Size.Value);
         }
 
+        if (mappingInfo.ClrType == typeof(char))
+        {
+            var isUnicode = mappingInfo.IsUnicode ?? true;
+            
+            return new ClickHouseFixedStringTypeMapping(
+                mappingInfo.ClrType!,
+                isUnicode,
+                isUnicode ? 2 : 1);
+        }
+
         if (mappingInfo.ClrType != null && ClrTypeMappings.TryGetValue(mappingInfo.ClrType, out var map))
         {
             return map;

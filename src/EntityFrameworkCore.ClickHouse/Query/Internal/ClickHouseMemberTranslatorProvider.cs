@@ -9,7 +9,7 @@ public sealed class ClickHouseMemberTranslatorProvider : RelationalMemberTransla
         : base(dependencies)
     {
         AddTranslators([
-            new ClickHouseStringTranslator(dependencies.SqlExpressionFactory),
+            new ClickHouseStringTranslator(dependencies.SqlExpressionFactory, typeMappingSource),
             new ClickHouseArrayTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseMathTranslator(dependencies.SqlExpressionFactory, typeMappingSource),
             new ClickHouseConvertTranslator(dependencies.SqlExpressionFactory),

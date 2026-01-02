@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using ClickHouse.EntityFrameworkCore.Extensions;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
@@ -18,13 +19,7 @@ public class ClickHouseFixedStringTypeMapping : RelationalTypeMapping
             new RelationalTypeMappingParameters(
                 new CoreTypeMappingParameters(
                     clrType: clrType,
-                    converter: new StringToBytesConverter(
-                        unicode ? Encoding.UTF8 : Encoding.ASCII,
-                        new ConverterMappingHints(
-                            size: size,
-                            precision: null,
-                            scale: null,
-                            unicode: unicode)),
+                    converter: GetConverter(clrType, unicode, size),
                     jsonValueReaderWriter: clrType == typeof(char)
                         ? JsonCharReaderWriter.Instance
                         : clrType == typeof(string)
@@ -32,7 +27,7 @@ public class ClickHouseFixedStringTypeMapping : RelationalTypeMapping
                             : throw new ArgumentException("Argument type must be char or string", nameof(clrType))),
                 storeType: "FixedString",
                 storeTypePostfix: StoreTypePostfix.Size,
-                dbType: System.Data.DbType.Binary,
+                dbType: unicode ? System.Data.DbType.StringFixedLength : System.Data.DbType.AnsiStringFixedLength,
                 unicode: unicode,
                 size: size,
                 fixedLength: true,
@@ -50,8 +45,45 @@ public class ClickHouseFixedStringTypeMapping : RelationalTypeMapping
         return new ClickHouseFixedStringTypeMapping(parameters);
     }
 
+    protected override void ConfigureParameter(DbParameter parameter)
+    {
+        parameter.SetStoreType(StoreType);
+    }
+
     public override MethodInfo GetDataReaderMethod()
     {
         return typeof(DbDataReader).GetRuntimeMethod(nameof(DbDataReader.GetValue), [typeof(int)])!;
+    }
+
+    private static ValueConverter GetConverter(Type clrType, bool unicode, int size)
+    {
+        var mappingHints = new ConverterMappingHints(
+            size: size,
+            precision: null,
+            scale: null,
+            unicode: unicode);
+
+        var stringConverter = new StringToBytesConverter(
+            unicode ? Encoding.UTF8 : Encoding.ASCII,
+            mappingHints);
+
+        if (clrType == typeof(string))
+        {
+            return stringConverter;
+        }
+
+        return clrType == typeof(char)
+            ? new CharToStringConverter(mappingHints).ComposeWith(stringConverter)
+            : throw new ArgumentException("Argument type must be char or string", nameof(clrType));
+    }
+
+    protected override string GenerateNonNullSqlLiteral(object value)
+    {
+        if (value is byte[])
+        {
+            return "'" + Converter!.ConvertFromProvider(value) + "'";
+        }
+
+        return base.GenerateNonNullSqlLiteral(value);
     }
 }

@@ -21,10 +21,10 @@ public class ValueConvertersEndToEndClickHouseTest
     {
         return base.Can_insert_and_read_back_with_conversions(valueOrder);
     }
-    
+
     [ConditionalTheory]
-    [InlineData(nameof(ConvertingEntity.BoolAsChar), "String", false)]
-    [InlineData(nameof(ConvertingEntity.BoolAsNullableChar), "String", false)]
+    [InlineData(nameof(ConvertingEntity.BoolAsChar), "FixedString(2)", false)]
+    [InlineData(nameof(ConvertingEntity.BoolAsNullableChar), "FixedString(2)", false)]
     [InlineData(nameof(ConvertingEntity.BoolAsString), "String", false)]
     [InlineData(nameof(ConvertingEntity.BoolAsInt), "Int32", false)]
     [InlineData(nameof(ConvertingEntity.BoolAsNullableString), "String", false)]
@@ -67,8 +67,8 @@ public class ValueConvertersEndToEndClickHouseTest
     [InlineData(nameof(ConvertingEntity.StringToNullableBool), "Bool", false)]
     [InlineData(nameof(ConvertingEntity.StringToBytes), "Array(UInt8)", false)]
     [InlineData(nameof(ConvertingEntity.StringToNullableBytes), "Array(UInt8)", false)]
-    [InlineData(nameof(ConvertingEntity.StringToChar), "String", false)]
-    [InlineData(nameof(ConvertingEntity.StringToNullableChar), "String", false)]
+    [InlineData(nameof(ConvertingEntity.StringToChar), "FixedString(2)", false)]
+    [InlineData(nameof(ConvertingEntity.StringToNullableChar), "FixedString(2)", false)]
     [InlineData(nameof(ConvertingEntity.StringToDateTime), "DateTime", false)]
     [InlineData(nameof(ConvertingEntity.StringToNullableDateTime), "DateTime", false)]
     [InlineData(nameof(ConvertingEntity.StringToDateTimeOffset), "String", false)]
@@ -89,8 +89,8 @@ public class ValueConvertersEndToEndClickHouseTest
     [InlineData(nameof(ConvertingEntity.UriToNullableString), "String", false)]
     [InlineData(nameof(ConvertingEntity.NullableCharAsString), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableCharAsNullableString), "String", true)]
-    [InlineData(nameof(ConvertingEntity.NullableBoolAsChar), "String", true)]
-    [InlineData(nameof(ConvertingEntity.NullableBoolAsNullableChar), "String", true)]
+    [InlineData(nameof(ConvertingEntity.NullableBoolAsChar), "FixedString(2)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableBoolAsNullableChar), "FixedString(2)", true)]
     [InlineData(nameof(ConvertingEntity.NullableBoolAsString), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableBoolAsNullableString), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableBoolAsInt), "Int32", true)]
@@ -131,8 +131,8 @@ public class ValueConvertersEndToEndClickHouseTest
     [InlineData(nameof(ConvertingEntity.NullableStringToNullableBool), "Bool", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToBytes), "Array(UInt8)", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToNullableBytes), "Array(UInt8)", true)]
-    [InlineData(nameof(ConvertingEntity.NullableStringToChar), "String", true)]
-    [InlineData(nameof(ConvertingEntity.NullableStringToNullableChar), "String", true)]
+    [InlineData(nameof(ConvertingEntity.NullableStringToChar), "FixedString(2)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableStringToNullableChar), "FixedString(2)", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToDateTime), "DateTime", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToNullableDateTime), "DateTime", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToDateTimeOffset), "String", true)]
@@ -168,8 +168,7 @@ public class ValueConvertersEndToEndClickHouseTest
 
     public class ValueConvertersEndToEndClickHouseFixture : ValueConvertersEndToEndFixtureBase
     {
-        protected override ITestStoreFactory TestStoreFactory
-            => ClickHouseTestStoreFactory.Instance;
+        protected override ITestStoreFactory TestStoreFactory => ClickHouseTestStoreFactory.Instance;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder, DbContext context)
         {
