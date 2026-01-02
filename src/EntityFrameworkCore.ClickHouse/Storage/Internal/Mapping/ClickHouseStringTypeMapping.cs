@@ -6,7 +6,8 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
 public class ClickHouseStringTypeMapping : StringTypeMapping
 {
-    public ClickHouseStringTypeMapping(bool unicode = false, int? size = null) : base("String", System.Data.DbType.String, unicode, size)
+    public ClickHouseStringTypeMapping()
+        : base("String", System.Data.DbType.String, true, null)
     {
     }
 

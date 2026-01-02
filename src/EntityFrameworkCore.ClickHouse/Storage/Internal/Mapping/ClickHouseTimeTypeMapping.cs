@@ -107,7 +107,7 @@ public class ClickHouseTimeTypeMapping : RelationalTypeMapping
             $"{hours}:{minutes:00}:{seconds:00}.{frac.ToString(new string('0', precision), CultureInfo.InvariantCulture)}"
         );
     }
-    
+
     private static int? ValidatePrecision(int? precision, string storeType)
     {
         if (!precision.HasValue)
