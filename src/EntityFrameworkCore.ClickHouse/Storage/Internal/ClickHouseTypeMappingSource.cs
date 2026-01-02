@@ -155,11 +155,6 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
 
     private RelationalTypeMapping FindExistingMapping(in RelationalTypeMappingInfo mappingInfo)
     {
-        if (mappingInfo.ClrType != null && ClrTypeMappings.TryGetValue(mappingInfo.ClrType, out var map))
-        {
-            return map;
-        }
-
         if (!string.IsNullOrWhiteSpace(mappingInfo.StoreTypeNameBase) &&
             AliasTypeMapping.TryGetValue(mappingInfo.StoreTypeNameBase, out var mapAsAlias1))
         {
@@ -187,6 +182,19 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
                 mappingInfo.ClrType,
                 "Time64",
                 mappingInfo.Precision ?? ClickHouseTimeTypeMapping.MaxPrecision);
+        }
+
+        if (mappingInfo.ClrType == typeof(string) && mappingInfo is { Size: > 0, IsFixedLength: true })
+        {
+            return new ClickHouseFixedStringTypeMapping(
+                mappingInfo.ClrType!,
+                mappingInfo.IsUnicode ?? true,
+                mappingInfo.Size.Value);
+        }
+
+        if (mappingInfo.ClrType != null && ClrTypeMappings.TryGetValue(mappingInfo.ClrType, out var map))
+        {
+            return map;
         }
 
         return null;
