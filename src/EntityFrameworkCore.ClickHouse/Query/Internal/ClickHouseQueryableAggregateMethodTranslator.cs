@@ -118,6 +118,38 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
             }
         }
 
+        if (method.DeclaringType == typeof(ClickHouseAggregateDbFunctionsExtensions))
+        {
+            var methodInfo = method.IsGenericMethod
+                ? method.GetGenericMethodDefinition()
+                : method;
+
+            switch (methodInfo.Name)
+            {
+                case nameof(ClickHouseAggregateDbFunctionsExtensions.Any)
+                    when source.Selector is SqlExpression anySqlExpression:
+                    anySqlExpression = CombineTerms(source, anySqlExpression);
+                    return _sqlExpressionFactory.Function(
+                        "any",
+                        [anySqlExpression],
+                        nullable: true,
+                        argumentsPropagateNullability: [false],
+                        anySqlExpression.Type,
+                        anySqlExpression.TypeMapping);
+
+                case nameof(ClickHouseAggregateDbFunctionsExtensions.AnyRespectNulls)
+                    when source.Selector is SqlExpression anyRespectNullsSqlExpression:
+                    anyRespectNullsSqlExpression = CombineTerms(source, anyRespectNullsSqlExpression);
+                    return _sqlExpressionFactory.Function(
+                        "anyRespectNulls",
+                        [anyRespectNullsSqlExpression],
+                        nullable: true,
+                        argumentsPropagateNullability: [false],
+                        anyRespectNullsSqlExpression.Type,
+                        anyRespectNullsSqlExpression.TypeMapping);
+            }
+        }
+
         return null;
     }
 
