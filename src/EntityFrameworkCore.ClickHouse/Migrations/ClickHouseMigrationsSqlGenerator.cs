@@ -15,15 +15,15 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 
     public ClickHouseMigrationsSqlGenerator(MigrationsSqlGeneratorDependencies dependencies) : base(dependencies)
     {
-        _stringTypeMapping = dependencies.TypeMappingSource.FindMapping(typeof(string));
+        _stringTypeMapping = dependencies.TypeMappingSource.FindMapping(typeof(string))!;
     }
 
     protected override void ComputedColumnDefinition(
-        string schema,
+        string? schema,
         string table,
         string name,
         ColumnOperation operation,
-        IModel model,
+        IModel? model,
         MigrationCommandListBuilder builder)
     {
         var defaultValueType = operation.IsStored == true ? " MATERIALIZED " : " ALIAS ";
@@ -40,11 +40,11 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     }
 
     protected override void ColumnDefinition(
-        string schema,
+        string? schema,
         string table,
         string name,
         ColumnOperation operation,
-        IModel model,
+        IModel? model,
         MigrationCommandListBuilder builder)
     {
         if (operation.Collation != null)
@@ -68,7 +68,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 
         if (string.IsNullOrWhiteSpace(defaultValue) && operation.DefaultValue != null)
         {
-            var typeMapping = (columnType != null
+            var typeMapping = (!string.IsNullOrEmpty(columnType)
                                   ? Dependencies.TypeMappingSource.FindMapping(operation.DefaultValue.GetType(), columnType)
                                   : null)
                               ?? Dependencies.TypeMappingSource.GetMappingForValue(operation.DefaultValue);
@@ -82,7 +82,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         }
     }
 
-    protected override void Generate(MigrationOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(MigrationOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         if (operation is ClickHouseCreateDatabaseOperation cdo)
         {
@@ -99,7 +99,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         base.Generate(operation, model, builder);
     }
 
-    protected virtual void Generate(ClickHouseCreateDatabaseOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected virtual void Generate(ClickHouseCreateDatabaseOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         builder
             .Append("CREATE DATABASE ")
@@ -116,12 +116,12 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         EndStatement(builder, true);
     }
 
-    protected override void CreateTableConstraints(CreateTableOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void CreateTableConstraints(CreateTableOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         CreateTableCheckConstraints(operation, model, builder);
     }
 
-    protected override void Generate(CreateTableOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
+    protected override void Generate(CreateTableOperation operation, IModel? model, MigrationCommandListBuilder builder, bool terminate = true)
     {
         base.Generate(operation, model, builder, false);
 
@@ -141,7 +141,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
             .ForEach(e => ModifyComment(e, builder));
     }
 
-    protected override void Generate(InsertDataOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
+    protected override void Generate(InsertDataOperation operation, IModel? model, MigrationCommandListBuilder builder, bool terminate = true)
     {
         foreach (var modificationCommand in GenerateModificationCommands(operation, model))
         {
@@ -158,9 +158,9 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         }
     }
 
-    protected override void Generate(AlterColumnOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(AlterColumnOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
-        var oldComputedSql = operation.OldColumn?.ComputedColumnSql;
+        var oldComputedSql = operation.OldColumn.ComputedColumnSql;
         var newComputedSql = operation.ComputedColumnSql;
 
         if (!string.IsNullOrEmpty(oldComputedSql) && !string.IsNullOrEmpty(newComputedSql) &&
@@ -200,18 +200,18 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         }
     }
 
-    protected override void Generate(RenameTableOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(RenameTableOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         builder
             .Append("RENAME TABLE ")
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
             .Append(" TO ")
-            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.NewName));
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.NewName!));
 
         EndStatement(builder);
     }
 
-    protected override void Generate(RenameColumnOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(RenameColumnOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         builder
             .Append("ALTER TABLE ")
@@ -224,7 +224,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         EndStatement(builder);
     }
 
-    protected override void Generate(AddColumnOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
+    protected override void Generate(AddColumnOperation operation, IModel? model, MigrationCommandListBuilder builder, bool terminate = true)
     {
         builder
             .Append("ALTER TABLE ")
@@ -248,18 +248,18 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         }
     }
 
-    protected override void Generate(DropIndexOperation operation, IModel model, MigrationCommandListBuilder builder, bool terminate = true)
+    protected override void Generate(DropIndexOperation operation, IModel? model, MigrationCommandListBuilder builder, bool terminate = true)
     {
         builder
             .Append("ALTER TABLE ")
-            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table!, operation.Schema))
             .Append(" DROP INDEX ")
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name));
 
         EndStatement(builder);
     }
 
-    protected override void Generate(AlterTableOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(AlterTableOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         base.Generate(operation, model, builder);
 
@@ -272,7 +272,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 
     protected override void Generate(
         DropPrimaryKeyOperation operation,
-        IModel model,
+        IModel? model,
         MigrationCommandListBuilder builder,
         bool terminate = true)
     {
@@ -280,7 +280,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 
     protected override void Generate(
         AddPrimaryKeyOperation operation,
-        IModel model,
+        IModel? model,
         MigrationCommandListBuilder builder,
         bool terminate = true)
     {
@@ -290,7 +290,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     {
         builder
             .Append("ALTER TABLE ")
-            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name, operation.Schema))
             .Append(" MODIFY COMMENT ")
             .Append(_stringTypeMapping.GenerateSqlLiteral(operation.Comment ?? string.Empty));
 
@@ -301,7 +301,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     {
         builder
             .Append("ALTER TABLE ")
-            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table))
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Table, operation.Schema))
             .Append(" COMMENT COLUMN ")
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
             .Append(_stringTypeMapping.GenerateSqlLiteral(operation.Comment ?? string.Empty));
@@ -309,52 +309,52 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         EndStatement(builder);
     }
 
-    protected override void Generate(DropSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(DropSequenceOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
     }
 
-    protected override void Generate(AlterSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(AlterSequenceOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
     }
 
-    protected override void Generate(CreateSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(CreateSequenceOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
     }
 
-    protected override void Generate(RenameSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(RenameSequenceOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
     }
 
-    protected override void Generate(RestartSequenceOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(RestartSequenceOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSequences);
     }
 
-    protected override void Generate(EnsureSchemaOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(EnsureSchemaOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSchemas);
     }
 
-    protected override void Generate(DropSchemaOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(DropSchemaOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportSchemas);
     }
 
-    protected override void Generate(AddUniqueConstraintOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(AddUniqueConstraintOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportUniqueConstraints);
     }
 
-    protected override void Generate(DropUniqueConstraintOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected override void Generate(DropUniqueConstraintOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         throw new NotSupportedException(ClickHouseExceptions.DoesNotSupportUniqueConstraints);
     }
 
-    protected override void Generate(CreateIndexOperation operation, IModel model, MigrationCommandListBuilder builder,
+    protected override void Generate(CreateIndexOperation operation, IModel? model, MigrationCommandListBuilder builder,
         bool terminate = true)
     {
         if (operation.IsUnique)
@@ -367,7 +367,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 
     protected override void Generate(
         AddForeignKeyOperation operation,
-        IModel model,
+        IModel? model,
         MigrationCommandListBuilder builder,
         bool terminate = true)
     {
@@ -376,7 +376,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
 
     protected override void Generate(
         DropForeignKeyOperation operation,
-        IModel model,
+        IModel? model,
         MigrationCommandListBuilder builder,
         bool terminate = true)
     {
