@@ -12,7 +12,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
 {
     public static DbContextOptionsBuilder UseClickHouse(
         this DbContextOptionsBuilder optionsBuilder,
-        Action<ClickHouseDbContextOptionsBuilder> clickHouseOptionsAction = null)
+        Action<ClickHouseDbContextOptionsBuilder>? clickHouseOptionsAction = null)
     {
         ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(GetOrCreateExtension(optionsBuilder));
         ConfigureWarnings(optionsBuilder);
@@ -23,7 +23,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
     public static DbContextOptionsBuilder UseClickHouse(
         this DbContextOptionsBuilder optionsBuilder,
         string connectionString,
-        Action<ClickHouseDbContextOptionsBuilder> clickHouseOptionsAction = null)
+        Action<ClickHouseDbContextOptionsBuilder>? clickHouseOptionsAction = null)
     {
         var extension = (ClickHouseOptionsExtension)GetOrCreateExtension(optionsBuilder).WithConnectionString(connectionString);
         ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(extension);
@@ -38,7 +38,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
     public static DbContextOptionsBuilder UseClickHouse(
         this DbContextOptionsBuilder optionsBuilder,
         DbConnection connection,
-        Action<ClickHouseDbContextOptionsBuilder> clickHouseOptionsAction = null)
+        Action<ClickHouseDbContextOptionsBuilder>? clickHouseOptionsAction = null)
     {
         var extension = (ClickHouseOptionsExtension)GetOrCreateExtension(optionsBuilder).WithConnection(connection);
         ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(extension);
@@ -52,7 +52,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
 
     public static DbContextOptionsBuilder<TContext> UseClickHouse<TContext>(
         this DbContextOptionsBuilder<TContext> optionsBuilder,
-        Action<ClickHouseDbContextOptionsBuilder> clickHouseOptionsAction = null)
+        Action<ClickHouseDbContextOptionsBuilder>? clickHouseOptionsAction = null)
         where TContext : DbContext
         => (DbContextOptionsBuilder<TContext>)UseClickHouse(
             (DbContextOptionsBuilder)optionsBuilder, clickHouseOptionsAction);
@@ -60,7 +60,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
     public static DbContextOptionsBuilder<TContext> UseClickHouse<TContext>(
         this DbContextOptionsBuilder<TContext> optionsBuilder,
         string connectionString,
-        Action<ClickHouseDbContextOptionsBuilder> clickHouseOptionsAction = null)
+        Action<ClickHouseDbContextOptionsBuilder>? clickHouseOptionsAction = null)
         where TContext : DbContext
         => (DbContextOptionsBuilder<TContext>)UseClickHouse(
             (DbContextOptionsBuilder)optionsBuilder, connectionString, clickHouseOptionsAction);
@@ -68,7 +68,7 @@ public static class ClickHouseDbContextOptionsBuilderExtensions
     public static DbContextOptionsBuilder<TContext> UseClickHouse<TContext>(
         this DbContextOptionsBuilder<TContext> optionsBuilder,
         DbConnection connection,
-        Action<ClickHouseDbContextOptionsBuilder> clickHouseOptionsAction = null)
+        Action<ClickHouseDbContextOptionsBuilder>? clickHouseOptionsAction = null)
         where TContext : DbContext
         => (DbContextOptionsBuilder<TContext>)UseClickHouse(
             (DbContextOptionsBuilder)optionsBuilder, connection, clickHouseOptionsAction);
