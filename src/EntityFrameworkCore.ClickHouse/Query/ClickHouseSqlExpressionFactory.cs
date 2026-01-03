@@ -31,14 +31,14 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
     }
 
     [return: NotNullIfNotNull("sqlExpression")]
-    public override SqlExpression ApplyTypeMapping(SqlExpression sqlExpression, RelationalTypeMapping typeMapping)
+    public override SqlExpression? ApplyTypeMapping(SqlExpression? sqlExpression, RelationalTypeMapping? typeMapping)
     {
         if (sqlExpression is { TypeMapping: null })
         {
             sqlExpression = sqlExpression switch
             {
-                SqlBinaryExpression e => ApplyTypeMappingOnSqlBinary(e, typeMapping),
-                ClickHouseRowValueExpression e => ApplyTypeMappingOnRowValue(e, typeMapping),
+                SqlBinaryExpression e => ApplyTypeMappingOnSqlBinary(e, typeMapping!),
+                ClickHouseRowValueExpression e => ApplyTypeMappingOnRowValue(e, typeMapping!),
 
                 _ => base.ApplyTypeMapping(sqlExpression, typeMapping)
             };
@@ -47,29 +47,29 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
         return base.ApplyTypeMapping(sqlExpression, typeMapping);
     }
 
-    public override SqlExpression MakeBinary(
+    public override SqlExpression? MakeBinary(
         ExpressionType operatorType,
         SqlExpression left,
         SqlExpression right,
-        RelationalTypeMapping typeMapping,
-        SqlExpression existingExpression = null)
+        RelationalTypeMapping? typeMapping,
+        SqlExpression? existingExpression = null)
     {
         switch (operatorType)
         {
             case ExpressionType.And:
-                return Function("bitAnd", [left, right], true, [true, true], typeMapping.ClrType, typeMapping);
+                return Function("bitAnd", [left, right], true, [true, true], typeMapping!.ClrType, typeMapping);
 
             case ExpressionType.Or:
-                return Function("bitOr", [left, right], true, [true, true], typeMapping.ClrType, typeMapping);
+                return Function("bitOr", [left, right], true, [true, true], typeMapping!.ClrType, typeMapping);
 
             case ExpressionType.ExclusiveOr:
-                return Function("bitXor", [left, right], true, [true, true], typeMapping.ClrType, typeMapping);
+                return Function("bitXor", [left, right], true, [true, true], typeMapping!.ClrType, typeMapping);
 
             case ExpressionType.LeftShift:
-                return Function("bitShiftLeft", [left, right], true, [true, true], typeMapping.ClrType, typeMapping);
+                return Function("bitShiftLeft", [left, right], true, [true, true], typeMapping!.ClrType, typeMapping);
 
             case ExpressionType.RightShift:
-                return Function("bitShiftRight", [left, right], true, [true, true], typeMapping.ClrType, typeMapping);
+                return Function("bitShiftRight", [left, right], true, [true, true], typeMapping!.ClrType, typeMapping);
         }
 
         return base.MakeBinary(operatorType, left, right, typeMapping, existingExpression);
@@ -325,13 +325,13 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             typeMapping: GetDecimalTypaMapping(DecimalPrecision256, DecimalMaxScale256, scale));
     }
 
-    private RelationalTypeMapping GetDecimalTypaMapping(byte precision, byte maxScale, SqlExpression scale)
+    private RelationalTypeMapping? GetDecimalTypaMapping(byte precision, byte maxScale, SqlExpression scale)
     {
         if (scale is SqlConstantExpression { Value: byte scaleValue })
         {
             ArgumentOutOfRangeException.ThrowIfGreaterThan(scaleValue, maxScale);
 
-            return Dependencies.TypeMappingSource.FindMapping($"Decimal({precision}, {scaleValue})");
+            return Dependencies.TypeMappingSource.FindMapping($"Decimal({precision}, {scaleValue})")!;
         }
 
         return null;
@@ -1484,7 +1484,7 @@ public class ClickHouseSqlExpressionFactory : SqlExpressionFactory
             }
         }
 
-        bool TryGetRowValueValues(SqlExpression e, [NotNullWhen(true)] out IReadOnlyList<SqlExpression> values)
+        bool TryGetRowValueValues(SqlExpression e, [NotNullWhen(true)] out IReadOnlyList<SqlExpression>? values)
         {
             switch (e)
             {
