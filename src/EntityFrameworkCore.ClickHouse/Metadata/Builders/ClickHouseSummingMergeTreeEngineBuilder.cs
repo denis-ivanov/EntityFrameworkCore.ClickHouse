@@ -53,7 +53,7 @@ public class ClickHouseSummingMergeTreeEngineBuilder : ClickHouseEngineBuilder
     public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table, ISqlGenerationHelper sql)
     {
         var column = table.GetSummingMergeTreeColumn();
-        string engineArg = null;
+        string? engineArg = null;
 
         if (!string.IsNullOrEmpty(column))
         {

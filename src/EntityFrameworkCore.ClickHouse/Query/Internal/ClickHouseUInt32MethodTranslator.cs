@@ -16,8 +16,8 @@ public class ClickHouseUInt32MethodTranslator : IMethodCallTranslator
         _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
     
-    public SqlExpression Translate(
-        SqlExpression instance,
+    public SqlExpression? Translate(
+        SqlExpression? instance,
         MethodInfo method,
         IReadOnlyList<SqlExpression> arguments,
         IDiagnosticsLogger<DbLoggerCategory.Query> logger)

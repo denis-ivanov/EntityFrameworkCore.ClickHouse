@@ -84,7 +84,7 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
     {
         await AssertQueryScalar(
             async,
-            ss => ss.Set<Order>().Select(o => o.OrderDate.Value.AddYears(1).Year));
+            ss => ss.Set<Order>().Select(o => o.OrderDate!.Value.AddYears(1).Year));
 
         AssertSql(
             """

@@ -17,7 +17,7 @@ public class ClickHouseRelationalConnection : RelationalConnection, IClickHouseR
 
     protected override DbConnection CreateDbConnection()
     {
-        return new ClickHouseDbConnection(ConnectionString);
+        return new ClickHouseDbConnection(ConnectionString!);
     }
 
     public IClickHouseRelationalConnection CreateReadOnlyConnection()

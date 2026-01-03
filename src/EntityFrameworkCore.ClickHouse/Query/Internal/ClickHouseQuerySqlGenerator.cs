@@ -63,7 +63,7 @@ public class ClickHouseQuerySqlGenerator : QuerySqlGenerator
                 sqlParameterExpression.IsNullable);
         }
 
-        Sql.Append(Dependencies.SqlGenerationHelper.GenerateParameterName(sqlParameterExpression.Name, sqlParameterExpression.TypeMapping.StoreType));
+        Sql.Append(Dependencies.SqlGenerationHelper.GenerateParameterName(sqlParameterExpression.Name, sqlParameterExpression.TypeMapping!.StoreType));
         return sqlParameterExpression;
     }
 

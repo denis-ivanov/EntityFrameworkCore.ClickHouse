@@ -32,7 +32,7 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <see cref="ToDateTime(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTime</remarks>
-    public static DateTime ToDateTime(this DbFunctions _, string expr)
+    public static DateTime ToDateTime(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -79,7 +79,7 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <see cref="ToDateTime(DbFunctions, string, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTime</remarks>
-    public static DateTime ToDateTime(this DbFunctions _, string expr, string timeZone)
+    public static DateTime ToDateTime(this DbFunctions _, string? expr, string timeZone)
     {
         throw new InvalidOperationException();
     }
@@ -112,7 +112,7 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <see cref="ToDateTimeOrZero(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTimeOrZero</remarks>
-    public static DateTime ToDateTimeOrZero(this DbFunctions _, string expr)
+    public static DateTime ToDateTimeOrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -128,7 +128,7 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTimeOrNull</remarks>
-    public static DateTime? ToDateTimeOrNull(this DbFunctions _, string expr)
+    public static DateTime? ToDateTimeOrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -144,7 +144,7 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTimeOrDefault</remarks>
-    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string expr)
+    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -161,7 +161,7 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTimeOrDefault</remarks>
-    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string expr, string timeZone)
+    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string? expr, string timeZone)
     {
         throw new InvalidOperationException();
     }
@@ -179,7 +179,7 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateTimeOrDefault</remarks>
-    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string expr, string timeZone, DateTime defaultValue)
+    public static DateTime ToDateTimeOrDefault(this DbFunctions _, string? expr, string timeZone, DateTime defaultValue)
     {
         throw new InvalidOperationException();
     }

@@ -11,7 +11,7 @@ public class ClickHouseValueConverterSelector : ValueConverterSelector
     {
     }
 
-    public override IEnumerable<ValueConverterInfo> Select(Type modelClrType, Type providerClrType = null)
+    public override IEnumerable<ValueConverterInfo> Select(Type modelClrType, Type? providerClrType = null)
     {
         var result = base.Select(modelClrType, providerClrType);
         return result;

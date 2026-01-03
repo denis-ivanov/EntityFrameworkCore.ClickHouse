@@ -15,7 +15,7 @@ public static class ClickHouseUuidDbFunctionsExtensions
     /// <see cref="ToUuid(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toUUID</remarks>
-    public static Guid ToUuid(this DbFunctions _, string expr)
+    public static Guid ToUuid(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -31,7 +31,7 @@ public static class ClickHouseUuidDbFunctionsExtensions
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToUuid(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
-    public static Guid ToUuidOrZero(this DbFunctions _, string expr)
+    public static Guid ToUuidOrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -45,7 +45,7 @@ public static class ClickHouseUuidDbFunctionsExtensions
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToUuidOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
-    public static Guid? ToUuidOrNull(this DbFunctions _, string expr)
+    public static Guid? ToUuidOrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -59,7 +59,7 @@ public static class ClickHouseUuidDbFunctionsExtensions
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToUuidOrDefault(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
-    public static Guid ToUuidOrDefault(this DbFunctions _, string expr)
+    public static Guid ToUuidOrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -74,7 +74,7 @@ public static class ClickHouseUuidDbFunctionsExtensions
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToUuidOrDefault(DbFunctions, string, Guid)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
-    public static Guid ToUuidOrDefault(this DbFunctions _, string expr, Guid defaultValue)
+    public static Guid ToUuidOrDefault(this DbFunctions _, string? expr, Guid defaultValue)
     {
         throw new InvalidOperationException();
     }

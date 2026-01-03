@@ -16,8 +16,8 @@ public class ClickHouseObjectToStringTranslator : IMethodCallTranslator
         _sqlExpressionFactory = sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(
-        SqlExpression instance,
+    public SqlExpression? Translate(
+        SqlExpression? instance,
         MethodInfo method,
         IReadOnlyList<SqlExpression> arguments,
         IDiagnosticsLogger<DbLoggerCategory.Query> logger)

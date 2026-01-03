@@ -27,9 +27,9 @@ public class ClickHouseDateTimeTypeMapping : DateTimeTypeMapping
         parameter.SetStoreType(StoreType);
     }
 
-    public override string GenerateSqlLiteral(object value)
+    public override string GenerateSqlLiteral(object? value)
     {
-        var dateTime = (DateTime)value;
+        var dateTime = (DateTime)value!;
         var format = Format;
 
         if (Precision is > 0 and <= 7)

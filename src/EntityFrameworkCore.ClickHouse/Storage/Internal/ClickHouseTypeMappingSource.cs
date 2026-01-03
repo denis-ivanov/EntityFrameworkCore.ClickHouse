@@ -141,19 +141,19 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     {
     }
 
-    public override RelationalTypeMapping FindMapping(Type type)
+    public override RelationalTypeMapping? FindMapping(Type type)
     {
         return FindMapping(new RelationalTypeMappingInfo(type)) ?? base.FindMapping(type);
     }
 
-    protected override RelationalTypeMapping FindMapping(in RelationalTypeMappingInfo mappingInfo) =>
+    protected override RelationalTypeMapping? FindMapping(in RelationalTypeMappingInfo mappingInfo) =>
         FindExistingMapping(mappingInfo) ??
         FindArrayMapping(mappingInfo) ??
         FindTupleMapping(mappingInfo) ??
         FindDecimalMapping(mappingInfo) ??
         base.FindMapping(in mappingInfo);
 
-    private RelationalTypeMapping FindExistingMapping(in RelationalTypeMappingInfo mappingInfo)
+    private RelationalTypeMapping? FindExistingMapping(in RelationalTypeMappingInfo mappingInfo)
     {
         if (!string.IsNullOrWhiteSpace(mappingInfo.StoreTypeNameBase) &&
             AliasTypeMapping.TryGetValue(mappingInfo.StoreTypeNameBase, out var mapAsAlias1))
@@ -171,8 +171,8 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
             string.Equals("Time64", mappingInfo.StoreTypeNameBase, StringComparison.InvariantCultureIgnoreCase))
         {
             return new ClickHouseTimeTypeMapping(
-                mappingInfo.ClrType,
-                mappingInfo.StoreTypeName,
+                mappingInfo.ClrType ?? typeof(TimeSpan),
+                mappingInfo.StoreTypeName!,
                 mappingInfo.Precision ?? ClickHouseTimeTypeMapping.MaxPrecision);
         }
 
@@ -200,7 +200,7 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         return null;
     }
 
-    private RelationalTypeMapping FindArrayMapping(in RelationalTypeMappingInfo mappingInfo)
+    private RelationalTypeMapping? FindArrayMapping(in RelationalTypeMappingInfo mappingInfo)
     {
         if (mappingInfo.StoreTypeName != null &&
             mappingInfo.StoreTypeName.StartsWith("Array(") &&
@@ -221,14 +221,14 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         return null;
     }
 
-    private RelationalTypeMapping FindDecimalMapping(in RelationalTypeMappingInfo mappingInfo)
+    private RelationalTypeMapping? FindDecimalMapping(in RelationalTypeMappingInfo mappingInfo)
     {
         return mappingInfo.ClrType == typeof(decimal) || mappingInfo.StoreTypeNameBase == "Decimal"
             ? new ClickHouseDecimalTypeMapping(mappingInfo.Precision, mappingInfo.Scale, mappingInfo.Size)
             : null;
     }
 
-    private RelationalTypeMapping FindTupleMapping(in RelationalTypeMappingInfo mappingInfo)
+    private RelationalTypeMapping? FindTupleMapping(in RelationalTypeMappingInfo mappingInfo)
     {
         if (mappingInfo.ClrType is not { IsGenericType: true })
         {

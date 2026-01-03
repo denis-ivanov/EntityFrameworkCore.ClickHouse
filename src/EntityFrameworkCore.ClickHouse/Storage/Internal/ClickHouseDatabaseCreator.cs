@@ -59,14 +59,14 @@ public class ClickHouseDatabaseCreator : RelationalDatabaseCreator
         return Dependencies.ExecutionStrategy
             .Execute(
                 _connection,
-                connection => 1 == (byte) CreateHasTablesCommand()
+                connection => (bool)CreateHasTablesCommand()
                     .ExecuteScalar(
                         new RelationalCommandParameterObject(
                             connection,
                             null,
                             null,
                             Dependencies.CurrentContext.Context,
-                            Dependencies.CommandLogger)));
+                            Dependencies.CommandLogger))!);
     }
 
     public override void Create()
@@ -112,11 +112,11 @@ public class ClickHouseDatabaseCreator : RelationalDatabaseCreator
 
         return Dependencies.MigrationsSqlGenerator.Generate(operations);
     }
-        
+
     IRelationalCommand CreateHasTablesCommand()
     {
         var sql = $@"
-SELECT if(COUNT() = 0, 0, 1)
+SELECT any(True)
 FROM system.tables
 WHERE database = '{Dependencies.Connection.DbConnection.Database}';";
 

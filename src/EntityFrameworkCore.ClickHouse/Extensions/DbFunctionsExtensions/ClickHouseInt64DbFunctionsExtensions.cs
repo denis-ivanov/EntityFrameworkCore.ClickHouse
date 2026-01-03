@@ -26,7 +26,7 @@ public static class ClickHouseInt64DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint64</remarks>
-    public static long ToInt64(this DbFunctions _, string expr)
+    public static long ToInt64(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -39,7 +39,7 @@ public static class ClickHouseInt64DbFunctionsExtensions
     /// <param name="expr">A String representation of a number</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint64orzero</remarks>
-    public static long ToInt64OrZero(this DbFunctions _, string expr)
+    public static long ToInt64OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -52,7 +52,7 @@ public static class ClickHouseInt64DbFunctionsExtensions
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint64ornull</remarks>
-    public static long? ToInt64OrNull(this DbFunctions _, string expr)
+    public static long? ToInt64OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -66,7 +66,7 @@ public static class ClickHouseInt64DbFunctionsExtensions
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint64ordefault</remarks>
-    public static long ToInt64OrDefault(this DbFunctions _, string expr)
+    public static long ToInt64OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -81,7 +81,7 @@ public static class ClickHouseInt64DbFunctionsExtensions
     /// <param name="defaultValue">The default value to return if parsing to type <see cref="long"/> is unsuccessful.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint64ordefault</remarks>
-    public static long ToInt64OrDefault(this DbFunctions _, string expr, long defaultValue)
+    public static long ToInt64OrDefault(this DbFunctions _, string? expr, long defaultValue)
     {
         throw new InvalidOperationException();
     }

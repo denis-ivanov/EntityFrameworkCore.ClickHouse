@@ -38,7 +38,7 @@ public static class ClickHouseDecimal128DbFunctionsExtensions
     /// <param name="number">A String representation of a number.</param>
     /// <param name="scale">Scale parameter between 0 and 38, specifying how many digits the fractional part of a number can have.</param>
     /// <returns></returns>
-    public static decimal ToDecimal128OrZero(this DbFunctions _, string number, [Range(0, 38)] byte scale)
+    public static decimal ToDecimal128OrZero(this DbFunctions _, string? number, [Range(0, 38)] byte scale)
     {
         throw new InvalidOperationException();
     }
@@ -52,7 +52,7 @@ public static class ClickHouseDecimal128DbFunctionsExtensions
     /// <param name="scale">Scale parameter between 0 and 38, specifying how many digits the fractional part of a number can have.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static decimal? ToDecimal128OrNull(this DbFunctions _, string number, [Range(0, 38)] byte scale)
+    public static decimal? ToDecimal128OrNull(this DbFunctions _, string? number, [Range(0, 38)] byte scale)
     {
         throw new InvalidOperationException();
     }
@@ -64,7 +64,7 @@ public static class ClickHouseDecimal128DbFunctionsExtensions
     /// <param name="number">A String representation of a number.</param>
     /// <param name="scale">Scale parameter between 0 and 38, specifying how many digits the fractional part of a number can have.</param>
     /// <returns></returns>
-    public static decimal ToDecimal128OrDefault(this DbFunctions _, string number, [Range(0, 38)] byte scale)
+    public static decimal ToDecimal128OrDefault(this DbFunctions _, string? number, [Range(0, 38)] byte scale)
     {
         throw new InvalidOperationException();
     }
@@ -77,7 +77,7 @@ public static class ClickHouseDecimal128DbFunctionsExtensions
     /// <param name="scale">Scale parameter between 0 and 38, specifying how many digits the fractional part of a number can have.</param>
     /// <param name="defaultValue"></param>
     /// <returns></returns>
-    public static decimal ToDecimal128OrDefault(this DbFunctions _, string number, [Range(0, 38)] byte scale, decimal defaultValue)
+    public static decimal ToDecimal128OrDefault(this DbFunctions _, string? number, [Range(0, 38)] byte scale, decimal defaultValue)
     {
         throw new InvalidOperationException();
     }

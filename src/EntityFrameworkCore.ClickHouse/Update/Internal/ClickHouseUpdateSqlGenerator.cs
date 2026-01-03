@@ -17,7 +17,7 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
     protected override void AppendDeleteCommand(
         StringBuilder commandStringBuilder,
         string name,
-        string schema,
+        string? schema,
         IReadOnlyList<IColumnModification> readOperations,
         IReadOnlyList<IColumnModification> conditionOperations,
         bool appendReturningOneClause = false)
@@ -30,7 +30,7 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
     protected override void AppendDeleteCommandHeader(
         StringBuilder commandStringBuilder,
         string name,
-        string schema)
+        string? schema)
     {
         ArgumentNullException.ThrowIfNull(commandStringBuilder);
         ArgumentNullException.ThrowIfNull(name);
@@ -43,7 +43,7 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
     protected override void AppendUpdateCommand(
         StringBuilder commandStringBuilder,
         string name,
-        string schema,
+        string? schema,
         IReadOnlyList<IColumnModification> writeOperations,
         IReadOnlyList<IColumnModification> readOperations,
         IReadOnlyList<IColumnModification> conditionOperations,
@@ -57,7 +57,7 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
     protected override void AppendUpdateCommandHeader(
         StringBuilder commandStringBuilder,
         string name,
-        string schema,
+        string? schema,
         IReadOnlyList<IColumnModification> operations)
     {
         ArgumentNullException.ThrowIfNull(commandStringBuilder);
@@ -82,13 +82,16 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
                     }
                     else
                     {
-                        g.SqlGenerationHelper.GenerateParameterNamePlaceholder(sb, o.ParameterName, o.ColumnType);
+                        g.SqlGenerationHelper.GenerateParameterNamePlaceholder(sb, o.ParameterName, o.ColumnType!);
                     }
                 });
     }
 
-    public override ResultSetMapping AppendUpdateOperation(StringBuilder commandStringBuilder, IReadOnlyModificationCommand command,
-        int commandPosition, out bool requiresTransaction)
+    public override ResultSetMapping AppendUpdateOperation(
+        StringBuilder commandStringBuilder,
+        IReadOnlyModificationCommand command,
+        int commandPosition,
+        out bool requiresTransaction)
     {
         var name = command.TableName;
         var schema = command.Schema;
@@ -130,15 +133,16 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
             else
             {
                 SqlGenerationHelper.GenerateParameterNamePlaceholder(
-                    commandStringBuilder, useOriginalValue
-                        ? columnModification.OriginalParameterName
-                        : columnModification.ParameterName,
-                    columnModification.ColumnType);
+                    commandStringBuilder,
+                    useOriginalValue
+                        ? columnModification.OriginalParameterName!
+                        : columnModification.ParameterName!,
+                    columnModification.ColumnType!);
             }
         }
     }
 
-    private void AppendSqlLiteral(StringBuilder commandStringBuilder, IColumnModification modification, string tableName, string schema)
+    private new void AppendSqlLiteral(StringBuilder commandStringBuilder, IColumnModification modification, string? tableName, string? schema)
     {
         if (modification.TypeMapping == null)
         {
@@ -159,7 +163,7 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
         commandStringBuilder.Append(modification.TypeMapping.GenerateProviderValueSqlLiteral(modification.Value));
     }
 
-    protected override void AppendValues(StringBuilder commandStringBuilder, string name, string schema, IReadOnlyList<IColumnModification> operations)
+    protected override void AppendValues(StringBuilder commandStringBuilder, string name, string? schema, IReadOnlyList<IColumnModification> operations)
     {
         if (operations.Count > 0)
         {

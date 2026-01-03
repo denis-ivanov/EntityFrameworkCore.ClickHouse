@@ -28,8 +28,8 @@ public class ClickHouseDateTimeMethodTranslator : IMethodCallTranslator
         _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(
-        SqlExpression instance,
+    public SqlExpression? Translate(
+        SqlExpression? instance,
         MethodInfo method,
         IReadOnlyList<SqlExpression> arguments,
         IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -38,7 +38,7 @@ public class ClickHouseDateTimeMethodTranslator : IMethodCallTranslator
         {
             return _sqlExpressionFactory.Function(
                 function,
-                arguments.Prepend(instance),
+                arguments.Prepend(instance!),
                 nullable: false,
                 argumentsPropagateNullability: [false, false],
                 returnType: method.ReturnType);

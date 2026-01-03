@@ -10,8 +10,8 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
 public class ClickHouseGuidTranslator : IMethodCallTranslator
 {
-    private static readonly MethodInfo New = typeof(Guid).GetRuntimeMethod(nameof(Guid.NewGuid), Type.EmptyTypes);
-    private static readonly MethodInfo Parse = typeof(Guid).GetRuntimeMethod(nameof(Guid.Parse), [typeof(string)]);
+    private static readonly MethodInfo New = typeof(Guid).GetRuntimeMethod(nameof(Guid.NewGuid), Type.EmptyTypes)!;
+    private static readonly MethodInfo Parse = typeof(Guid).GetRuntimeMethod(nameof(Guid.Parse), [typeof(string)])!;
 
     private readonly ClickHouseSqlExpressionFactory _sqlExpressionFactory;
 
@@ -20,8 +20,8 @@ public class ClickHouseGuidTranslator : IMethodCallTranslator
         _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(
-        SqlExpression instance, 
+    public SqlExpression? Translate(
+        SqlExpression? instance, 
         MethodInfo method, 
         IReadOnlyList<SqlExpression> arguments,
         IDiagnosticsLogger<DbLoggerCategory.Query> logger)

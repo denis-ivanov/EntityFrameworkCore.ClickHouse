@@ -65,9 +65,9 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
         _sqlExpressionFactory = sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
+    public SqlExpression? Translate(SqlExpression? instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
-        return instance is { Type: { IsArray: true } } &&
+        return instance is { Type.IsArray: true } &&
                member.Name == nameof(Array.Length)
             ? _sqlExpressionFactory.Function(
                 name: "length",
@@ -78,7 +78,7 @@ public class ClickHouseArrayTranslator : IMethodCallTranslator, IMemberTranslato
             : null;
     }
 
-    public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
+    public SqlExpression? Translate(SqlExpression? instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
         if (method.Equals(EmptyArrayUInt8))
         {

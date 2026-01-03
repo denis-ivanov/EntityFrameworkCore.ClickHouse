@@ -32,7 +32,7 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// <see cref="ToFloat32{TNumber}(DbFunctions, TNumber)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#tofloat32</remarks>
-    public static float ToFloat32(this DbFunctions _, string expr)
+    public static float ToFloat32(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -48,7 +48,7 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// <see cref="ToFloat32OrZero(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#tofloat32orzero</remarks>
-    public static float ToFloat32OrZero(this DbFunctions _, string expr)
+    public static float ToFloat32OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -64,7 +64,7 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// <see cref="ToFloat32OrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#tofloat32ornull</remarks>
-    public static float? ToFloat32OrNull(this DbFunctions _, string expr)
+    public static float? ToFloat32OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -81,7 +81,7 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// <see cref="ToFloat32OrDefault(DbFunctions,string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#tofloat32ordefault</remarks>
-    public static float ToFloat32OrDefault(this DbFunctions _, string expr)
+    public static float ToFloat32OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -99,7 +99,7 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// <see cref="ToFloat32OrDefault(DbFunctions,string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#tofloat32ordefault</remarks>
-    public static float ToFloat32OrDefault(this DbFunctions _, string expr, float defaultValue)
+    public static float ToFloat32OrDefault(this DbFunctions _, string? expr, float defaultValue)
     {
         throw new InvalidOperationException();
     }

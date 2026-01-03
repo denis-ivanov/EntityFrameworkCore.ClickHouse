@@ -15,7 +15,7 @@ public class ClickHouseHistoryRepository : HistoryRepository
     {
     }
 
-    protected override bool InterpretExistsResult(object value)
+    protected override bool InterpretExistsResult(object? value)
         => value != null && value != DBNull.Value && (byte)value == 1;
 
     public override string GetCreateIfNotExistsScript()

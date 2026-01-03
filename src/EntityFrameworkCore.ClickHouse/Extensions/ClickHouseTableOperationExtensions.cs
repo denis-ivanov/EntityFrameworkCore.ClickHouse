@@ -10,7 +10,7 @@ public static class ClickHouseTableOperationExtensions
     {
         var engine = operation.FindAnnotation(ClickHouseAnnotationNames.TableEngine);
 
-        return (string)engine?.Value switch
+        return (string?)engine?.Value switch
         {
             ClickHouseAnnotationNames.MergeTreeEngine => new ClickHouseMergeTreeEngineBuilder(operation),
             ClickHouseAnnotationNames.ReplacingMergeTree => new ClickHouseReplacingMergeTreeEngineBuilder(operation),

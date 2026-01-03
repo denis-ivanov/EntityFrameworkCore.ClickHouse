@@ -43,7 +43,7 @@ public class ClickHouseGraphiteMergeTreeEngineBuilder : ClickHouseEngineBuilder
 
     public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table, ISqlGenerationHelper sql)
     {
-        var configSection = sql.DelimitIdentifier(table.GetGraphiteMergeTreeConfigSection());
+        var configSection = sql.DelimitIdentifier(table.GetGraphiteMergeTreeConfigSection()!);
 
         builder.Append($" ENGINE = GraphiteMergeTree({configSection})").AppendLine();
 

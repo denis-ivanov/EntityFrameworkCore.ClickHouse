@@ -17,5 +17,5 @@ public static class TestEnvironment
 
     public static IConfiguration Configuration { get; }
 
-    public static string DefaultConnection => Configuration["DefaultConnection"];
+    public static string DefaultConnection => Configuration["DefaultConnection"]!;
 }

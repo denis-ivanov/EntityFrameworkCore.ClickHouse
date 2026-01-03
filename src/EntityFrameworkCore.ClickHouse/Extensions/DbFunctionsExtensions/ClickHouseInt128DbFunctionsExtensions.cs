@@ -27,7 +27,7 @@ public static class ClickHouseInt128DbFunctionsExtensions
     /// <typeparam name="TNumber"></typeparam>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint128</remarks>
-    public static Int128 ToInt128(this DbFunctions _, string expr)
+    public static Int128 ToInt128(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -40,7 +40,7 @@ public static class ClickHouseInt128DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint128orzero</remarks>
-    public static Int128 ToInt128OrZero(this DbFunctions _, string expr)
+    public static Int128 ToInt128OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -53,7 +53,7 @@ public static class ClickHouseInt128DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint128ornull</remarks>
-    public static Int128? ToInt128OrNull(this DbFunctions _, string expr)
+    public static Int128? ToInt128OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -66,7 +66,7 @@ public static class ClickHouseInt128DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint128ordefault</remarks>
-    public static Int128 ToInt128OrDefault(this DbFunctions _, string expr)
+    public static Int128 ToInt128OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -80,7 +80,7 @@ public static class ClickHouseInt128DbFunctionsExtensions
     /// <param name="defaultValue">The default value to return if parsing to type <see cref="Int128"/> is unsuccessful.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint128ordefault</remarks>
-    public static Int128 ToInt128OrDefault(this DbFunctions _, string expr, Int128 defaultValue)
+    public static Int128 ToInt128OrDefault(this DbFunctions _, string? expr, Int128 defaultValue)
     {
         throw new InvalidOperationException();
     }

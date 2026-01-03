@@ -25,7 +25,7 @@ public static class ClickHouseInt16DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint16</remarks>
-    public static short ToInt16(this DbFunctions _, string expr)
+    public static short ToInt16(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -38,7 +38,7 @@ public static class ClickHouseInt16DbFunctionsExtensions
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static short ToInt16OrZero(this DbFunctions _, string expr)
+    public static short ToInt16OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -51,7 +51,7 @@ public static class ClickHouseInt16DbFunctionsExtensions
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint16ornull</remarks>
-    public static short? ToInt16OrNull(this DbFunctions _, string expr)
+    public static short? ToInt16OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -64,7 +64,7 @@ public static class ClickHouseInt16DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint16ordefault</remarks>
-    public static short ToInt16OrDefault(this DbFunctions _, string expr)
+    public static short ToInt16OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -78,7 +78,7 @@ public static class ClickHouseInt16DbFunctionsExtensions
     /// <param name="defaultValue">The default value to return if parsing to type <see cref="short"/> is unsuccessful.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint16ordefault</remarks>
-    public static short ToInt16OrDefault(this DbFunctions _, string expr, short defaultValue)
+    public static short ToInt16OrDefault(this DbFunctions _, string? expr, short defaultValue)
     {
         throw new InvalidOperationException();
     }

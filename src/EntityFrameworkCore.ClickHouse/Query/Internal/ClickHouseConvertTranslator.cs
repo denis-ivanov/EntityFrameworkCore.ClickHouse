@@ -20,7 +20,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
         _sqlExpressionFactory = sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
+    public SqlExpression? Translate(SqlExpression? instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
         var argc = method.GetParameters().Length;
 
@@ -185,7 +185,7 @@ public class ClickHouseConvertTranslator : IMethodCallTranslator, IMemberTransla
         return null;
     }
 
-    public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
+    public SqlExpression? Translate(SqlExpression? instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
         return null;
     }

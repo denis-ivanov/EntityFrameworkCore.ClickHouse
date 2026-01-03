@@ -627,7 +627,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             set.Where(e => e.Id == 11 && EF.Property<DateTime>(e, nameof(BuiltInDataTypes.TestDateTime)) == param6).ToList()
                 .Single());
 
-        if (entityType.FindProperty(nameof(BuiltInDataTypes.TestDateTimeOffset)) != null)
+        if (entityType!.FindProperty(nameof(BuiltInDataTypes.TestDateTimeOffset)) != null)
         {
             var param7 = new DateTimeOffset(new DateTime(), TimeSpan.FromHours(-8.0));
             Assert.Same(
@@ -636,7 +636,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
                     .ToList().Single());
         }
 
-        if (entityType.FindProperty(nameof(BuiltInDataTypes.TestTimeSpan)) != null)
+        if (entityType!.FindProperty(nameof(BuiltInDataTypes.TestTimeSpan)) != null)
         {
             var param8 = new TimeSpan(0, 10, 9, 8, 7);
             Assert.Same(
@@ -848,14 +848,14 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             if (propertyEntry.CurrentValue is double)
             {
                 Assert.Equal(
-                    (double)source.Property(propertyEntry.Metadata.Name).CurrentValue,
+                    source.Property<double>(propertyEntry.Metadata.Name).CurrentValue,
                     (double)propertyEntry.CurrentValue,
                     Fixture.DoublePrecision);
             }
             else if (propertyEntry.CurrentValue is decimal)
             {
                 Assert.Equal(
-                    (decimal)source.Property(propertyEntry.Metadata.Name).CurrentValue,
+                    source.Property<decimal>(propertyEntry.Metadata.Name).CurrentValue,
                     (decimal)propertyEntry.CurrentValue,
                     Fixture.DecimalPrecision);
             }
@@ -872,7 +872,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
-    private static Type UnwrapNullableType(Type type)
+    private static Type? UnwrapNullableType(Type? type)
         => type == null ? null : Nullable.GetUnderlyingType(type) ?? type;
 
     public class BuiltInDataTypesClickHouseFixture : BuiltInDataTypesFixtureBase

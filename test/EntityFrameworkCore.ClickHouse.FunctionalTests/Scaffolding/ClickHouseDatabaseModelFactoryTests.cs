@@ -205,7 +205,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             [],
             dbModel =>
             {
-                var pk = dbModel.Tables.Single().PrimaryKey;
+                var pk = dbModel.Tables.Single().PrimaryKey!;
 
                 Assert.Equal(["Id"], pk.Columns.Select(ic => ic.Name).ToList());
             },
@@ -468,14 +468,17 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
                 var column = columns.Single(c => c.Name == "A");
                 Assert.Equal("-1.1111", column.DefaultValueSql);
+                Assert.NotNull(column.DefaultValue);
                 Assert.Equal(-1.1111, (double)column.DefaultValue, 3);
 
                 column = columns.Single(c => c.Name == "B");
                 Assert.Equal("0.", column.DefaultValueSql);
+                Assert.NotNull(column.DefaultValue);
                 Assert.Equal(0, (double)column.DefaultValue, 3);
 
                 column = columns.Single(c => c.Name == "C");
                 Assert.Equal("1.1", column.DefaultValueSql);
+                Assert.NotNull(column.DefaultValue);
                 Assert.Equal(1.1000000000000001e+000, (double)column.DefaultValue, 3);
             },
             ["DROP TABLE MyTable;"]);
@@ -497,18 +500,21 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             [],
             dbModel =>
             {
-                var columns = dbModel.Tables.Single().Columns;
+                var columns = Assert.Single(dbModel.Tables).Columns;
 
-                var column = columns.Single(c => c.Name == "A");
+                var column = Assert.Single(columns, c => c.Name == "A");
                 Assert.Equal("-1.1111", column.DefaultValueSql);
+                Assert.NotNull(column.DefaultValue);
                 Assert.Equal((float)-1.1111, (float)column.DefaultValue, 0.01);
 
-                column = columns.Single(c => c.Name == "B");
+                column = Assert.Single(columns, c => c.Name == "B");
                 Assert.Equal("0.", column.DefaultValueSql);
+                Assert.NotNull(column.DefaultValue);
                 Assert.Equal((float)0, (float)column.DefaultValue, 0.01);
 
-                column = columns.Single(c => c.Name == "C");
+                column = Assert.Single(columns, c => c.Name == "C");
                 Assert.Equal("1.1", column.DefaultValueSql);
+                Assert.NotNull(column.DefaultValue);
                 Assert.Equal((float)1.1000000000000001e+000, (float)column.DefaultValue, 0.01);
             },
             ["DROP TABLE MyTable;"]);
@@ -752,7 +758,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             [],
             dbModel =>
             {
-                var pk = dbModel.Tables.Single().PrimaryKey;
+                var pk = Assert.Single(dbModel.Tables).PrimaryKey!;
 
                 Assert.Equal(["Id2", "Id1"], pk.Columns.Select(ic => ic.Name).ToList());
             },
@@ -771,7 +777,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             [],
             dbModel =>
             {
-                var pk = dbModel.Tables.Single().PrimaryKey;
+                var pk = Assert.Single(dbModel.Tables).PrimaryKey!;
 
                 //Assert.Equal("RowidPrimaryKey", pk.Table.Name);
                 Assert.Equal(["Id"], pk.Columns.Select(ic => ic.Name).ToList());
@@ -813,15 +819,19 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
                 Assert.Equal(ClickHouseAnnotationNames.MergeTreeEngine, engine);
 
                 var partitionBy = table.GetPartitionBy();
+                Assert.NotNull(partitionBy);
                 Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
 
                 var primaryKey = table.GetPrimaryKey();
+                Assert.NotNull(primaryKey);
                 Assert.Equal(["id", "age"], primaryKey);
 
                 var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
                 Assert.Equal(["id", "age", "created_at"], orderBy);
 
                 var sampleBy = table.GetSampleBy();
+                Assert.NotNull(sampleBy);
                 Assert.Equal(["id"], sampleBy);
             },
             ["DROP TABLE my_table;"]);

@@ -28,7 +28,7 @@ public static class ClickHouseUInt64DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toUInt64</remarks>
-    public static ulong ToUInt64(this DbFunctions _, string expr)
+    public static ulong ToUInt64(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -40,7 +40,7 @@ public static class ClickHouseUInt64DbFunctionsExtensions
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
-    public static ulong ToUInt64OrZero(this DbFunctions _, string expr)
+    public static ulong ToUInt64OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -52,7 +52,7 @@ public static class ClickHouseUInt64DbFunctionsExtensions
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
-    public static ulong? ToUInt64OrNull(this DbFunctions _, string expr)
+    public static ulong? ToUInt64OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -66,7 +66,7 @@ public static class ClickHouseUInt64DbFunctionsExtensions
     /// <param name="expr"></param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toUInt64ordefault</remarks>
-    public static ulong ToUInt64OrDefault(this DbFunctions _, string expr)
+    public static ulong ToUInt64OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -81,7 +81,7 @@ public static class ClickHouseUInt64DbFunctionsExtensions
     /// <param name="defaultValue"></param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toUInt64ordefault</remarks>
-    public static ulong ToUInt64OrDefault(this DbFunctions _, string expr, ulong defaultValue)
+    public static ulong ToUInt64OrDefault(this DbFunctions _, string? expr, ulong defaultValue)
     {
         throw new InvalidOperationException();
     }

@@ -26,27 +26,27 @@ public abstract class ClickHouseEngineBuilder
         TableOperation table,
         ISqlGenerationHelper sql);
 
-    protected void AddOrderBy(MigrationCommandListBuilder builder, string[] columns, ISqlGenerationHelper sql)
+    protected void AddOrderBy(MigrationCommandListBuilder builder, string[]? columns, ISqlGenerationHelper sql)
     {
         AddOption(builder, OrderByOption, columns, sql);
     }
 
-    protected void AddPartitionBy(MigrationCommandListBuilder builder, string[] columns, ISqlGenerationHelper sql)
+    protected void AddPartitionBy(MigrationCommandListBuilder builder, string[]? columns, ISqlGenerationHelper sql)
     {
         AddOption(builder, PartitionByOption, columns, sql);
     }
 
-    protected void AddPrimaryKey(MigrationCommandListBuilder builder, string[] columns, ISqlGenerationHelper sql)
+    protected void AddPrimaryKey(MigrationCommandListBuilder builder, string[]? columns, ISqlGenerationHelper sql)
     {
         AddOption(builder, PrimaryKeyOption, columns, sql);
     }
 
-    protected void AddSampleBy(MigrationCommandListBuilder builder, string[] columns, ISqlGenerationHelper sql)
+    protected void AddSampleBy(MigrationCommandListBuilder builder, string[]? columns, ISqlGenerationHelper sql)
     {
         AddOption(builder, SampleByOption, columns, sql);
     }
 
-    private void AddOption(MigrationCommandListBuilder builder, string optionName, string[] columns, ISqlGenerationHelper sql)
+    private void AddOption(MigrationCommandListBuilder builder, string optionName, string[]? columns, ISqlGenerationHelper sql)
     {
         if (columns is { Length: > 0 })
         {

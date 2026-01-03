@@ -21,7 +21,7 @@ public class ClickHouseQueryableMethodTranslatingExpressionVisitor
                 this);
     }
 
-    protected override ShapedQueryExpression TranslateTake(ShapedQueryExpression source, Expression count)
+    protected override ShapedQueryExpression? TranslateTake(ShapedQueryExpression source, Expression count)
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(count);

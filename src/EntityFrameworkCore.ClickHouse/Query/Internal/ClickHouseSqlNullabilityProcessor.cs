@@ -40,9 +40,9 @@ public class ClickHouseSqlNullabilityProcessor : SqlNullabilityProcessor
             Debug.Assert(leftRowValue.Values.Count == rightRowValue.Values.Count, "left.Values.Count == right.Values.Count");
             var count = leftRowValue.Values.Count;
 
-            SqlExpression expandedExpression = null;
-            List<SqlExpression> visitedLeftValues = null;
-            List<SqlExpression> visitedRightValues = null;
+            SqlExpression? expandedExpression = null;
+            List<SqlExpression>? visitedLeftValues = null;
+            List<SqlExpression>? visitedRightValues = null;
 
             for (var i = 0; i < count; i++)
             {
@@ -113,17 +113,17 @@ public class ClickHouseSqlNullabilityProcessor : SqlNullabilityProcessor
                         existingExpression: sqlBinaryExpression)!;
             }
 
-            if (visitedLeftValues.Count is 0)
+            if (visitedLeftValues!.Count is 0)
             {
                 return expandedExpression;
             }
 
             var unexpandedExpression = visitedLeftValues.Count is 1
-                ? Dependencies.SqlExpressionFactory.MakeBinary(operatorType, visitedLeftValues[0], visitedRightValues[0], typeMapping: null)!
+                ? Dependencies.SqlExpressionFactory.MakeBinary(operatorType, visitedLeftValues[0], visitedRightValues![0], typeMapping: null)!
                 : Dependencies.SqlExpressionFactory.MakeBinary(
                     operatorType,
                     new ClickHouseRowValueExpression(visitedLeftValues, leftRowValue.Type, leftRowValue.TypeMapping),
-                    new ClickHouseRowValueExpression(visitedRightValues, rightRowValue.Type, rightRowValue.TypeMapping),
+                    new ClickHouseRowValueExpression(visitedRightValues!, rightRowValue.Type, rightRowValue.TypeMapping),
                     typeMapping: null)!;
 
             return Dependencies.SqlExpressionFactory.MakeBinary(
