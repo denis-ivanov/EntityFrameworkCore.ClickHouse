@@ -2,9 +2,9 @@
 
 namespace ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 
-public class ClickHouseCharToStringConverter : ValueConverter<char?, string>
+public class ClickHouseCharToStringConverter : ValueConverter<char?, string?>
 {
-    public ClickHouseCharToStringConverter(ConverterMappingHints mappingHints = null)
+    public ClickHouseCharToStringConverter(ConverterMappingHints? mappingHints = null)
         : base(
             c => c == null ? null : c.ToString(),
             s => string.IsNullOrEmpty(s) ? null : s[0],
