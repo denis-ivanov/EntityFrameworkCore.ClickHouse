@@ -1,4 +1,5 @@
 ﻿using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -63,7 +64,7 @@ public class ClickHouseFixedStringTypeMapping : RelationalTypeMapping
             scale: null,
             unicode: unicode);
 
-        var stringConverter = new StringToBytesConverter(
+        var stringConverter = new ClickHouseStringToBytesConverter(
             unicode ? Encoding.UTF8 : Encoding.ASCII,
             mappingHints);
 
@@ -72,9 +73,14 @@ public class ClickHouseFixedStringTypeMapping : RelationalTypeMapping
             return stringConverter;
         }
 
-        return clrType == typeof(char)
-            ? new CharToStringConverter(mappingHints).ComposeWith(stringConverter)
-            : throw new ArgumentException("Argument type must be char or string", nameof(clrType));
+        if (clrType == typeof(char))
+        {
+            var charToStringConverter = new ClickHouseCharToStringConverter(mappingHints);
+            var composed = charToStringConverter.ComposeWith(stringConverter);
+            return composed;
+        }
+
+        throw new ArgumentException("Argument type must be char or string", nameof(clrType));
     }
 
     protected override string GenerateNonNullSqlLiteral(object value)
