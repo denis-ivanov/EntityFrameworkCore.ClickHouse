@@ -4,6 +4,7 @@
     <RootNamespace>ClickHouse.EntityFrameworkCore</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
     <PackageVersion>3.0.1</PackageVersion>
+    <Nullable>enable</Nullable>  
     <Authors>Denis Ivanov</Authors>
     <Description>ClickHouse provider for Entity Framework Core.</Description>
     <PackageTags>ClickHouse; Entity Framework Core</PackageTags>
