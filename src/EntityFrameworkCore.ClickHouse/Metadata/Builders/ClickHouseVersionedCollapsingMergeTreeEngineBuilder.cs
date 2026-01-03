@@ -42,8 +42,8 @@ public class ClickHouseVersionedCollapsingMergeTreeEngineBuilder : ClickHouseCol
 
     public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table, ISqlGenerationHelper sql)
     {
-        var sign = sql.DelimitIdentifier(table.GetVersionedCollapsingMergeTreeSign());
-        var version = sql.DelimitIdentifier(table.GetVersionedCollapsingMergeTreeVersion());
+        var sign = sql.DelimitIdentifier(table.GetVersionedCollapsingMergeTreeSign()!);
+        var version = sql.DelimitIdentifier(table.GetVersionedCollapsingMergeTreeVersion()!);
 
         builder.Append($" ENGINE = VersionedCollapsingMergeTree({sign}, {version})").AppendLine();
 

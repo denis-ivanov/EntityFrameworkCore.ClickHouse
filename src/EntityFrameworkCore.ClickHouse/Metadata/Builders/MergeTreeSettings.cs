@@ -40,7 +40,7 @@ public class MergeTreeSettings
 
     public long MergeMaxBlockSize { get; set; } = DefaultMergeMaxBlockSize;
 
-    public string StoragePolicy { get; set; }
+    public string? StoragePolicy { get; set; }
 
     public long? MinBytesForWidePart { get; set; }
 

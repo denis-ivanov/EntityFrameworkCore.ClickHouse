@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ClickHouse.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,7 +13,7 @@ public class ClickHouseCollapsingMergeTreeEngineBuilder : ClickHouseEngineBuilde
     {
     }
 
-    public virtual ClickHouseCollapsingMergeTreeEngineBuilder WithPartitionBy([NotNull] params string[] columns)
+    public virtual ClickHouseCollapsingMergeTreeEngineBuilder WithPartitionBy(params string[] columns)
     {
         ArgumentNullException.ThrowIfNull(columns);
 
@@ -23,7 +22,7 @@ public class ClickHouseCollapsingMergeTreeEngineBuilder : ClickHouseEngineBuilde
         return this;
     }
 
-    public virtual ClickHouseCollapsingMergeTreeEngineBuilder WithOrderBy([NotNull] params string[] columns)
+    public virtual ClickHouseCollapsingMergeTreeEngineBuilder WithOrderBy(params string[] columns)
     {
         ArgumentNullException.ThrowIfNull(columns);
 
@@ -32,7 +31,7 @@ public class ClickHouseCollapsingMergeTreeEngineBuilder : ClickHouseEngineBuilde
         return this;
     }
 
-    public virtual ClickHouseCollapsingMergeTreeEngineBuilder WithSampleBy([NotNull] params string[] columns)
+    public virtual ClickHouseCollapsingMergeTreeEngineBuilder WithSampleBy(params string[] columns)
     {
         ArgumentNullException.ThrowIfNull(columns);
 

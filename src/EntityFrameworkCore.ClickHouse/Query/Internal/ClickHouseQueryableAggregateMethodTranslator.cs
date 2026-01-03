@@ -17,7 +17,7 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
         _sqlExpressionFactory = sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(
+    public SqlExpression? Translate(
         MethodInfo method,
         EnumerableExpression source,
         IReadOnlyList<SqlExpression> arguments,

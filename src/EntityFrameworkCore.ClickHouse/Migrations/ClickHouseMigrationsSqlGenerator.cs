@@ -34,7 +34,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
             .Append(" ")
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
             .Append(" ")
-            .Append(operation.IsNullable && !operation.ClrType.IsArray ? columnType.GetNullableType() : columnType)
+            .Append((operation is { IsNullable: true, ClrType.IsArray: false } ? columnType.GetNullableType() : columnType)!)
             .Append(defaultValueType)
             .Append(operation.ComputedColumnSql!);
     }
@@ -62,7 +62,7 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
         builder
             .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(name))
             .Append(" ")
-            .Append(operation.IsNullable && !operation.ClrType.IsArray ? columnType.GetNullableType() : columnType);
+            .Append((operation is { IsNullable: true, ClrType.IsArray: false } ? columnType.GetNullableType() : columnType)!);
 
         var defaultValue = operation.DefaultValueSql;
 
@@ -103,15 +103,15 @@ public class ClickHouseMigrationsSqlGenerator : MigrationsSqlGenerator
     {
         builder
             .Append("CREATE DATABASE ")
-            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name!))
             .AppendLine(";");
         EndStatement(builder, true);
     }
 
-    protected virtual void Generate(ClickHouseDropDatabaseOperation operation, IModel model, MigrationCommandListBuilder builder)
+    protected virtual void Generate(ClickHouseDropDatabaseOperation operation, IModel? model, MigrationCommandListBuilder builder)
     {
         builder.Append("DROP DATABASE ")
-            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name))
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name!))
             .AppendLine(";");
         EndStatement(builder, true);
     }

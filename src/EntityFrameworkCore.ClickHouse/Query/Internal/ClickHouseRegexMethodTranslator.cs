@@ -10,8 +10,7 @@ namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
 public class ClickHouseRegexMethodTranslator : IMethodCallTranslator
 {
-    private static readonly MethodInfo IsMatch =
-        typeof(Regex).GetRuntimeMethod(nameof(Regex.IsMatch), [typeof(string), typeof(string)]);
+    private static readonly MethodInfo IsMatch = typeof(Regex).GetRuntimeMethod(nameof(Regex.IsMatch), [typeof(string), typeof(string)])!;
 
     private readonly ISqlExpressionFactory _sqlExpressionFactory;
 
@@ -20,8 +19,8 @@ public class ClickHouseRegexMethodTranslator : IMethodCallTranslator
         _sqlExpressionFactory = sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(
-        SqlExpression instance,
+    public SqlExpression? Translate(
+        SqlExpression? instance,
         MethodInfo method,
         IReadOnlyList<SqlExpression> arguments,
         IDiagnosticsLogger<DbLoggerCategory.Query> logger)

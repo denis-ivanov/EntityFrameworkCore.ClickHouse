@@ -13,7 +13,7 @@ public class ClickHouseRuntimeModelConvention : RelationalRuntimeModelConvention
     {
     }
 
-    protected override void ProcessEntityTypeAnnotations(Dictionary<string, object> annotations, IEntityType entityType, RuntimeEntityType runtimeEntityType,
+    protected override void ProcessEntityTypeAnnotations(Dictionary<string, object?> annotations, IEntityType entityType, RuntimeEntityType runtimeEntityType,
         bool runtime)
     {
         base.ProcessEntityTypeAnnotations(annotations, entityType, runtimeEntityType, runtime);

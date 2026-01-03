@@ -49,9 +49,9 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
                 Dependencies.SqlExpressionFactory.Function(
                     "dateDiff",
                     [
-                        Dependencies.SqlExpressionFactory.Constant(unit),
-                        Translate(right),
-                        Translate(left)
+                        Dependencies.SqlExpressionFactory.Constant(unit!),
+                        Translate(right!)!,
+                        Translate(left!)!
                     ],
                     false,
                     [false, false, false],
@@ -69,7 +69,7 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
         {
             return Dependencies.SqlExpressionFactory.Function(
                 name: "concat",
-                arguments: [Translate(binaryExpression.Left), Translate(binaryExpression.Right)],
+                arguments: [Translate(binaryExpression.Left)!, Translate(binaryExpression.Right)!],
                 nullable: true,
                 argumentsPropagateNullability: [true, true],
                 returnType: typeof(string),
@@ -115,7 +115,7 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
         }
     }
 
-    private static bool IsDateDiffExpression(MemberExpression memberExpression, out Expression left, out Expression right, out string unit)
+    private static bool IsDateDiffExpression(MemberExpression memberExpression, out Expression? left, out Expression? right, out string? unit)
     {
         left = null;
         right = null;
@@ -144,7 +144,7 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
     }
     
     [DebuggerStepThrough]
-    private static bool TranslationFailed(Expression original, Expression translation, out SqlExpression castTranslation)
+    private static bool TranslationFailed(Expression? original, Expression? translation, out SqlExpression? castTranslation)
     {
         if (original is not null && !(translation is SqlExpression))
         {

@@ -315,12 +315,12 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
                || type == typeof(char);
     }
 
-    private static string[] ParseColumns(string columnsSql)
+    private static string[]? ParseColumns(string columnsSql)
     {
         return string.IsNullOrWhiteSpace(columnsSql) ? null : Array.ConvertAll(columnsSql.Split(','), e => e.Trim());
     }
 
-    private static string[] ParseEngineArgs(string engineFull)
+    private static string[]? ParseEngineArgs(string engineFull)
     {
         if (string.IsNullOrWhiteSpace(engineFull))
         {

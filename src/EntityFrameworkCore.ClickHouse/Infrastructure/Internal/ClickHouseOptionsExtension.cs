@@ -7,7 +7,7 @@ namespace ClickHouse.EntityFrameworkCore.Infrastructure.Internal;
 
 public class ClickHouseOptionsExtension : RelationalOptionsExtension
 {
-    private DbContextOptionsExtensionInfo _info;
+    private DbContextOptionsExtensionInfo? _info;
         
     public ClickHouseOptionsExtension()
     {

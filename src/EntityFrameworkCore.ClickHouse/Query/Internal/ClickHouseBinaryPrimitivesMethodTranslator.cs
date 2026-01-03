@@ -22,8 +22,8 @@ public class ClickHouseBinaryPrimitivesMethodTranslator : IMethodCallTranslator
         _typeMappingSource = typeMappingSource;
     }
 
-    public SqlExpression Translate(
-        SqlExpression instance,
+    public SqlExpression? Translate(
+        SqlExpression? instance,
         MethodInfo method,
         IReadOnlyList<SqlExpression> arguments,
         IDiagnosticsLogger<DbLoggerCategory.Query> logger)

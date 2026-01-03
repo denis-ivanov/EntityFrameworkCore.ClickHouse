@@ -7,13 +7,13 @@ namespace ClickHouse.EntityFrameworkCore.Extensions;
 
 public static class ClickHouseEntityTypeExtensions
 {
-    public static string GetTableEngine(this IAnnotatable table)
+    public static string? GetTableEngine(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var engine = table.FindAnnotation(ClickHouseAnnotationNames.TableEngine);
 
-        return (string)engine?.Value;
+        return (string?)engine?.Value;
     }
 
     public static void SetTableEngine(this AnnotatableBase table, string engine)
@@ -64,40 +64,40 @@ public static class ClickHouseEntityTypeExtensions
         return table;
     }
 
-    public static string[] GetOrderBy(this IAnnotatable table)
+    public static string[]? GetOrderBy(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var annotation = table.FindAnnotation(ClickHouseAnnotationNames.OrderBy);
 
-        return (string[])annotation?.Value;
+        return (string[]?)annotation?.Value;
     }
 
-    public static string[] GetPartitionBy(this IAnnotatable table)
+    public static string[]? GetPartitionBy(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var annotation = table.FindAnnotation(ClickHouseAnnotationNames.PartitionBy);
 
-        return (string[])annotation?.Value;
+        return (string[]?)annotation?.Value;
     }
 
-    public static string[] GetPrimaryKey(this IAnnotatable table)
+    public static string[]? GetPrimaryKey(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var annotation = table.FindAnnotation(ClickHouseAnnotationNames.PrimaryKey);
 
-        return (string[])annotation?.Value;
+        return (string[]?)annotation?.Value;
     }
 
-    public static string[] GetSampleBy(this IAnnotatable table)
+    public static string[]? GetSampleBy(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var annotation = table.FindAnnotation(ClickHouseAnnotationNames.SampleBy);
 
-        return (string[])annotation?.Value;
+        return (string[]?)annotation?.Value;
     }
 
     #region MergeTreeEngine
@@ -115,7 +115,7 @@ public static class ClickHouseEntityTypeExtensions
 
     #region ReplacingMergeTree
 
-    public static IMutableAnnotatable SetReplacingMergeTreeTableEngine(this IMutableEntityType table, string version, string isDeleted)
+    public static IMutableAnnotatable SetReplacingMergeTreeTableEngine(this IMutableEntityType table, string? version, string? isDeleted)
     {
         ArgumentNullException.ThrowIfNull(table);
 
@@ -140,29 +140,29 @@ public static class ClickHouseEntityTypeExtensions
         table.SetAnnotation(ClickHouseAnnotationNames.ReplacingMergeTreeIsDeleted, isDeleted);
     }
 
-    public static string GetReplacingMergeTreeVersion(this IAnnotatable table)
+    public static string? GetReplacingMergeTreeVersion(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var version = table.FindAnnotation(ClickHouseAnnotationNames.ReplacingMergeTreeVersion);
 
-        return (string)version?.Value;
+        return (string?)version?.Value;
     }
 
-    public static string GetReplacingMergeTreeIsDeleted(this IAnnotatable table)
+    public static string? GetReplacingMergeTreeIsDeleted(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var version = table.FindAnnotation(ClickHouseAnnotationNames.ReplacingMergeTreeIsDeleted);
 
-        return (string)version?.Value;
+        return (string?)version?.Value;
     }
 
     #endregion
 
     #region SummingMergeTree
 
-    public static IMutableAnnotatable SetSummingMergeTreeTableEngine(this IMutableEntityType table, string column)
+    public static IMutableAnnotatable SetSummingMergeTreeTableEngine(this IMutableEntityType table, string? column)
     {
         ArgumentNullException.ThrowIfNull(table);
 
@@ -186,13 +186,13 @@ public static class ClickHouseEntityTypeExtensions
         }
     }
 
-    public static string GetSummingMergeTreeColumn(this IAnnotatable table)
+    public static string? GetSummingMergeTreeColumn(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var columns = table.FindAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumn);
 
-        return (string)columns?.Value;
+        return (string?)columns?.Value;
     }
 
     #endregion
@@ -223,13 +223,13 @@ public static class ClickHouseEntityTypeExtensions
         return table;
     }
 
-    public static string GetCollapsingMergeTreeSign(this IAnnotatable table)
+    public static string? GetCollapsingMergeTreeSign(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var sign = table.FindAnnotation(ClickHouseAnnotationNames.CollapsingMergeTreeSign);
 
-        return (string)sign?.Value;
+        return (string?)sign?.Value;
     }
 
     #endregion
@@ -251,22 +251,22 @@ public static class ClickHouseEntityTypeExtensions
         return table;
     }
 
-    public static string GetVersionedCollapsingMergeTreeSign(this IMutableAnnotatable table)
+    public static string? GetVersionedCollapsingMergeTreeSign(this IMutableAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var sign = table.FindAnnotation(ClickHouseAnnotationNames.VersionedCollapsingMergeTreeSign);
 
-        return (string)sign?.Value;
+        return (string?)sign?.Value;
     }
 
-    public static string GetVersionedCollapsingMergeTreeVersion(this IMutableAnnotatable table)
+    public static string? GetVersionedCollapsingMergeTreeVersion(this IMutableAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var version = table.FindAnnotation(ClickHouseAnnotationNames.VersionedCollapsingMergeTreeVersion);
 
-        return (string)version?.Value;
+        return (string?)version?.Value;
     }
 
 
@@ -285,13 +285,13 @@ public static class ClickHouseEntityTypeExtensions
         return table;
     }
 
-    public static string GetGraphiteMergeTreeConfigSection(this IMutableAnnotatable table)
+    public static string? GetGraphiteMergeTreeConfigSection(this IMutableAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         var configSection = table.FindAnnotation(ClickHouseAnnotationNames.GraphiteMergeTreeConfigSection);
 
-        return (string)configSection?.Value;
+        return (string?)configSection?.Value;
     }
 
     #endregion

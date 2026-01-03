@@ -8,7 +8,7 @@ namespace Microsoft.EntityFrameworkCore;
 
 public static class ClickHouseEntityTypeBuilderExtensions
 {
-    public static ClickHouseMergeTreeEngineBuilder HasMergeTreeEngine([NotNull] this TableBuilder builder)
+    public static ClickHouseMergeTreeEngineBuilder HasMergeTreeEngine(this TableBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -18,7 +18,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseReplacingMergeTreeEngineBuilder HasReplacingMergeTreeEngine([NotNull] this TableBuilder builder)
+    public static ClickHouseReplacingMergeTreeEngineBuilder HasReplacingMergeTreeEngine(this TableBuilder builder)
     {
         return HasReplacingMergeTreeEngine(builder, null, null);
     }
@@ -31,9 +31,9 @@ public static class ClickHouseEntityTypeBuilderExtensions
     }
 
     public static ClickHouseReplacingMergeTreeEngineBuilder HasReplacingMergeTreeEngine(
-        [NotNull] this TableBuilder builder,
-        string version,
-        string isDeleted)
+        this TableBuilder builder,
+        string? version,
+        string? isDeleted)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -48,7 +48,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseSummingMergeTreeEngineBuilder HasSummingMergeTreeEngine([NotNull] this TableBuilder builder)
+    public static ClickHouseSummingMergeTreeEngineBuilder HasSummingMergeTreeEngine(this TableBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -58,7 +58,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseSummingMergeTreeEngineBuilder HasSummingMergeTreeEngine([NotNull] this TableBuilder builder, string column)
+    public static ClickHouseSummingMergeTreeEngineBuilder HasSummingMergeTreeEngine(this TableBuilder builder, string column)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -68,7 +68,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseAggregatingMergeTreeEngineBuilder HasAggregatingMergeTreeEngine([NotNull] this TableBuilder builder)
+    public static ClickHouseAggregatingMergeTreeEngineBuilder HasAggregatingMergeTreeEngine(this TableBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -78,7 +78,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseCollapsingMergeTreeEngineBuilder HasCollapsingMergeTreeEngine([NotNull] this TableBuilder builder, string sign)
+    public static ClickHouseCollapsingMergeTreeEngineBuilder HasCollapsingMergeTreeEngine(this TableBuilder builder, string sign)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentException.ThrowIfNullOrWhiteSpace(sign);
@@ -90,7 +90,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
     }
 
     public static ClickHouseVersionedCollapsingMergeTreeEngineBuilder HasVersionedCollapsingMergeTreeEngine(
-        [NotNull] this TableBuilder builder,
+        this TableBuilder builder,
         string sign,
         string version)
     {
@@ -105,7 +105,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
     }
 
     public static ClickHouseGraphiteMergeTreeEngineBuilder HasGraphiteMergeTreeEngine(
-        [NotNull] this TableBuilder builder,
+        this TableBuilder builder,
         string configSection)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -117,7 +117,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseTinyLogEngineBuilder HasTinyLogEngine([NotNull] this TableBuilder builder)
+    public static ClickHouseTinyLogEngineBuilder HasTinyLogEngine(this TableBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -127,7 +127,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseStripeLogEngineBuilder HasStripeLogEngine([NotNull] this TableBuilder builder)
+    public static ClickHouseStripeLogEngineBuilder HasStripeLogEngine(this TableBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -137,7 +137,7 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseStripeLogEngineBuilder HasLogEngine([NotNull] this TableBuilder builder)
+    public static ClickHouseStripeLogEngineBuilder HasLogEngine(this TableBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 

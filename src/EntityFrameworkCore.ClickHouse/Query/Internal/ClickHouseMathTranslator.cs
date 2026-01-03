@@ -95,7 +95,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
         _typeMappingSource = typeMappingSource;
     }
 
-    public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
+    public SqlExpression? Translate(SqlExpression? instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
         if (SupportedMethods.TryGetValue(method, out var functionName))
         {
@@ -194,7 +194,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
         return null;
     }
 
-    public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
+    public SqlExpression? Translate(SqlExpression? instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
         return null;
     }

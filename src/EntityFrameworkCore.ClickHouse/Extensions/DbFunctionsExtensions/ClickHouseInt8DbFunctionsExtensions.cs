@@ -26,7 +26,7 @@ public static class ClickHouseInt8DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint8</remarks>
-    public static sbyte ToInt8(this DbFunctions _, string expr)
+    public static sbyte ToInt8(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -38,7 +38,7 @@ public static class ClickHouseInt8DbFunctionsExtensions
     /// <param name="expr"> A String representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint8orzero</remarks>
-    public static sbyte ToInt8OrZero(this DbFunctions _, string expr)
+    public static sbyte ToInt8OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -51,7 +51,7 @@ public static class ClickHouseInt8DbFunctionsExtensions
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toInt8OrNull</remarks>
-    public static sbyte? ToInt8OrNull(this DbFunctions _, string expr)
+    public static sbyte? ToInt8OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -65,7 +65,7 @@ public static class ClickHouseInt8DbFunctionsExtensions
     /// <param name="expr"></param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint8ordefault</remarks>
-    public static sbyte ToInt8OrDefault(this DbFunctions _, string expr)
+    public static sbyte ToInt8OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -80,7 +80,7 @@ public static class ClickHouseInt8DbFunctionsExtensions
     /// <param name="defaultValue"></param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toint8ordefault</remarks>
-    public static sbyte ToInt8OrDefault(this DbFunctions _, string expr, sbyte defaultValue)
+    public static sbyte ToInt8OrDefault(this DbFunctions _, string? expr, sbyte defaultValue)
     {
         throw new InvalidOperationException();
     }

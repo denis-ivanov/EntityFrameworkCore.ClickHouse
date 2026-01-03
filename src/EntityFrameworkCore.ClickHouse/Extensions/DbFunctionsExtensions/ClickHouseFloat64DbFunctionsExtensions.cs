@@ -32,7 +32,7 @@ public static class ClickHouseFloat64DbFunctionsExtensions
     /// <see cref="ToFloat64(DbFunctions, string)"/> is used for converting string representations of numbers to Float64.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toFloat64</remarks>
-    public static double ToFloat64(this DbFunctions _, string expr)
+    public static double ToFloat64(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -48,7 +48,7 @@ public static class ClickHouseFloat64DbFunctionsExtensions
     /// <see cref="ToFloat64OrZero(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toFloat64OrZero</remarks>
-    public static double ToFloat64OrZero(this DbFunctions _, string expr)
+    public static double ToFloat64OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -64,7 +64,7 @@ public static class ClickHouseFloat64DbFunctionsExtensions
     /// <see cref="ToFloat64OrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toFloat64OrNull</remarks>
-    public static double? ToFloat64OrNull(this DbFunctions _, string expr)
+    public static double? ToFloat64OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -81,7 +81,7 @@ public static class ClickHouseFloat64DbFunctionsExtensions
     /// <see cref="ToFloat64OrDefault(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toFloat64OrDefault</remarks>
-    public static double ToFloat64OrDefault(this DbFunctions _, string expr)
+    public static double ToFloat64OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -98,7 +98,7 @@ public static class ClickHouseFloat64DbFunctionsExtensions
     /// <see cref="ToFloat64OrDefault(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toFloat64OrDefault</remarks>
-    public static double ToFloat64OrDefault(this DbFunctions _, string expr, double defaultValue)
+    public static double ToFloat64OrDefault(this DbFunctions _, string? expr, double defaultValue)
     {
         throw new InvalidOperationException();
     }

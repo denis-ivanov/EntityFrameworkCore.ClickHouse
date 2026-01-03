@@ -41,8 +41,8 @@ public class ClickHouseDateTimeMemberTranslator : IMemberTranslator
         _sqlExpressionFactory = sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(
-        SqlExpression instance,
+    public SqlExpression? Translate(
+        SqlExpression? instance,
         MemberInfo member,
         Type returnType,
         IDiagnosticsLogger<DbLoggerCategory.Query> logger)
@@ -51,7 +51,7 @@ public class ClickHouseDateTimeMemberTranslator : IMemberTranslator
         {
             var expression = _sqlExpressionFactory.Function(
                 function.Item1,
-                [instance],
+                [instance!],
                 nullable: true,
                 argumentsPropagateNullability: [true],
                 returnType);
@@ -65,7 +65,7 @@ public class ClickHouseDateTimeMemberTranslator : IMemberTranslator
         {
             var unixSeconds = _sqlExpressionFactory.Function(
                 "toUnixTimestamp",
-                [instance],
+                [instance!],
                 nullable: true,
                 argumentsPropagateNullability: [true],
                 typeof(long));

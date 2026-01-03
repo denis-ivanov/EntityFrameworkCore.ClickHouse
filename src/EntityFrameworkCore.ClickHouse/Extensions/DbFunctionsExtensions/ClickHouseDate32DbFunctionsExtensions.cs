@@ -16,7 +16,7 @@ public static class ClickHouseDate32DbFunctionsExtensions
     /// <see cref="ToDate32(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDate32</remarks>
-    public static DateOnly ToDate32(this DbFunctions _, string expr)
+    public static DateOnly ToDate32(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -47,7 +47,7 @@ public static class ClickHouseDate32DbFunctionsExtensions
     /// <see cref="ToDate32OrZero(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#todate32orzero</remarks>
-    public static DateOnly ToDate32OrZero(this DbFunctions _, string expr)
+    public static DateOnly ToDate32OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -62,7 +62,7 @@ public static class ClickHouseDate32DbFunctionsExtensions
     /// <see cref="ToDate32OrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#todate32ornull</remarks>
-    public static DateOnly? ToDate32OrNull(this DbFunctions _, string expr)
+    public static DateOnly? ToDate32OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -80,7 +80,7 @@ public static class ClickHouseDate32DbFunctionsExtensions
     /// <see cref="ToDate32OrDefault(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#todate32ordefault</remarks>
-    public static DateOnly ToDate32OrDefault(this DbFunctions _, string expr)
+    public static DateOnly ToDate32OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -99,7 +99,7 @@ public static class ClickHouseDate32DbFunctionsExtensions
     /// <see cref="ToDate32OrDefault(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#todate32ordefault</remarks>
-    public static DateOnly ToDate32OrDefault(this DbFunctions _, string expr, DateOnly defaultValue)
+    public static DateOnly ToDate32OrDefault(this DbFunctions _, string? expr, DateOnly defaultValue)
     {
         throw new InvalidOperationException();
     }

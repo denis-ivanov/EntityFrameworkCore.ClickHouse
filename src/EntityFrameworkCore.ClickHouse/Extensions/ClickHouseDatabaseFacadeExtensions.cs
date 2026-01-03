@@ -7,7 +7,7 @@ namespace ClickHouse.EntityFrameworkCore.Extensions;
 public static class ClickHouseDatabaseFacadeExtensions
 {
     public static bool IsClickHouse(this DatabaseFacade database)
-        => database.ProviderName.Equals(
-            typeof(ClickHouseOptionsExtension).Assembly.GetName().Name,
+        => typeof(ClickHouseOptionsExtension).Assembly.GetName().Name!.Equals(
+            database.ProviderName,
             StringComparison.Ordinal);
 }

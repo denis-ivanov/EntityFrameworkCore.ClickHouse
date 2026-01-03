@@ -28,7 +28,7 @@ public static class ClickHouseUInt128DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toUInt128</remarks>
-    public static UInt128 ToUInt128(this DbFunctions _, string expr)
+    public static UInt128 ToUInt128(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -40,7 +40,7 @@ public static class ClickHouseUInt128DbFunctionsExtensions
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
-    public static UInt128 ToUInt128OrZero(this DbFunctions _, string expr)
+    public static UInt128 ToUInt128OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -52,7 +52,7 @@ public static class ClickHouseUInt128DbFunctionsExtensions
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
-    public static UInt128? ToUInt128OrNull(this DbFunctions _, string expr)
+    public static UInt128? ToUInt128OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -66,7 +66,7 @@ public static class ClickHouseUInt128DbFunctionsExtensions
     /// <param name="expr"></param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toUInt128ordefault</remarks>
-    public static UInt128 ToUInt128OrDefault(this DbFunctions _, string expr)
+    public static UInt128 ToUInt128OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -81,7 +81,7 @@ public static class ClickHouseUInt128DbFunctionsExtensions
     /// <param name="defaultValue"></param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toUInt128ordefault</remarks>
-    public static UInt128 ToUInt128OrDefault(this DbFunctions _, string expr, UInt128 defaultValue)
+    public static UInt128 ToUInt128OrDefault(this DbFunctions _, string? expr, UInt128 defaultValue)
     {
         throw new InvalidOperationException();
     }

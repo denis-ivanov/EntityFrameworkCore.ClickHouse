@@ -16,68 +16,68 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 {
     private static readonly MethodInfo ToUpper = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeMethod(nameof(string.ToUpper), Type.EmptyTypes);
+        .GetRuntimeMethod(nameof(string.ToUpper), Type.EmptyTypes)!;
 
     private static readonly MethodInfo ToLower = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeMethod(nameof(string.ToLower), Type.EmptyTypes);
+        .GetRuntimeMethod(nameof(string.ToLower), Type.EmptyTypes)!;
 
     private static readonly MethodInfo IsNullOrEmpty = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeMethod(nameof(string.IsNullOrEmpty), [typeof(string)]);
+        .GetRuntimeMethod(nameof(string.IsNullOrEmpty), [typeof(string)])!;
 
     private static readonly MethodInfo IsNullOrWhiteSpace = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeMethod(nameof(string.IsNullOrWhiteSpace), [typeof(string)]);
+        .GetRuntimeMethod(nameof(string.IsNullOrWhiteSpace), [typeof(string)])!;
 
     private static readonly PropertyInfo Length = typeof(string)
         .GetTypeInfo()
-        .GetRuntimeProperty(nameof(string.Length));
+        .GetRuntimeProperty(nameof(string.Length))!;
 
     private static readonly MethodInfo TrimStart = typeof(string)
-        .GetRuntimeMethod(nameof(string.TrimStart), Type.EmptyTypes);
+        .GetRuntimeMethod(nameof(string.TrimStart), Type.EmptyTypes)!;
 
     private static readonly MethodInfo TrimStartChar = typeof(string)
-        .GetRuntimeMethod(nameof(string.TrimStart), [typeof(char)]);
+        .GetRuntimeMethod(nameof(string.TrimStart), [typeof(char)])!;
 
     private static readonly MethodInfo TrimStartCharArray = typeof(string)
-        .GetRuntimeMethod(nameof(string.TrimStart), [typeof(char[])]);
+        .GetRuntimeMethod(nameof(string.TrimStart), [typeof(char[])])!;
 
     private static readonly MethodInfo TrimEnd = typeof(string)
-        .GetRuntimeMethod(nameof(string.TrimEnd), Type.EmptyTypes);
+        .GetRuntimeMethod(nameof(string.TrimEnd), Type.EmptyTypes)!;
 
     private static readonly MethodInfo TrimEndChar = typeof(string)
-        .GetRuntimeMethod(nameof(string.TrimEnd), [typeof(char)]);
+        .GetRuntimeMethod(nameof(string.TrimEnd), [typeof(char)])!;
 
     private static readonly MethodInfo TrimEndCharArray = typeof(string)
-        .GetRuntimeMethod(nameof(string.TrimEnd), [typeof(char[])]);
+        .GetRuntimeMethod(nameof(string.TrimEnd), [typeof(char[])])!;
 
     private static readonly MethodInfo Trim = typeof(string)
-        .GetRuntimeMethod(nameof(string.Trim), Type.EmptyTypes);
+        .GetRuntimeMethod(nameof(string.Trim), Type.EmptyTypes)!;
 
     private static readonly MethodInfo TrimChar = typeof(string)
-        .GetRuntimeMethod(nameof(string.Trim), [typeof(char)]);
+        .GetRuntimeMethod(nameof(string.Trim), [typeof(char)])!;
 
     private static readonly MethodInfo TrimCharArray = typeof(string)
-        .GetRuntimeMethod(nameof(string.Trim), [typeof(char[])]);
+        .GetRuntimeMethod(nameof(string.Trim), [typeof(char[])])!;
 
     private static readonly MethodInfo StartsWith = typeof(string)
-        .GetRuntimeMethod(nameof(string.StartsWith), [typeof(string)]);
+        .GetRuntimeMethod(nameof(string.StartsWith), [typeof(string)])!;
 
     private static readonly MethodInfo EndsWith = typeof(string)
-        .GetRuntimeMethod(nameof(string.EndsWith), [typeof(string)]);
+        .GetRuntimeMethod(nameof(string.EndsWith), [typeof(string)])!;
 
     private static readonly MethodInfo Contains = typeof(string)
-        .GetRuntimeMethod(nameof(string.Contains), [typeof(string)]);
+        .GetRuntimeMethod(nameof(string.Contains), [typeof(string)])!;
 
     private static readonly MethodInfo IndexOf = typeof(string)
-        .GetRuntimeMethod(nameof(string.IndexOf), [typeof(string)]);
+        .GetRuntimeMethod(nameof(string.IndexOf), [typeof(string)])!;
 
     private static readonly MethodInfo IndexOfWithStartingPosition = typeof(string)
-        .GetRuntimeMethod(nameof(string.IndexOf), [typeof(string), typeof(int)]);
+        .GetRuntimeMethod(nameof(string.IndexOf), [typeof(string), typeof(int)])!;
 
     private static readonly MethodInfo IsMatch = typeof(Regex)
-        .GetRuntimeMethod(nameof(Regex.IsMatch), [typeof(string), typeof(string)]);
+        .GetRuntimeMethod(nameof(Regex.IsMatch), [typeof(string), typeof(string)])!;
 
     private static readonly MethodInfo FirstOrDefaultWithoutArgs = typeof(Enumerable)
         .GetRuntimeMethods().Single(m => m.Name == nameof(Enumerable.FirstOrDefault)
@@ -88,13 +88,13 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                                          && m.GetParameters().Length == 1).MakeGenericMethod(typeof(char));
 
     private static readonly MethodInfo SubstringWithStartIndex = typeof(string)
-        .GetRuntimeMethod(nameof(string.Substring), [typeof(int)]);
+        .GetRuntimeMethod(nameof(string.Substring), [typeof(int)])!;
 
     private static readonly MethodInfo SubstringWithIndexAndLength = typeof(string)
-        .GetRuntimeMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
+        .GetRuntimeMethod(nameof(string.Substring), [typeof(int), typeof(int)])!;
 
     private static readonly MethodInfo ReplaceAll = typeof(string)
-        .GetRuntimeMethod(nameof(string.Replace), [typeof(string), typeof(string)]);
+        .GetRuntimeMethod(nameof(string.Replace), [typeof(string), typeof(string)])!;
 
     private readonly ClickHouseSqlExpressionFactory _sqlExpressionFactory;
 
@@ -103,28 +103,28 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
 
-    public SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
+    public SqlExpression? Translate(SqlExpression? instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
         if (ToLower.Equals(method))
         {
             return _sqlExpressionFactory.Function(
                 "lowerUTF8",
-                [instance],
+                [instance!],
                 true,
                 [true],
                 method.ReturnType,
-                instance.TypeMapping);
+                instance!.TypeMapping);
         }
 
         if (ToUpper.Equals(method))
         {
             return _sqlExpressionFactory.Function(
                 "upperUTF8",
-                [instance],
+                [instance!],
                 true,
                 [true],
                 method.ReturnType,
-                instance.TypeMapping);
+                instance!.TypeMapping);
         }
 
         if (IsNullOrEmpty.Equals(method))
@@ -164,7 +164,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Function(
                 name: "trimLeft",
-                arguments: [instance],
+                arguments: [instance!],
                 nullable: true,
                 argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
@@ -172,14 +172,14 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
         if (TrimStartChar.Equals(method) || TrimStartCharArray.Equals(method))
         {
-            return _sqlExpressionFactory.Trim(instance, GetTrimChars(arguments[0]), ClickHouseStringTrimMode.Leading);
+            return _sqlExpressionFactory.Trim(instance!, GetTrimChars(arguments[0]), ClickHouseStringTrimMode.Leading);
         }
 
         if (TrimEnd.Equals(method))
         {
             return _sqlExpressionFactory.Function(
                 name: "trimRight",
-                arguments: [instance],
+                arguments: [instance!],
                 nullable: true,
                 argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
@@ -187,14 +187,14 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
         if (TrimEndChar.Equals(method) || TrimEndCharArray.Equals(method))
         {
-            return _sqlExpressionFactory.Trim(instance, GetTrimChars(arguments[0]), ClickHouseStringTrimMode.Trailing);
+            return _sqlExpressionFactory.Trim(instance!, GetTrimChars(arguments[0]), ClickHouseStringTrimMode.Trailing);
         }
 
         if (Trim.Equals(method))
         {
             return _sqlExpressionFactory.Function(
                 name: "trim",
-                arguments: [instance],
+                arguments: [instance!],
                 nullable: true,
                 argumentsPropagateNullability: [true],
                 returnType: method.ReturnType);
@@ -202,14 +202,14 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
         if (TrimChar.Equals(method) || TrimCharArray.Equals(method))
         {
-            return _sqlExpressionFactory.Trim(instance, GetTrimChars(arguments[0]), ClickHouseStringTrimMode.Both);
+            return _sqlExpressionFactory.Trim(instance!, GetTrimChars(arguments[0]), ClickHouseStringTrimMode.Both);
         }
 
         if (StartsWith.Equals(method))
         {
             return _sqlExpressionFactory.Function(
                 name: "startsWith",
-                arguments: arguments.Prepend(instance),
+                arguments: arguments.Prepend(instance!),
                 nullable: true,
                 argumentsPropagateNullability: Enumerable.Repeat(true, arguments.Count + 1),
                 returnType: method.ReturnType);
@@ -219,7 +219,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Function(
                 name: "endsWith",
-                arguments: arguments.Prepend(instance),
+                arguments: arguments.Prepend(instance!),
                 nullable: true,
                 argumentsPropagateNullability: Enumerable.Repeat(true, arguments.Count + 1),
                 returnType: method.ReturnType);
@@ -230,7 +230,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
             return _sqlExpressionFactory.GreaterThan(
                 _sqlExpressionFactory.Function(
                     name: "positionUTF8",
-                    arguments: arguments.Prepend(instance),
+                    arguments: arguments.Prepend(instance!),
                     nullable: false,
                     argumentsPropagateNullability: Enumerable.Repeat(true, arguments.Count + 1),
                     returnType: typeof(int)),
@@ -285,7 +285,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
             
             return _sqlExpressionFactory.Function(
                 "substring",
-                [instance, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1))],
+                [instance!, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1))],
                 nullable: true,
                 argumentsPropagateNullability: [true, true],
                 method.ReturnType);
@@ -298,7 +298,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
             return _sqlExpressionFactory.Function(
                 "substring",
-                [instance, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)), length],
+                [instance!, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)), length],
                 nullable: true,
                 argumentsPropagateNullability: [true, true, true],
                 method.ReturnType);
@@ -308,7 +308,7 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         {
             return _sqlExpressionFactory.Subtract(_sqlExpressionFactory.Function(
                     name: "positionUTF8",
-                    arguments: arguments.Prepend(instance),
+                    arguments: arguments.Prepend(instance!),
                     nullable: true,
                     argumentsPropagateNullability: Enumerable.Repeat(true, arguments.Count + 1),
                     method.ReturnType),
@@ -317,14 +317,14 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
         if (IndexOfWithStartingPosition.Equals(method))
         {
-            return TranslateIndexOf(method, instance, arguments[0], arguments[1]);
+            return TranslateIndexOf(method, instance!, arguments[0], arguments[1]);
         }
 
         if (ReplaceAll.Equals(method))
         {
             return _sqlExpressionFactory.Function(
                 "replaceAll",
-                arguments: arguments.Prepend(instance),
+                arguments: arguments.Prepend(instance!),
                 nullable: true,
                 argumentsPropagateNullability: [true, true, true],
                 method.ReturnType);
@@ -353,13 +353,13 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         return null;
     }
 
-    public SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
+    public SqlExpression? Translate(SqlExpression? instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
     {
         if (member.Equals(Length))
         {
             return _sqlExpressionFactory.Function(
                 "char_length",
-                [instance],
+                [instance!],
                 nullable: true,
                 argumentsPropagateNullability: [true],
                 returnType);
@@ -406,37 +406,5 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
 
             _ => _sqlExpressionFactory.ApplyDefaultTypeMapping(chars)
         };
-
-        // if (chars.Type == typeof(char))
-        // {
-        //     return chars;
-        // }
-        //
-        // if (chars is NewArrayExpression newArrayExpression)
-        // {
-        //     return _sqlExpressionFactory.Function(
-        //         "concat",
-        //         newArrayExpression.Expressions,
-        //         true,
-        //         Enumerable.Repeat(true, methodArgs.Count),
-        //         typeof(string),
-        //         Dependencies.TypeMappingSource.FindMapping(typeof(string)));
-        // }
-        // else
-        // {
-        //     trimArg = Dependencies.SqlExpressionFactory.Function(
-        //         "arrayStringConcat",
-        //         [Translate(methodArgs[0])],
-        //         true,
-        //         [true],
-        //         typeof(string),
-        //         Dependencies.TypeMappingSource.FindMapping(typeof(string)));
-        // }
-        //
-        // var trimInstance = Translate(methodCallExpression.Object);
-        //
-        // var trimMapping = Dependencies.TypeMappingSource.FindMapping(methodCallExpression.Method.DeclaringType);
-        //
-        // return new ClickHouseTrimFunction([trimArg, trimInstance], trimMapping, trimMode);
     }
 }

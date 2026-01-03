@@ -6,6 +6,7 @@ using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Scaffolding;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -311,7 +312,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(
                     TypeMappingSource
                         .FindMapping(typeof(string), storeTypeName: null, fixedLength: true, size: 100)
-                        .StoreType,
+                        !.StoreType,
                     column.StoreType);
             });
 
@@ -338,7 +339,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(
                     TypeMappingSource
                         .FindMapping(typeof(string), storeTypeName: null, size: 30)
-                        .StoreType,
+                        !.StoreType,
                     column.StoreType);
             });
 
@@ -799,7 +800,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             {
                 var table = Assert.Single(model.Tables);
                 var column = Assert.Single(table.Columns, c => c.Name == "SomeColumn");
-                Assert.Equal(TypeMappingSource.FindMapping(typeof(long)).StoreType, column.StoreType);
+                Assert.Equal(TypeMappingSource.FindMapping(typeof(long))!.StoreType, column.StoreType);
             });
 
     [ConditionalTheory]
@@ -915,7 +916,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var table = Assert.Single(model.Tables);
                 var firstNameColumn = Assert.Single(table.Columns, c => c.Name == "FirstName");
                 Assert.False(firstNameColumn.IsNullable);
-                // TOOD
+                // TODO
                 // var index = Assert.Single(table.Indexes);
                 // Assert.Equal(2, index.Columns.Count);
                 // Assert.Contains(table.Columns.Single(c => c.Name == "FirstName"), index.Columns);
@@ -959,7 +960,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
 
                 entityTypeBuilder.Property<int>("Id");
                 entityTypeBuilder.Property<string>("SomeColumn");
-                entityTypeBuilder.HasData(new Dictionary<string, object> { { "Id", 1 }, { "SomeColumn", null } });
+                entityTypeBuilder.HasData(new Dictionary<string, object?> { { "Id", 1 }, { "SomeColumn", null } });
 
                 entityTypeBuilder.ToTable(table => table
                     .HasMergeTreeEngine()
@@ -1559,15 +1560,19 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(ClickHouseAnnotationNames.MergeTreeEngine, engine);
 
                 var partitionBy = table.GetPartitionBy();
+                Assert.NotNull(partitionBy);
                 Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
 
                 var primaryKey = table.GetPrimaryKey();
+                Assert.NotNull(primaryKey);
                 Assert.Equal(["id", "age"], primaryKey);
 
                 var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
                 Assert.Equal(["id", "age", "created_at"], orderBy);
 
                 var sampleBy = table.GetSampleBy();
+                Assert.NotNull(sampleBy);
                 Assert.Equal(["id"], sampleBy);
             });
 
@@ -1610,15 +1615,19 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal("is_deleted", isDeleted);
 
                 var partitionBy = table.GetPartitionBy();
+                Assert.NotNull(partitionBy);
                 Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
 
                 var primaryKey = table.GetPrimaryKey();
+                Assert.NotNull(primaryKey);
                 Assert.Equal(["id"], primaryKey);
 
                 var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
                 Assert.Equal(["id", "created_at"], orderBy);
 
                 var sampleBy = table.GetSampleBy();
+                Assert.NotNull(sampleBy);
                 Assert.Equal(["id"], sampleBy);
             });
 
@@ -1657,15 +1666,19 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal("amount", engineColumn);
 
                 var partitionBy = table.GetPartitionBy();
+                Assert.NotNull(partitionBy);
                 Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
 
                 var primaryKey = table.GetPrimaryKey();
+                Assert.NotNull(primaryKey);
                 Assert.Equal(["id", "category", "created_at"], primaryKey);
 
                 var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
                 Assert.Equal(["id", "category", "created_at"], orderBy);
 
                 var sampleBy = table.GetSampleBy();
+                Assert.NotNull(sampleBy);
                 Assert.Equal(["id"], sampleBy);
             });
 
@@ -1700,12 +1713,15 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(ClickHouseAnnotationNames.AggregatingMergeTree, engine);
 
                 var partitionBy = table.GetPartitionBy();
+                Assert.NotNull(partitionBy);
                 Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
 
                 var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
                 Assert.Equal(["id", "created_at"], orderBy);
 
                 var sampleBy = table.GetSampleBy();
+                Assert.NotNull(sampleBy);
                 Assert.Equal(["id"], sampleBy);
             });
 
@@ -1740,13 +1756,16 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(ClickHouseAnnotationNames.CollapsingMergeTree, engine);
 
                 var partitionBy = table.GetPartitionBy();
+                Assert.NotNull(partitionBy);
                 Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
 
                 var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
                 Assert.Equal(["id", "category", "created_at"], orderBy);
 
-                var samepleBy = table.GetSampleBy();
-                Assert.Equal(["id"], samepleBy);
+                var sampleBy = table.GetSampleBy();
+                Assert.NotNull(sampleBy);
+                Assert.Equal(["id"], sampleBy);
             });
 
     [ConditionalFact]
@@ -1781,12 +1800,15 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(ClickHouseAnnotationNames.VersionedCollapsingMergeTree, engine);
 
                 var partitionBy = table.GetPartitionBy();
+                Assert.NotNull(partitionBy);
                 Assert.Equal(["toYYYYMM(created_at)"], partitionBy);
 
                 var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
                 Assert.Equal(["id", "category", "created_at", "version"], orderBy);
 
                 var sampleBy = table.GetSampleBy();
+                Assert.NotNull(sampleBy);
                 Assert.Equal(["id"], sampleBy);
             });
 

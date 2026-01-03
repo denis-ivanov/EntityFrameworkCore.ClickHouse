@@ -5,5 +5,5 @@ namespace ClickHouse.EntityFrameworkCore.Migrations.Operations;
 
 public class ClickHouseCreateDatabaseOperation : MigrationOperation
 {
-    public string Name { get; [param: NotNull]set; }
+    public string? Name { get; [param: NotNull] set; }
 }

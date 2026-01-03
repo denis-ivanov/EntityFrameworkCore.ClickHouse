@@ -32,7 +32,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     /// <see cref="ToDate(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDate</remarks>
-    public static DateOnly ToDate(this DbFunctions _, string expr)
+    public static DateOnly ToDate(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -80,7 +80,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     /// <see cref="ToDate(DbFunctions, string, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDate</remarks>
-    public static DateOnly ToDate(this DbFunctions _, string expr, string timeZone)
+    public static DateOnly ToDate(this DbFunctions _, string? expr, string timeZone)
     {
         throw new InvalidOperationException();
     }
@@ -112,7 +112,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     /// <see cref="ToDateOrZero(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateOrZero</remarks>
-    public static DateOnly ToDateOrZero(this DbFunctions _, string expr)
+    public static DateOnly ToDateOrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -128,7 +128,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     /// <see cref="ToDateOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#toDateOrNull</remarks>
-    public static DateOnly? ToDateOrNull(this DbFunctions _, string expr)
+    public static DateOnly? ToDateOrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -143,7 +143,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateOrDefault(DbFunctions, string, DateOnly)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
-    public static DateOnly ToDateOrDefault(this DbFunctions _, string expr)
+    public static DateOnly ToDateOrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -159,7 +159,7 @@ public static class ClickHouseDateDbFunctionsExtensions
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateOrDefault(DbFunctions, string, DateOnly)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
     /// </exception>
-    public static DateOnly ToDateOrDefault(this DbFunctions _, string expr, DateOnly defaultValue)
+    public static DateOnly ToDateOrDefault(this DbFunctions _, string? expr, DateOnly defaultValue)
     {
         throw new InvalidOperationException();
     }

@@ -1,19 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Expressions.Internal;
 
-public class ClickHouseTrimExpression : SqlExpression
+public class ClickHouseTrimExpression : SqlExpression, IEquatable<ClickHouseTrimExpression>
 {
     private static readonly ConstructorInfo Constructor = typeof(ClickHouseTrimExpression).GetConstructor(
     [
         typeof(SqlExpression),
         typeof(SqlExpression),
         typeof(ClickHouseStringTrimMode)
-    ]);
+    ])!;
 
     public ClickHouseTrimExpression(
         SqlExpression inputString,
@@ -72,5 +73,45 @@ public class ClickHouseTrimExpression : SqlExpression
         expressionPrinter.Append(" FROM ");
         expressionPrinter.Visit(InputString);
         expressionPrinter.Append(")");
+    }
+
+    public bool Equals(ClickHouseTrimExpression? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return base.Equals(other) && InputString.Equals(other.InputString) && TrimCharacters.Equals(other.TrimCharacters) && TrimMode == other.TrimMode;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != GetType())
+        {
+            return false;
+        }
+
+        return Equals((ClickHouseTrimExpression)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(InputString, TrimCharacters, TrimMode);
     }
 }

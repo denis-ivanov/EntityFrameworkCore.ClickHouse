@@ -36,9 +36,9 @@ public class ClickHouseTupleTypeMapping : RelationalTypeMapping
         parameter.SetStoreType(StoreType);
     }
 
-    public override string GenerateSqlLiteral(object value)
+    public override string GenerateSqlLiteral(object? value)
     {
-        var tuple = (ITuple)value;
+        var tuple = (ITuple)value!;
         var argsType = ClrType.GetGenericArguments();
 
         var sb = new StringBuilder("tuple(");

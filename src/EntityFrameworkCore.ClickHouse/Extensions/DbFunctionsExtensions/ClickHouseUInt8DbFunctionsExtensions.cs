@@ -28,7 +28,7 @@ public static class ClickHouseUInt8DbFunctionsExtensions
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#touint8</remarks>
-    public static byte ToUInt8(this DbFunctions _, string expr)
+    public static byte ToUInt8(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -40,7 +40,7 @@ public static class ClickHouseUInt8DbFunctionsExtensions
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
-    public static byte ToUInt8OrZero(this DbFunctions _, string expr)
+    public static byte ToUInt8OrZero(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -52,7 +52,7 @@ public static class ClickHouseUInt8DbFunctionsExtensions
     /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
     /// <returns></returns>
-    public static byte? ToUInt8OrNull(this DbFunctions _, string expr)
+    public static byte? ToUInt8OrNull(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -66,7 +66,7 @@ public static class ClickHouseUInt8DbFunctionsExtensions
     /// <param name="expr"></param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#touint8ordefault</remarks>
-    public static byte ToUInt8OrDefault(this DbFunctions _, string expr)
+    public static byte ToUInt8OrDefault(this DbFunctions _, string? expr)
     {
         throw new InvalidOperationException();
     }
@@ -81,7 +81,7 @@ public static class ClickHouseUInt8DbFunctionsExtensions
     /// <param name="defaultValue"></param>
     /// <returns></returns>
     /// <remarks>https://clickhouse.com/docs/sql-reference/functions/type-conversion-functions#touint8ordefault</remarks>
-    public static byte ToUInt8OrDefault(this DbFunctions _, string expr, byte defaultValue)
+    public static byte ToUInt8OrDefault(this DbFunctions _, string? expr, byte defaultValue)
     {
         throw new InvalidOperationException();
     }
