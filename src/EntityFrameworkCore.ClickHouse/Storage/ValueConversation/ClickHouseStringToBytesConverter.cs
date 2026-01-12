@@ -45,39 +45,20 @@ public class ClickHouseStringToBytesConverter : ValueConverter<string?, byte[]?>
 
     private static Expression<Func<byte[]?, string?>> FromProvider(Encoding encoding)
     {
-        // v => v == null || v.Length == 0 || Array.TrueForAll(v, b => b == 0) ? null : encoding.GetString(v)
+        // v => v == null ? null : Encoding.GetEncoding(cp).GetString(v)
         var prm = Expression.Parameter(typeof(byte[]), "v");
 
         var isNullCheck = Expression.Equal(prm, Expression.Constant(null, typeof(byte[])));
-        var lengthProperty = Expression.Property(prm, nameof(Array.Length));
-        var isEmptyCheck = Expression.Equal(lengthProperty, Expression.Constant(0));
-
-        // Array.TrueForAll<byte>(v, b => b == 0)
-        var trueForAllMethod = typeof(Array)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .First(m => m is { Name: nameof(Array.TrueForAll), IsGenericMethodDefinition: true } && m.GetGenericArguments().Length == 1)
-            .MakeGenericMethod(typeof(byte));
-
-        var byteParam = Expression.Parameter(typeof(byte), "b");
-        var predicate = Expression.Lambda<Predicate<byte>>(
-            Expression.Equal(byteParam, Expression.Constant((byte)0)),
-            byteParam);
-        var allZeroCheck = Expression.Call(trueForAllMethod, prm, predicate);
-
-        var conditionCheck = Expression.OrElse(
-            Expression.OrElse(isNullCheck, isEmptyCheck),
-            allZeroCheck);
-
         var nullConstant = Expression.Constant(null, typeof(string));
+
         var getStringCall = Expression.Call(
             Expression.Call(
                 EncodingGetEncodingMethodInfo,
                 Expression.Constant(encoding.CodePage)),
-            EncodingGetStringMethodInfo, prm);
+            EncodingGetStringMethodInfo,
+            prm);
 
-        var conditionalExpression = Expression.Condition(conditionCheck, nullConstant, getStringCall);
-
-        var result = Expression.Lambda<Func<byte[]?, string?>>(conditionalExpression, prm);
-        return result;
+        var conditionalExpression = Expression.Condition(isNullCheck, nullConstant, getStringCall);
+        return Expression.Lambda<Func<byte[]?, string?>>(conditionalExpression, prm);
     }
 }
