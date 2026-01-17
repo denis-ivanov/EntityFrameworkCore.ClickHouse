@@ -1,5 +1,7 @@
 ﻿using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,8 +67,8 @@ public class ValueConvertersEndToEndClickHouseTest
     [InlineData(nameof(ConvertingEntity.NumberToNullableBytes), "FixedString(1)", false)]
     [InlineData(nameof(ConvertingEntity.StringToBool), "Bool", false)]
     [InlineData(nameof(ConvertingEntity.StringToNullableBool), "Bool", false)]
-    [InlineData(nameof(ConvertingEntity.StringToBytes), "Array(UInt8)", false)]
-    [InlineData(nameof(ConvertingEntity.StringToNullableBytes), "Array(UInt8)", false)]
+    [InlineData(nameof(ConvertingEntity.StringToBytes), "String", false)]
+    [InlineData(nameof(ConvertingEntity.StringToNullableBytes), "String", false)]
     [InlineData(nameof(ConvertingEntity.StringToChar), "String", false)]
     [InlineData(nameof(ConvertingEntity.StringToNullableChar), "String", false)]
     [InlineData(nameof(ConvertingEntity.StringToDateTime), "DateTime", false)]
@@ -129,8 +131,8 @@ public class ValueConvertersEndToEndClickHouseTest
     [InlineData(nameof(ConvertingEntity.NullableNumberToNullableBytes), "FixedString(1)", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToBool), "Bool", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToNullableBool), "Bool", true)]
-    [InlineData(nameof(ConvertingEntity.NullableStringToBytes), "Array(UInt8)", true)]
-    [InlineData(nameof(ConvertingEntity.NullableStringToNullableBytes), "Array(UInt8)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableStringToBytes), "String", true)]
+    [InlineData(nameof(ConvertingEntity.NullableStringToNullableBytes), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToChar), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToNullableChar), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToDateTime), "DateTime", true)]
@@ -197,6 +199,11 @@ public class ValueConvertersEndToEndClickHouseTest
                 b.Property(e => e.NumberToNullableBytes).IsFixedLength().HasMaxLength(1);
                 b.Property(e => e.NullableNumberToBytes).IsFixedLength().HasMaxLength(1);
                 b.Property(e => e.NullableNumberToNullableBytes).IsFixedLength().HasMaxLength(1);
+
+                b.Property(e => e.StringToBytes).HasConversion((ValueConverter?)null);
+                b.Property(e => e.StringToNullableBytes).HasConversion((ValueConverter?)null);
+                b.Property(e => e.NullableStringToBytes).HasConversion((ValueConverter?)null);
+                b.Property(e => e.NullableStringToNullableBytes).HasConversion((ValueConverter?)null);
             });
         }
     }
