@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal;
@@ -230,25 +230,12 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
 
     private RelationalTypeMapping? FindTupleMapping(in RelationalTypeMappingInfo mappingInfo)
     {
-        if (mappingInfo.ClrType is not { IsGenericType: true })
-        {
-            return null;
-        }
-
-        var genericTypeDefinition = mappingInfo.ClrType.GetGenericTypeDefinition();
-
-        if (genericTypeDefinition == typeof(Tuple<>) ||
-            genericTypeDefinition == typeof(Tuple<,>) ||
-            genericTypeDefinition == typeof(Tuple<,,>) ||
-            genericTypeDefinition == typeof(Tuple<,,,>) ||
-            genericTypeDefinition == typeof(Tuple<,,,,>) ||
-            genericTypeDefinition == typeof(Tuple<,,,,,>) ||
-            genericTypeDefinition == typeof(Tuple<,,,,,,>) ||
-            genericTypeDefinition == typeof(Tuple<,,,,,,,>))
+        if (mappingInfo.ClrType is { IsGenericType: true } && mappingInfo.ClrType.IsAssignableTo(typeof(ITuple)))
         {
             var genericArguments = mappingInfo.ClrType.GetGenericArguments();
-            var storeType = "tuple(" + string.Join(", ", genericArguments.Select(e => FindMapping(new RelationalTypeMappingInfo(e))!.StoreType)) + ")";
-            return new ClickHouseTupleTypeMapping(storeType, mappingInfo.ClrType, this);
+            var elementsMappings = Array.ConvertAll(genericArguments, e => FindMapping(new RelationalTypeMappingInfo(e))!);
+
+            return new ClickHouseTupleTypeMapping(mappingInfo.ClrType, elementsMappings);
         }
 
         return null;

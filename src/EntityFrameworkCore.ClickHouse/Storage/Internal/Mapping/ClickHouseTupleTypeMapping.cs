@@ -1,8 +1,8 @@
 ﻿using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -10,25 +10,27 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
 public class ClickHouseTupleTypeMapping : RelationalTypeMapping
 {
-    private readonly IRelationalTypeMappingSource _typeMappingSource;
-
-    public ClickHouseTupleTypeMapping(string storeType, Type clrType, IRelationalTypeMappingSource typeMappingSource)
-        : base(storeType, clrType, System.Data.DbType.Object)
+    public ClickHouseTupleTypeMapping(Type clrType, IReadOnlyList<RelationalTypeMapping> elementsMappings)
+        : base("Tuple", clrType, System.Data.DbType.Object)
     {
-        _typeMappingSource = typeMappingSource;
+        ElementsMappings = elementsMappings;
+    }
+
+    protected ClickHouseTupleTypeMapping(
+        RelationalTypeMappingParameters parameters,
+        IReadOnlyList<RelationalTypeMapping> elementsMappings)
+        : base(parameters)
+    {
+        ElementsMappings = elementsMappings;
     }
 
     protected override string SqlLiteralFormatString => "tuple{0}";
 
-    protected ClickHouseTupleTypeMapping(RelationalTypeMappingParameters parameters, IRelationalTypeMappingSource typeMappingSource)
-        : base(parameters)
-    {
-        _typeMappingSource = typeMappingSource;
-    }
+    protected IReadOnlyList<RelationalTypeMapping> ElementsMappings { get; set; }
 
     protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
     {
-        return new ClickHouseTupleTypeMapping(parameters, _typeMappingSource);
+        return new ClickHouseTupleTypeMapping(parameters, ElementsMappings);
     }
 
     protected override void ConfigureParameter(DbParameter parameter)
@@ -36,15 +38,25 @@ public class ClickHouseTupleTypeMapping : RelationalTypeMapping
         parameter.SetStoreType(StoreType);
     }
 
-    public override string GenerateSqlLiteral(object? value)
+    protected override string GenerateNonNullSqlLiteral(object value)
     {
-        var tuple = (ITuple)value!;
-        var argsType = ClrType.GetGenericArguments();
+        var tuple = (ITuple)value;
 
         var sb = new StringBuilder("tuple(");
 
-        var args = argsType.Select((e, i) => _typeMappingSource.FindMapping(e)!.GenerateSqlLiteral(tuple[i]!));
-        sb.AppendJoin(", ", args).Append(')');
+        for (var i = 0; i < ElementsMappings.Count; i++)
+        {
+            var elementValue = tuple[i];
+            var elementMapping = ElementsMappings[i];
+            sb.Append(elementMapping.GenerateSqlLiteral(elementValue));
+
+            if (i < ElementsMappings.Count - 1)
+            {
+                sb.Append(", ");
+            }
+        }
+
+        sb.Append(')');
 
         return sb.ToString();
     }
