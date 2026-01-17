@@ -35,21 +35,28 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
     {
         var sb = new ClickHouseConnectionStringBuilder(connection.ConnectionString);
         var result = new DatabaseModel { DatabaseName = sb.Database };
-        var tables = LoadTables(connection, result, options.Tables.ToImmutableHashSet(StringComparer.InvariantCultureIgnoreCase));
+        var tables = LoadTables((ClickHouseDbConnection)connection, result, options.Tables.ToImmutableHashSet(StringComparer.InvariantCultureIgnoreCase));
 
         tables.ForEach(e => result.Tables.Add(e));
         return result;
     }
 
-    private List<DatabaseTable> LoadTables(DbConnection connection, DatabaseModel database, ISet<string> tables)
+    private List<DatabaseTable> LoadTables(ClickHouseDbConnection connection, DatabaseModel database, ISet<string> tables)
     {
         var result = new List<DatabaseTable>();
         var primaryKeys = new Dictionary<string, string[]>();
-        var query = $"SELECT * FROM system.tables WHERE database='{database.DatabaseName}';";
+        var query = "SELECT * FROM system.tables WHERE database = {databaseName:String};";
 
         connection.Open();
 
         using var command = connection.CreateCommand(query);
+
+        var databaseNameParameter = command.CreateParameter();
+        databaseNameParameter.ParameterName = "databaseName";
+        databaseNameParameter.Value = database.DatabaseName;
+        databaseNameParameter.ClickHouseType = "String";
+        command.Parameters.Add(databaseNameParameter);
+
         using var reader = command.ExecuteReader();
 
         while (reader.Read())
@@ -105,7 +112,7 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
     }
 
     private void LoadColumns(
-        DbConnection connection,
+        ClickHouseDbConnection connection,
         List<DatabaseTable> tables,
         DatabaseModel database,
         Dictionary<string, string[]> primaryKeys)
@@ -116,11 +123,25 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
         }
 
         connection.Open();
-        var tablesQ = string.Join(", ", tables.Select(e => $"'{e.Name}'"));
-        var query = $"SELECT * FROM system.columns WHERE database='{database.DatabaseName}' AND table IN ({tablesQ});";
+
+        var query = "SELECT * FROM system.columns WHERE database = {databaseName:String} AND table IN {tables:Array(String)};";
 
         using var command = connection.CreateCommand(query);
+
+        var databaseNameParameter = command.CreateParameter();
+        databaseNameParameter.ParameterName = "databaseName";
+        databaseNameParameter.Value = database.DatabaseName;
+        databaseNameParameter.ClickHouseType = "String";
+        command.Parameters.Add(databaseNameParameter);
+
+        var tablesParameter = command.CreateParameter();
+        tablesParameter.ParameterName = "tables";
+        tablesParameter.Value = tables.ConvertAll(e => e.Name).ToArray();
+        tablesParameter.ClickHouseType = "Array(String)";
+        command.Parameters.Add(tablesParameter);
+
         using var reader = command.ExecuteReader();
+
         while (reader.Read())
         {
             var tableName = reader.GetString("table");
