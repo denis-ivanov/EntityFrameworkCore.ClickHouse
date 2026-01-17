@@ -148,6 +148,7 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
 
     protected override RelationalTypeMapping? FindMapping(in RelationalTypeMappingInfo mappingInfo) =>
         FindExistingMapping(mappingInfo) ??
+        FindFixedStringTypeMapping(mappingInfo) ??
         FindArrayMapping(mappingInfo) ??
         FindTupleMapping(mappingInfo) ??
         FindDecimalMapping(mappingInfo) ??
@@ -182,14 +183,6 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
                 mappingInfo.ClrType,
                 "Time64",
                 mappingInfo.Precision ?? ClickHouseTimeTypeMapping.MaxPrecision);
-        }
-
-        if (mappingInfo.ClrType == typeof(string) && mappingInfo is { Size: > 0, IsFixedLength: true })
-        {
-            return new ClickHouseFixedStringTypeMapping(
-                mappingInfo.ClrType!,
-                mappingInfo.IsUnicode ?? true,
-                mappingInfo.Size.Value);
         }
 
         if (mappingInfo.ClrType != null && ClrTypeMappings.TryGetValue(mappingInfo.ClrType, out var map))
@@ -236,6 +229,30 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
             var elementsMappings = Array.ConvertAll(genericArguments, e => FindMapping(new RelationalTypeMappingInfo(e))!);
 
             return new ClickHouseTupleTypeMapping(mappingInfo.ClrType, elementsMappings);
+        }
+
+        return null;
+    }
+
+    private RelationalTypeMapping? FindFixedStringTypeMapping(in RelationalTypeMappingInfo mappingInfo)
+    {
+        if (mappingInfo is { Size: > 0, IsFixedLength: true })
+        {
+            if (mappingInfo.ClrType == typeof(string))
+            {
+                return new ClickHouseFixedStringTypeMapping(
+                    mappingInfo.ClrType!,
+                    mappingInfo.IsUnicode ?? true,
+                    mappingInfo.Size.Value);
+            }
+
+            if (mappingInfo.ClrType == typeof(byte[]))
+            {
+                return new ClickHouseFixedStringTypeMapping(
+                    mappingInfo.ClrType,
+                    false,
+                    mappingInfo.Size.Value);
+            }
         }
 
         return null;

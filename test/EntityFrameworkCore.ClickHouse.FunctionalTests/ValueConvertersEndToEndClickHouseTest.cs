@@ -21,7 +21,7 @@ public class ValueConvertersEndToEndClickHouseTest
     {
         return base.Can_insert_and_read_back_with_conversions(valueOrder);
     }
-    
+
     [ConditionalTheory]
     [InlineData(nameof(ConvertingEntity.BoolAsChar), "String", false)]
     [InlineData(nameof(ConvertingEntity.BoolAsNullableChar), "String", false)]
@@ -49,20 +49,20 @@ public class ValueConvertersEndToEndClickHouseTest
     [InlineData(nameof(ConvertingEntity.EnumToNullableNumber), "Int64", false)]
     [InlineData(nameof(ConvertingEntity.GuidToString), "String", false)]
     [InlineData(nameof(ConvertingEntity.GuidToNullableString), "String", false)]
-    [InlineData(nameof(ConvertingEntity.GuidToBytes), "Array(UInt8)", false)]
-    [InlineData(nameof(ConvertingEntity.GuidToNullableBytes), "Array(UInt8)", false)]
+    [InlineData(nameof(ConvertingEntity.GuidToBytes), "FixedString(16)", false)]
+    [InlineData(nameof(ConvertingEntity.GuidToNullableBytes), "FixedString(16)", false)]
     [InlineData(nameof(ConvertingEntity.IPAddressToString), "String", false)]
     [InlineData(nameof(ConvertingEntity.IPAddressToNullableString), "String", false)]
-    [InlineData(nameof(ConvertingEntity.IPAddressToBytes), "Array(UInt8)", false)]
-    [InlineData(nameof(ConvertingEntity.IPAddressToNullableBytes), "Array(UInt8)", false)]
+    [InlineData(nameof(ConvertingEntity.IPAddressToBytes), "FixedString(16)", false)]
+    [InlineData(nameof(ConvertingEntity.IPAddressToNullableBytes), "FixedString(16)", false)]
     [InlineData(nameof(ConvertingEntity.PhysicalAddressToString), "String", false)]
     [InlineData(nameof(ConvertingEntity.PhysicalAddressToNullableString), "String", false)]
-    [InlineData(nameof(ConvertingEntity.PhysicalAddressToBytes), "Array(UInt8)", false)]
-    [InlineData(nameof(ConvertingEntity.PhysicalAddressToNullableBytes), "Array(UInt8)", false)]
+    [InlineData(nameof(ConvertingEntity.PhysicalAddressToBytes), "FixedString(8)", false)]
+    [InlineData(nameof(ConvertingEntity.PhysicalAddressToNullableBytes), "FixedString(8)", false)]
     [InlineData(nameof(ConvertingEntity.NumberToString), "String", false)]
     [InlineData(nameof(ConvertingEntity.NumberToNullableString), "String", false)]
-    [InlineData(nameof(ConvertingEntity.NumberToBytes), "Array(UInt8)", false)]
-    [InlineData(nameof(ConvertingEntity.NumberToNullableBytes), "Array(UInt8)", false)]
+    [InlineData(nameof(ConvertingEntity.NumberToBytes), "FixedString(1)", false)]
+    [InlineData(nameof(ConvertingEntity.NumberToNullableBytes), "FixedString(1)", false)]
     [InlineData(nameof(ConvertingEntity.StringToBool), "Bool", false)]
     [InlineData(nameof(ConvertingEntity.StringToNullableBool), "Bool", false)]
     [InlineData(nameof(ConvertingEntity.StringToBytes), "Array(UInt8)", false)]
@@ -113,20 +113,20 @@ public class ValueConvertersEndToEndClickHouseTest
     [InlineData(nameof(ConvertingEntity.NullableEnumToNullableNumber), "Int64", true)]
     [InlineData(nameof(ConvertingEntity.NullableGuidToString), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableGuidToNullableString), "String", true)]
-    [InlineData(nameof(ConvertingEntity.NullableGuidToBytes), "Array(UInt8)", true)]
-    [InlineData(nameof(ConvertingEntity.NullableGuidToNullableBytes), "Array(UInt8)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableGuidToBytes), "FixedString(16)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableGuidToNullableBytes), "FixedString(16)", true)]
     [InlineData(nameof(ConvertingEntity.NullableIPAddressToString), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableIPAddressToNullableString), "String", true)]
-    [InlineData(nameof(ConvertingEntity.NullableIPAddressToBytes), "Array(UInt8)", true)]
-    [InlineData(nameof(ConvertingEntity.NullableIPAddressToNullableBytes), "Array(UInt8)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableIPAddressToBytes), "FixedString(16)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableIPAddressToNullableBytes), "FixedString(16)", true)]
     [InlineData(nameof(ConvertingEntity.NullablePhysicalAddressToString), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullablePhysicalAddressToNullableString), "String", true)]
-    [InlineData(nameof(ConvertingEntity.NullablePhysicalAddressToBytes), "Array(UInt8)", true)]
-    [InlineData(nameof(ConvertingEntity.NullablePhysicalAddressToNullableBytes), "Array(UInt8)", true)]
+    [InlineData(nameof(ConvertingEntity.NullablePhysicalAddressToBytes), "FixedString(8)", true)]
+    [InlineData(nameof(ConvertingEntity.NullablePhysicalAddressToNullableBytes), "FixedString(8)", true)]
     [InlineData(nameof(ConvertingEntity.NullableNumberToString), "String", true)]
     [InlineData(nameof(ConvertingEntity.NullableNumberToNullableString), "String", true)]
-    [InlineData(nameof(ConvertingEntity.NullableNumberToBytes), "Array(UInt8)", true)]
-    [InlineData(nameof(ConvertingEntity.NullableNumberToNullableBytes), "Array(UInt8)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableNumberToBytes), "FixedString(1)", true)]
+    [InlineData(nameof(ConvertingEntity.NullableNumberToNullableBytes), "FixedString(1)", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToBool), "Bool", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToNullableBool), "Bool", true)]
     [InlineData(nameof(ConvertingEntity.NullableStringToBytes), "Array(UInt8)", true)]
@@ -175,14 +175,29 @@ public class ValueConvertersEndToEndClickHouseTest
         {
             base.OnModelCreating(modelBuilder, context);
 
-            modelBuilder.Entity<ConvertingEntity>(
-                b =>
-                {
-                    b.Property(e => e.NullableListOfInt).HasDefaultValue(new List<int>());
-                    b.Property(e => e.ListOfInt).HasDefaultValue(new List<int>());
-                    b.Property(e => e.NullableEnumerableOfInt).HasDefaultValue(Enumerable.Empty<int>());
-                    b.Property(e => e.EnumerableOfInt).HasDefaultValue(Enumerable.Empty<int>());
-                });
+            modelBuilder.Entity<ConvertingEntity>(b =>
+            {
+                b.Property(e => e.NullableListOfInt).HasDefaultValue(new List<int>());
+                b.Property(e => e.ListOfInt).HasDefaultValue(new List<int>());
+                b.Property(e => e.NullableEnumerableOfInt).HasDefaultValue(Enumerable.Empty<int>());
+                b.Property(e => e.EnumerableOfInt).HasDefaultValue(Enumerable.Empty<int>());
+                b.Property(e => e.GuidToBytes).IsFixedLength().HasMaxLength(16);
+                b.Property(e => e.GuidToNullableBytes).IsFixedLength().HasMaxLength(16);
+                b.Property(e => e.NullableGuidToBytes).IsFixedLength().HasMaxLength(16);
+                b.Property(e => e.NullableGuidToNullableBytes).IsFixedLength().HasMaxLength(16);
+                b.Property(e => e.IPAddressToBytes).IsFixedLength().HasMaxLength(16);
+                b.Property(e => e.NullableIPAddressToBytes).IsFixedLength().HasMaxLength(16);
+                b.Property(e => e.IPAddressToNullableBytes).IsFixedLength().HasMaxLength(16);
+                b.Property(e => e.NullableIPAddressToNullableBytes).IsFixedLength().HasMaxLength(16);
+                b.Property(e => e.PhysicalAddressToBytes).IsFixedLength().HasMaxLength(8);
+                b.Property(e => e.PhysicalAddressToNullableBytes).IsFixedLength().HasMaxLength(8);
+                b.Property(e => e.NullablePhysicalAddressToBytes).IsFixedLength().HasMaxLength(8);
+                b.Property(e => e.NullablePhysicalAddressToNullableBytes).IsFixedLength().HasMaxLength(8);
+                b.Property(e => e.NumberToBytes).IsFixedLength().HasMaxLength(1);
+                b.Property(e => e.NumberToNullableBytes).IsFixedLength().HasMaxLength(1);
+                b.Property(e => e.NullableNumberToBytes).IsFixedLength().HasMaxLength(1);
+                b.Property(e => e.NullableNumberToNullableBytes).IsFixedLength().HasMaxLength(1);
+            });
         }
     }
 }
