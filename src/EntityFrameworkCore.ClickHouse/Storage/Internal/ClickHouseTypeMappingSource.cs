@@ -12,7 +12,7 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     private static readonly RelationalTypeMapping StringTypeMapping = new ClickHouseStringTypeMapping();
     private static readonly RelationalTypeMapping BoolTypeMapping = new ClickHouseBoolTypeMapping();
     private static readonly RelationalTypeMapping ByteTypeMapping = new ClickHouseByteTypeMapping();
-    private static readonly RelationalTypeMapping CharTypeMapping = new ClickHouseCharTypeMapping();
+    private static readonly RelationalTypeMapping CharTypeMapping = new ClickHouseFixedStringTypeMapping(typeof(char), true, 2);
     private static readonly RelationalTypeMapping Int8TypeMapping = new ClickHouseInt8TypeMapping();
     private static readonly RelationalTypeMapping Int16TypeMapping = new ClickHouseInt16TypeMapping();
     private static readonly RelationalTypeMapping Int32TypeMapping = new ClickHouseInt32TypeMapping();
@@ -190,6 +190,16 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
                 mappingInfo.ClrType!,
                 mappingInfo.IsUnicode ?? true,
                 mappingInfo.Size.Value);
+        }
+
+        if (mappingInfo.ClrType == typeof(char))
+        {
+            var isUnicode = mappingInfo.IsUnicode ?? true;
+            
+            return new ClickHouseFixedStringTypeMapping(
+                mappingInfo.ClrType!,
+                isUnicode,
+                isUnicode ? 2 : 1);
         }
 
         if (mappingInfo.ClrType != null && ClrTypeMappings.TryGetValue(mappingInfo.ClrType, out var map))

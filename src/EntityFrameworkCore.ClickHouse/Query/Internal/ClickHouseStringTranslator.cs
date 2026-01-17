@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -97,9 +99,13 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
         .GetRuntimeMethod(nameof(string.Replace), [typeof(string), typeof(string)])!;
 
     private readonly ClickHouseSqlExpressionFactory _sqlExpressionFactory;
+    private readonly IRelationalTypeMappingSource _relationalTypeMappingSource;
 
-    public ClickHouseStringTranslator([NotNull]ISqlExpressionFactory sqlExpressionFactory)
+    public ClickHouseStringTranslator(
+        [NotNull]ISqlExpressionFactory sqlExpressionFactory,
+        IRelationalTypeMappingSource relationalTypeMappingSource)
     {
+        _relationalTypeMappingSource = relationalTypeMappingSource;
         _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
     }
 
@@ -256,7 +262,10 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 [argument, _sqlExpressionFactory.Constant(1), _sqlExpressionFactory.Constant(1)],
                 nullable: true,
                 argumentsPropagateNullability: [true, true, true],
-                method.ReturnType);
+                method.ReturnType,
+                typeMapping: (RelationalTypeMapping)_relationalTypeMappingSource
+                    .FindMapping(typeof(string))
+                    !.WithComposedConverter(new CharToStringConverter()));
         }
 
         if (LastOrDefaultWithoutArgs.Equals(method))
@@ -276,7 +285,8 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 ],
                 nullable: true,
                 argumentsPropagateNullability: [true, true, true],
-                method.ReturnType);
+                method.ReturnType,
+                typeMapping: _relationalTypeMappingSource.FindMapping(method.ReturnType));
         }
 
         if (SubstringWithStartIndex.Equals(method))
@@ -288,7 +298,8 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 [instance!, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1))],
                 nullable: true,
                 argumentsPropagateNullability: [true, true],
-                method.ReturnType);
+                method.ReturnType,
+                typeMapping: _relationalTypeMappingSource.FindMapping(method.ReturnType));
         }
 
         if (SubstringWithIndexAndLength.Equals(method))
@@ -301,7 +312,8 @@ public class ClickHouseStringTranslator : IMethodCallTranslator, IMemberTranslat
                 [instance!, _sqlExpressionFactory.Add(startIndex, _sqlExpressionFactory.Constant(1)), length],
                 nullable: true,
                 argumentsPropagateNullability: [true, true, true],
-                method.ReturnType);
+                method.ReturnType,
+                typeMapping: _relationalTypeMappingSource.FindMapping(method.ReturnType));
         }
 
         if (IndexOf.Equals(method))
