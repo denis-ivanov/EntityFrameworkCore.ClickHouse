@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using ClickHouse.Driver.ADO.Parameters;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
@@ -36,6 +37,11 @@ public class ClickHouseFixedStringTypeMapping : RelationalTypeMapping
     protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
     {
         return new ClickHouseFixedStringTypeMapping(parameters);
+    }
+
+    protected override void ConfigureParameter(DbParameter parameter)
+    {
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
 
     public override MethodInfo GetDataReaderMethod()
@@ -76,5 +82,15 @@ public class ClickHouseFixedStringTypeMapping : RelationalTypeMapping
         return clrType == typeof(byte[])
             ? System.Data.DbType.Binary
             : (unicode ? System.Data.DbType.StringFixedLength : System.Data.DbType.AnsiStringFixedLength);
+    }
+    
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+    
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }

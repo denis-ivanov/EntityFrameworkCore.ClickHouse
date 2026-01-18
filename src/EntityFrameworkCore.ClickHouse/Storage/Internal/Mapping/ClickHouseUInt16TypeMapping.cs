@@ -1,4 +1,4 @@
-using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.Driver.ADO.Parameters;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data.Common;
@@ -24,9 +24,9 @@ public class ClickHouseUInt16TypeMapping : UShortTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        parameter.SetStoreType(StoreType);
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
-    
+
     public override MethodInfo GetDataReaderMethod()
     {
         return typeof(DbDataReader).GetRuntimeMethod(nameof(DbDataReader.GetValue), [typeof(int)])!;
@@ -38,5 +38,15 @@ public class ClickHouseUInt16TypeMapping : UShortTypeMapping
             typeof(Convert).GetMethod(nameof(Convert.ToUInt16), [typeof(object)])!,
             expression
         );
+    }
+
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }

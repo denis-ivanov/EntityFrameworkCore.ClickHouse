@@ -1,4 +1,4 @@
-using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.Driver.ADO.Parameters;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data.Common;
@@ -24,7 +24,7 @@ public class ClickHouseFloat64TypeMapping : DoubleTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        parameter.SetStoreType(StoreType);
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
     
     public override MethodInfo GetDataReaderMethod()
@@ -49,5 +49,15 @@ public class ClickHouseFloat64TypeMapping : DoubleTypeMapping
             var d when double.IsPositiveInfinity(d) => "'Inf'::Float64",
             _ => base.GenerateNonNullSqlLiteral(value) + "::Float64"
         };
+    }
+    
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+    
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }

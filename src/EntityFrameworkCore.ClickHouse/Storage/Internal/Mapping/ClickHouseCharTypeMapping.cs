@@ -1,6 +1,7 @@
-using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.Driver.ADO.Parameters;
 using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Data.Common;
 using System.Reflection;
 
@@ -40,6 +41,16 @@ public class ClickHouseCharTypeMapping : CharTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        parameter.SetStoreType(StoreType);
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
+    }
+
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+    
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }

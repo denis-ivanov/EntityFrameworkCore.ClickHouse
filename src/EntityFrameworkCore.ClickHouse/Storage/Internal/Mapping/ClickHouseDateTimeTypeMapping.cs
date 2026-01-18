@@ -1,4 +1,4 @@
-using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.Driver.ADO.Parameters;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data.Common;
@@ -24,7 +24,7 @@ public class ClickHouseDateTimeTypeMapping : DateTimeTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        parameter.SetStoreType(StoreType);
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
 
     public override string GenerateSqlLiteral(object? value)
@@ -38,5 +38,15 @@ public class ClickHouseDateTimeTypeMapping : DateTimeTypeMapping
         }
 
         return $"'{dateTime.ToString(format)}'";
+    }
+    
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+    
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }

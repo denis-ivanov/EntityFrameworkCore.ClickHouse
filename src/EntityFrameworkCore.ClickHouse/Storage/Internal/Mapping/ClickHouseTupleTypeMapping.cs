@@ -1,4 +1,4 @@
-﻿using ClickHouse.EntityFrameworkCore.Extensions;
+﻿using ClickHouse.Driver.ADO.Parameters;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -35,7 +35,7 @@ public class ClickHouseTupleTypeMapping : RelationalTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        parameter.SetStoreType(StoreType);
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
 
     protected override string GenerateNonNullSqlLiteral(object value)
@@ -59,5 +59,15 @@ public class ClickHouseTupleTypeMapping : RelationalTypeMapping
         sb.Append(')');
 
         return sb.ToString();
+    }
+    
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+    
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }
