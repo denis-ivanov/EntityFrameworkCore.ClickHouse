@@ -1,5 +1,5 @@
-﻿using ClickHouse.Driver.ADO.Readers;
-using ClickHouse.EntityFrameworkCore.Extensions;
+﻿using ClickHouse.Driver.ADO.Parameters;
+using ClickHouse.Driver.ADO.Readers;
 using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Json;
@@ -51,7 +51,7 @@ public class ClickHouseTimeTypeMapping : RelationalTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        parameter.SetStoreType(StoreType);
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
 
     protected override string GenerateNonNullSqlLiteral(object value)
@@ -126,5 +126,15 @@ public class ClickHouseTimeTypeMapping : RelationalTypeMapping
         }
 
         return precision;
+    }
+    
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+    
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }

@@ -1,4 +1,4 @@
-﻿using ClickHouse.EntityFrameworkCore.Extensions;
+﻿using ClickHouse.Driver.ADO.Parameters;
 using ClickHouse.EntityFrameworkCore.Storage.Json;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -35,11 +35,21 @@ public class ClickHouseInt128TypeMapping : RelationalTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        parameter.SetStoreType(StoreType);
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
 
     public override MethodInfo GetDataReaderMethod()
     {
         return typeof(DbDataReader).GetRuntimeMethod(nameof(DbDataReader.GetValue), [typeof(int)])!;
+    }
+    
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+    
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }

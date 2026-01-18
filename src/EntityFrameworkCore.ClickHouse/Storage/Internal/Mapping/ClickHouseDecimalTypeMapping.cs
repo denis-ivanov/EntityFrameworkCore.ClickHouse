@@ -1,4 +1,3 @@
-using ClickHouse.EntityFrameworkCore.Extensions;
 using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -39,7 +38,7 @@ public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
         var clickHouseParameter = (Driver.ADO.Parameters.ClickHouseDbParameter)parameter;
         clickHouseParameter.Precision = (byte)(Precision ?? DefaultPrecision);
         clickHouseParameter.Scale = (byte)(Scale ?? DefaultScale);
-        parameter.SetStoreType(StoreType);
+        clickHouseParameter.ClickHouseType = GetStoreType(parameter.Value);
     }
 
     private static string GetStoreType(int precision, int scale) => $"Decimal({precision}, {scale})";
@@ -55,5 +54,15 @@ public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
             typeof(Convert).GetMethod(nameof(Convert.ToDecimal), [typeof(object)])!,
             expression
         );
+    }
+    
+    protected virtual string GetStoreType(bool? isNullable)
+    {
+        return isNullable == true ? $"Nullable({StoreType})" : StoreType;
+    }
+    
+    protected virtual string GetStoreType(object? parameterValue)
+    {
+        return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
     }
 }
