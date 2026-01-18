@@ -115,11 +115,12 @@ public class ClickHouseDatabaseCreator : RelationalDatabaseCreator
 
     IRelationalCommand CreateHasTablesCommand()
     {
-        var sql = $@"
-SELECT any(True)
-FROM system.tables
-WHERE database = '{Dependencies.Connection.DbConnection.Database}';";
+        const string sql = """
+                           SELECT any(True)
+                           FROM system.tables
+                           WHERE database = {databaseName:String};
+                           """;
 
-        return _rawSqlCommandBuilder.Build(sql);
+        return _rawSqlCommandBuilder.Build(sql, [Dependencies.Connection.DbConnection.Database]).RelationalCommand;
     }
 }
