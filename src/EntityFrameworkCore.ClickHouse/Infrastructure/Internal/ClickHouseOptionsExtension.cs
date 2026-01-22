@@ -7,14 +7,13 @@ namespace ClickHouse.EntityFrameworkCore.Infrastructure.Internal;
 
 public class ClickHouseOptionsExtension : RelationalOptionsExtension
 {
-    private DbContextOptionsExtensionInfo? _info;
-        
     public ClickHouseOptionsExtension()
     {
     }
 
     protected ClickHouseOptionsExtension(ClickHouseOptionsExtension copyFrom) : base(copyFrom)
     {
+        AdminDatabase = copyFrom.AdminDatabase;
     }
 
     protected override RelationalOptionsExtension Clone()
@@ -27,11 +26,19 @@ public class ClickHouseOptionsExtension : RelationalOptionsExtension
         services.AddEntityFrameworkClickHouse();
     }
 
-    public virtual string SystemDataBase { get; set; } = "default";
+    public virtual string AdminDatabase { get; set; } = "default";
 
     public override int? MaxBatchSize => 1;
 
-    public override DbContextOptionsExtensionInfo Info => _info ??= new ExtensionInfo(this);
+    public override DbContextOptionsExtensionInfo Info => field ??= new ExtensionInfo(this);
+
+    public virtual ClickHouseOptionsExtension WithAdminDatabase(string adminDatabase)
+    {
+        var clone = (ClickHouseOptionsExtension)Clone();
+        clone.AdminDatabase = adminDatabase;
+
+        return clone;
+    }
 
     private sealed class ExtensionInfo : RelationalExtensionInfo
     {
@@ -40,8 +47,7 @@ public class ClickHouseOptionsExtension : RelationalOptionsExtension
         {
         }
 
-        private new ClickHouseOptionsExtension Extension
-            => (ClickHouseOptionsExtension)base.Extension;
+        private new ClickHouseOptionsExtension Extension => (ClickHouseOptionsExtension)base.Extension;
 
         public override bool IsDatabaseProvider => true;
 

@@ -10,4 +10,7 @@ public class ClickHouseDbContextOptionsBuilder :
     public ClickHouseDbContextOptionsBuilder(DbContextOptionsBuilder optionsBuilder) : base(optionsBuilder)
     {
     }
+    
+    public ClickHouseDbContextOptionsBuilder UserAdminDatabase(string database)
+        => WithOption(e => e.WithAdminDatabase(database));
 }

@@ -73,18 +73,18 @@ public class ClickHouseDatabaseCreator : RelationalDatabaseCreator
     {
         Dependencies.MigrationCommandExecutor.ExecuteNonQuery(
             CreateCreateOperations(),
-            _connection.CreateMasterConnection());
+            _connection.CreateAdminConnection());
     }
 
     public override void Delete()
     {
-        using var masterConnection = _connection.CreateMasterConnection();
+        using var masterConnection = _connection.CreateAdminConnection();
         Dependencies.MigrationCommandExecutor.ExecuteNonQuery(CreateDropCommands(), masterConnection);
     }
 
     public override async Task DeleteAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        await using var masterConnection = _connection.CreateMasterConnection();
+        await using var masterConnection = _connection.CreateAdminConnection();
         await Dependencies.MigrationCommandExecutor.ExecuteNonQueryAsync(CreateDropCommands(), masterConnection, cancellationToken);
     }
 
