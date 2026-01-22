@@ -35,7 +35,7 @@ public class ClickHouseTrimExpression : SqlExpression, IEquatable<ClickHouseTrim
 
     public virtual ClickHouseTrimExpression Update(SqlExpression inputString, SqlExpression trimCharacters)
     {
-        return inputString != InputString || trimCharacters != trimCharacters
+        return inputString != InputString || trimCharacters != TrimCharacters
             ? new ClickHouseTrimExpression(inputString, trimCharacters, TrimMode)
             : this;
     }
