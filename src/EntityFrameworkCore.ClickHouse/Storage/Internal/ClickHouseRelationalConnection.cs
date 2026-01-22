@@ -1,5 +1,6 @@
 ﻿using ClickHouse.Driver.ADO;
 using ClickHouse.EntityFrameworkCore.Extensions;
+using ClickHouse.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
@@ -25,11 +26,13 @@ public class ClickHouseRelationalConnection : RelationalConnection, IClickHouseR
         throw new System.NotImplementedException();
     }
 
-    public IClickHouseRelationalConnection CreateMasterConnection()
+    public IClickHouseRelationalConnection CreateAdminConnection()
     {
+        var clickHouseOptions = Dependencies.ContextOptions.FindExtension<ClickHouseOptionsExtension>()!;
+
         var connectionStringBuilder = new ClickHouseConnectionStringBuilder(ConnectionString)
         {
-            Database = "default"
+            Database = clickHouseOptions.AdminDatabase
         };
 
         var contextOptions = new DbContextOptionsBuilder()

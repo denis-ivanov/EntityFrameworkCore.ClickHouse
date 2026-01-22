@@ -6,5 +6,5 @@ public interface IClickHouseRelationalConnection : IRelationalConnection
 {
     IClickHouseRelationalConnection CreateReadOnlyConnection();
 
-    IClickHouseRelationalConnection CreateMasterConnection();
+    IClickHouseRelationalConnection CreateAdminConnection();
 }
