@@ -18,9 +18,9 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(RelationalEntityTypeBuilderExtensions).GetRuntimeMethod(
             nameof(RelationalEntityTypeBuilderExtensions.ToTable), [typeof(EntityTypeBuilder), typeof(string), typeof(Action<TableBuilder>)])!;
 
-    private static readonly MethodInfo HasMergeTreeEngineMethodInfo
+    private static readonly MethodInfo UseMergeTreeEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasMergeTreeEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseMergeTreeEngine), [typeof(TableBuilder)])!;
 
     private static readonly MethodInfo MergeTreeOrderByMethodInfo
         = typeof(ClickHouseMergeTreeEngineBuilder).GetRuntimeMethod(
@@ -38,17 +38,17 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(ClickHouseMergeTreeEngineBuilder).GetRuntimeMethod(
             nameof(ClickHouseMergeTreeEngineBuilder.WithSampleBy), [typeof(string[])])!;
 
-    private static readonly MethodInfo HasReplacingMergeTreeEngineNoArgsMethodInfo
+    private static readonly MethodInfo UseReplacingMergeTreeEngineNoArgsMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasReplacingMergeTreeEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseReplacingMergeTreeEngine), [typeof(TableBuilder)])!;
 
-    private static readonly MethodInfo HasReplacingMergeTreeEngineWithVersionMethodInfo
+    private static readonly MethodInfo UseReplacingMergeTreeEngineWithVersionMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasReplacingMergeTreeEngine), [typeof(TableBuilder), typeof(string)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseReplacingMergeTreeEngine), [typeof(TableBuilder), typeof(string)])!;
 
-    private static readonly MethodInfo HasReplacingMergeTreeEngineFullMethodInfo
+    private static readonly MethodInfo UseReplacingMergeTreeEngineFullMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasReplacingMergeTreeEngine), [typeof(TableBuilder), typeof(string), typeof(string)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseReplacingMergeTreeEngine), [typeof(TableBuilder), typeof(string), typeof(string)])!;
 
     private static readonly MethodInfo ReplacingMergeTreePartitionByMethodInfo
         = typeof(ClickHouseReplacingMergeTreeEngineBuilder).GetRuntimeMethod(
@@ -66,9 +66,9 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(ClickHouseReplacingMergeTreeEngineBuilder).GetRuntimeMethod(
             nameof(ClickHouseReplacingMergeTreeEngineBuilder.WithSampleBy), [typeof(string[])])!;
 
-    private static readonly MethodInfo HasSummingMergeTreeEngineMethodInfo
+    private static readonly MethodInfo UseSummingMergeTreeEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasSummingMergeTreeEngine), [typeof(TableBuilder), typeof(string[])])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseSummingMergeTreeEngine), [typeof(TableBuilder), typeof(string[])])!;
 
     private static readonly MethodInfo SummingMergeTreePartitionByMethodInfo
         = typeof(ClickHouseSummingMergeTreeEngineBuilder).GetRuntimeMethod(
@@ -82,9 +82,9 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(ClickHouseSummingMergeTreeEngineBuilder).GetRuntimeMethod(
             nameof(ClickHouseSummingMergeTreeEngineBuilder.WithSampleBy), [typeof(string[])])!;
 
-    private static readonly MethodInfo HasAggregatingMergeTreeEngineMethodInfo
+    private static readonly MethodInfo UseAggregatingMergeTreeEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasAggregatingMergeTreeEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseAggregatingMergeTreeEngine), [typeof(TableBuilder)])!;
 
     private static readonly MethodInfo AggregatingMergeTreePartitionByMethodInfo
         = typeof(ClickHouseAggregatingMergeTreeEngineBuilder).GetRuntimeMethod(
@@ -98,9 +98,9 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(ClickHouseAggregatingMergeTreeEngineBuilder).GetRuntimeMethod(
             nameof(ClickHouseAggregatingMergeTreeEngineBuilder.WithSampleBy), [typeof(string[])])!;
 
-    private static readonly MethodInfo HasCollapsingMergeTreeEngineMethodInfo
+    private static readonly MethodInfo UseCollapsingMergeTreeEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasCollapsingMergeTreeEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseCollapsingMergeTreeEngine), [typeof(TableBuilder)])!;
 
     private static readonly MethodInfo CollapsingMergeTreeOrderByByMethodInfo
         = typeof(ClickHouseCollapsingMergeTreeEngineBuilder).GetRuntimeMethod(
@@ -114,9 +114,9 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(ClickHouseCollapsingMergeTreeEngineBuilder).GetRuntimeMethod(
             nameof(ClickHouseCollapsingMergeTreeEngineBuilder.WithPartitionBy), [typeof(string[])])!;
 
-    private static readonly MethodInfo HasVersionedCollapsingMergeTreeEngineMethodInfo
+    private static readonly MethodInfo UseVersionedCollapsingMergeTreeEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasVersionedCollapsingMergeTreeEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseVersionedCollapsingMergeTreeEngine), [typeof(TableBuilder)])!;
 
     private static readonly MethodInfo VersionedCollapsingMergeTreePartitionByMethodInfo
         = typeof(ClickHouseVersionedCollapsingMergeTreeEngineBuilder).GetRuntimeMethod(
@@ -130,9 +130,9 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(ClickHouseVersionedCollapsingMergeTreeEngineBuilder).GetRuntimeMethod(
             nameof(ClickHouseVersionedCollapsingMergeTreeEngineBuilder.WithSampleBy), [typeof(string[])])!;
 
-    private static readonly MethodInfo HasGraphiteMergeTreeEngineMethodInfo
+    private static readonly MethodInfo UseGraphiteMergeTreeEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasGraphiteMergeTreeEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseGraphiteMergeTreeEngine), [typeof(TableBuilder)])!;
 
     private static readonly MethodInfo GraphiteMergeTreePartitionByMethodInfo
         = typeof(ClickHouseGraphiteMergeTreeEngineBuilder).GetRuntimeMethod(
@@ -146,17 +146,17 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         = typeof(ClickHouseGraphiteMergeTreeEngineBuilder).GetRuntimeMethod(
             nameof(ClickHouseGraphiteMergeTreeEngineBuilder.WithSampleBy), [typeof(string[])])!;
 
-    private static readonly MethodInfo HasTinyLogEngineMethodInfo
+    private static readonly MethodInfo UseTinyLogEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasTinyLogEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseTinyLogEngine), [typeof(TableBuilder)])!;
 
-    private static readonly MethodInfo HasStripeLogEngineMethodInfo
+    private static readonly MethodInfo UseStripeLogEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasStripeLogEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseStripeLogEngine), [typeof(TableBuilder)])!;
 
-    private static readonly MethodInfo HasLogEngineMethodInfo
+    private static readonly MethodInfo UseLogEngineMethodInfo
         = typeof(ClickHouseEntityTypeBuilderExtensions).GetRuntimeMethod(
-            nameof(ClickHouseEntityTypeBuilderExtensions.HasLogEngine), [typeof(TableBuilder)])!;
+            nameof(ClickHouseEntityTypeBuilderExtensions.UseLogEngine), [typeof(TableBuilder)])!;
 
     public ClickHouseAnnotationCodeGenerator(AnnotationCodeGeneratorDependencies dependencies) : base(dependencies)
     {
@@ -178,7 +178,7 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
             switch (tableEngine)
             {
                 case ClickHouseAnnotationNames.MergeTreeEngine:
-                    engineCall = new MethodCallCodeFragment(HasMergeTreeEngineMethodInfo);
+                    engineCall = new MethodCallCodeFragment(UseMergeTreeEngineMethodInfo);
                     engineCall = MakeEngineCallChain(
                         engineCall,
                         (MergeTreeOrderByMethodInfo, orderBy),
@@ -192,10 +192,10 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
                     var version = GetAndRemove<string>(annotations, ClickHouseAnnotationNames.ReplacingMergeTreeVersion);
                     var isDeleted = GetAndRemove<string>(annotations, ClickHouseAnnotationNames.ReplacingMergeTreeIsDeleted);
                     engineCall = !string.IsNullOrWhiteSpace(version) && !string.IsNullOrWhiteSpace(isDeleted)
-                        ? new MethodCallCodeFragment(HasReplacingMergeTreeEngineFullMethodInfo, version, isDeleted)
+                        ? new MethodCallCodeFragment(UseReplacingMergeTreeEngineFullMethodInfo, version, isDeleted)
                             : !string.IsNullOrWhiteSpace(version)
-                              ? new MethodCallCodeFragment(HasReplacingMergeTreeEngineWithVersionMethodInfo, version)
-                                  : new MethodCallCodeFragment(HasReplacingMergeTreeEngineNoArgsMethodInfo);
+                              ? new MethodCallCodeFragment(UseReplacingMergeTreeEngineWithVersionMethodInfo, version)
+                                  : new MethodCallCodeFragment(UseReplacingMergeTreeEngineNoArgsMethodInfo);
 
                     engineCall = MakeEngineCallChain(
                         engineCall,
@@ -208,7 +208,7 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
 
                 case ClickHouseAnnotationNames.SummingMergeTree:
                     var summingMergeTreeColumns = GetAndRemove<string[]>(annotations, ClickHouseAnnotationNames.SummingMergeTreeColumns);
-                    engineCall = new MethodCallCodeFragment(HasSummingMergeTreeEngineMethodInfo, summingMergeTreeColumns);
+                    engineCall = new MethodCallCodeFragment(UseSummingMergeTreeEngineMethodInfo, summingMergeTreeColumns);
 
                     engineCall = MakeEngineCallChain(
                         engineCall,
@@ -219,7 +219,7 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
                     break;
 
                 case ClickHouseAnnotationNames.AggregatingMergeTree:
-                    engineCall = new MethodCallCodeFragment(HasAggregatingMergeTreeEngineMethodInfo);
+                    engineCall = new MethodCallCodeFragment(UseAggregatingMergeTreeEngineMethodInfo);
 
                     engineCall = MakeEngineCallChain(
                         engineCall,
@@ -231,7 +231,7 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
 
                 case ClickHouseAnnotationNames.CollapsingMergeTree:
                     var collapsingMergeTreeSign = GetAndRemove<string>(annotations, ClickHouseAnnotationNames.CollapsingMergeTreeSign);
-                    engineCall = new MethodCallCodeFragment(HasCollapsingMergeTreeEngineMethodInfo, collapsingMergeTreeSign);
+                    engineCall = new MethodCallCodeFragment(UseCollapsingMergeTreeEngineMethodInfo, collapsingMergeTreeSign);
 
                     engineCall = MakeEngineCallChain(
                         engineCall,
@@ -244,7 +244,7 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
                 case ClickHouseAnnotationNames.VersionedCollapsingMergeTree:
                     var versionedCollapsingMergeTreeSign = GetAndRemove<string>(annotations, ClickHouseAnnotationNames.VersionedCollapsingMergeTreeSign);
                     var versionedCollapsingMergeTreeVersion = GetAndRemove<string>(annotations, ClickHouseAnnotationNames.VersionedCollapsingMergeTreeVersion);
-                    engineCall = new MethodCallCodeFragment(HasVersionedCollapsingMergeTreeEngineMethodInfo, versionedCollapsingMergeTreeSign, versionedCollapsingMergeTreeVersion);
+                    engineCall = new MethodCallCodeFragment(UseVersionedCollapsingMergeTreeEngineMethodInfo, versionedCollapsingMergeTreeSign, versionedCollapsingMergeTreeVersion);
 
                     engineCall = MakeEngineCallChain(
                         engineCall,
@@ -256,7 +256,7 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
 
                 case ClickHouseAnnotationNames.GraphiteMergeTree:
                     var configSection = GetAndRemove<string>(annotations, ClickHouseAnnotationNames.GraphiteMergeTreeConfigSection);
-                    engineCall = new MethodCallCodeFragment(HasGraphiteMergeTreeEngineMethodInfo, configSection);
+                    engineCall = new MethodCallCodeFragment(UseGraphiteMergeTreeEngineMethodInfo, configSection);
 
                     engineCall = MakeEngineCallChain(
                         engineCall,
@@ -267,15 +267,15 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
                     break;
 
                 case ClickHouseAnnotationNames.TinyLogEngine:
-                    engineCall = new MethodCallCodeFragment(HasTinyLogEngineMethodInfo);
+                    engineCall = new MethodCallCodeFragment(UseTinyLogEngineMethodInfo);
                     break;
 
                 case ClickHouseAnnotationNames.StripeLogEngine:
-                    engineCall = new MethodCallCodeFragment(HasStripeLogEngineMethodInfo);
+                    engineCall = new MethodCallCodeFragment(UseStripeLogEngineMethodInfo);
                     break;
 
                 case ClickHouseAnnotationNames.LogEngine:
-                    engineCall = new MethodCallCodeFragment(HasLogEngineMethodInfo);
+                    engineCall = new MethodCallCodeFragment(UseLogEngineMethodInfo);
                     break;
             }
 
