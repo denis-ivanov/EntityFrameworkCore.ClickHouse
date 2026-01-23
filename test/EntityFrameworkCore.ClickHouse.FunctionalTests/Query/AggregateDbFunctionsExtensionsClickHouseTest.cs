@@ -23,10 +23,10 @@ public class AggregateDbFunctionsExtensionsClickHouseTest : IClassFixture<Northw
     public async Task Any()
     {
         var context = CreateContext();
-        
+
         await context.Customers
             .GroupBy(c => c.Country)
-            .Select(g => new { Key = g.Key, AnyCity = EF.Functions.Any(g.Select(c => c.City)) })
+            .Select(g => new { Key = g.Key, AnyCity = g.Any(e => e.City) })
             .ToListAsync();
 
         AssertSql(
@@ -44,7 +44,7 @@ public class AggregateDbFunctionsExtensionsClickHouseTest : IClassFixture<Northw
         
         await context.Customers
             .GroupBy(c => c.Country)
-            .Select(g => new { Key = g.Key, AnyRegion = EF.Functions.AnyRespectNulls(g.Select(c => c.Region)) })
+            .Select(g => new { Key = g.Key, AnyRegion = g.AnyRespectNulls(e => e.Region) })
             .ToListAsync();
 
         AssertSql(

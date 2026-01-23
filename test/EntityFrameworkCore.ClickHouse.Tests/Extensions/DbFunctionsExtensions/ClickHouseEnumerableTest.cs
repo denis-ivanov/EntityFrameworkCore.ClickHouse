@@ -2,7 +2,7 @@
 
 namespace EntityFrameworkCore.ClickHouse.Tests.Extensions.DbFunctionsExtensions;
 
-public sealed class ClickHouseAggregateDbFunctionsExtensionsTest
+public sealed class ClickHouseEnumerableTest
 {
     [Fact]
     public void Any_ThrowsException()
