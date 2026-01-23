@@ -878,6 +878,37 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             cleanupSql: ["DROP TABLE myThirdReplacingMT"]);
     }
+
+    [Fact]
+    public void SummingMergeTree_docs_example()
+    {
+        Test(
+            [
+                """
+                CREATE TABLE summtt
+                (
+                    key UInt32,
+                    value UInt32
+                )
+                ENGINE = SummingMergeTree()
+                ORDER BY key
+                """
+            ],
+            tables: [],
+            schemas: [],
+            asserter: dbModel =>
+            {
+                var table = Assert.Single(dbModel.Tables, e => e.Name == "summtt");
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.SummingMergeTree, engine);
+
+                var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
+                Assert.Equal(["key"], orderBy);
+            },
+            cleanupSql: ["DROP TABLE summtt"]);
+    }
     
     public class ClickHouseDatabaseModelFixture : SharedStoreFixtureBase<PoolableDbContext>
     {
