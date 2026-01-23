@@ -207,7 +207,7 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
                     break;
 
                 case ClickHouseAnnotationNames.SummingMergeTree:
-                    var summingMergeTreeColumns = GetAndRemove<string[]>(annotations, ClickHouseAnnotationNames.SummingMergeTreeColumn);
+                    var summingMergeTreeColumns = GetAndRemove<string[]>(annotations, ClickHouseAnnotationNames.SummingMergeTreeColumns);
                     engineCall = new MethodCallCodeFragment(HasSummingMergeTreeEngineMethodInfo, summingMergeTreeColumns);
 
                     engineCall = MakeEngineCallChain(

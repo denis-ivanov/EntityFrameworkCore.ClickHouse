@@ -5,7 +5,7 @@ using System;
 
 namespace ClickHouse.EntityFrameworkCore.Extensions;
 
-public static class ClickHouseEntityTypeExtensions
+public static partial class ClickHouseEntityTypeExtensions
 {
     public static string? GetTableEngine(this IAnnotatable table)
     {
@@ -102,6 +102,13 @@ public static class ClickHouseEntityTypeExtensions
 
     #region MergeTreeEngine
 
+    public static T SetMergeTreeTableEngine<T>(this T table) where T: AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.MergeTreeEngine);
+
+        return table;
+    }
+
     public static IMutableAnnotatable SetMergeTreeTableEngine(this IMutableEntityType table)
     {
         ArgumentNullException.ThrowIfNull(table);
@@ -114,6 +121,30 @@ public static class ClickHouseEntityTypeExtensions
     #endregion
 
     #region ReplacingMergeTree
+
+    public static T SetReplacingMergeTreeTableEngine<T>(this T table) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.ReplacingMergeTree);
+
+        return table;
+    }
+
+    public static T SetReplacingMergeTreeTableEngine<T>(this T table, string? version) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.ReplacingMergeTree);
+        table.SetAnnotation(ClickHouseAnnotationNames.ReplacingMergeTreeVersion, version);
+
+        return table;
+    }
+
+    public static T SetReplacingMergeTreeTableEngine<T>(this T table, string? version, string? isDeleted) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.ReplacingMergeTree);
+        table.SetAnnotation(ClickHouseAnnotationNames.ReplacingMergeTreeVersion, version);
+        table.SetAnnotation(ClickHouseAnnotationNames.ReplacingMergeTreeIsDeleted, isDeleted);
+        
+        return table;
+    }
 
     public static IMutableAnnotatable SetReplacingMergeTreeTableEngine(this IMutableEntityType table, string? version, string? isDeleted)
     {
@@ -162,43 +193,62 @@ public static class ClickHouseEntityTypeExtensions
 
     #region SummingMergeTree
 
-    public static IMutableAnnotatable SetSummingMergeTreeTableEngine(this IMutableEntityType table, string? column)
+    public static T SetSummingMergeTreeTableEngine<T>(this T table, string[] columns) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.SummingMergeTree);
+
+        if (columns is { Length: > 0 })
+        {
+            table.SetAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumns, columns);
+        }
+
+        return table;
+    }
+    
+    public static IMutableAnnotatable SetSummingMergeTreeTableEngine(this IMutableEntityType table, string[] columns)
     {
         ArgumentNullException.ThrowIfNull(table);
 
         table.SetOrRemoveAnnotation(ClickHouseAnnotationNames.TableEngine, ClickHouseAnnotationNames.SummingMergeTree);
 
-        if (!string.IsNullOrWhiteSpace(column))
+        if (columns is { Length: > 0 })
         {
-            table.SetOrRemoveAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumn, column);
+            table.SetOrRemoveAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumns, columns);
         }
 
         return table;
     }
 
-    public static void SetSummingMergeTreeTableEngineColumn(this AnnotatableBase table, string column)
+    public static void SetSummingMergeTreeTableEngineColumn(this AnnotatableBase table, string[] columns)
     {
         ArgumentNullException.ThrowIfNull(table);
 
-        if (!string.IsNullOrWhiteSpace(column))
+        if (columns is { Length: > 0 })
         {
-            table.SetAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumn, column);
+            table.SetAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumns, columns);
         }
     }
 
-    public static string? GetSummingMergeTreeColumn(this IAnnotatable table)
+    public static string[]? GetSummingMergeTreeColumns(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
-        var columns = table.FindAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumn);
+        var columns = table.FindAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumns);
 
-        return (string?)columns?.Value;
+        return (string[]?)columns?.Value;
     }
 
     #endregion
 
     #region AggregatingMergeTree
 
+    public static T SetAggregatingMergeTreeTableEngine<T>(this T table) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.AggregatingMergeTree);
+
+        return table;
+    }
+    
     public static IMutableAnnotatable SetAggregatingMergeTreeTableEngine(this IMutableEntityType table)
     {
         ArgumentNullException.ThrowIfNull(table);
@@ -211,6 +261,14 @@ public static class ClickHouseEntityTypeExtensions
     #endregion
 
     #region CollapsingMergeTree
+
+    public static T SetCollapsingMergeTreeTableEngine<T>(this T table, string sign) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.CollapsingMergeTree);
+        table.SetAnnotation(ClickHouseAnnotationNames.CollapsingMergeTreeSign, sign);
+
+        return table;
+    }
 
     public static IMutableAnnotatable SetCollapsingMergeTreeTableEngine(this IMutableEntityType table, string sign)
     {
@@ -235,6 +293,16 @@ public static class ClickHouseEntityTypeExtensions
     #endregion
 
     #region VersionedCollapsingMergeTree
+
+    public static T SetVersionedCollapsingMergeTreeTableEngine<T>(this T table, string sign, string version)
+        where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.VersionedCollapsingMergeTree);
+        table.SetAnnotation(ClickHouseAnnotationNames.VersionedCollapsingMergeTreeSign, sign);
+        table.SetAnnotation(ClickHouseAnnotationNames.VersionedCollapsingMergeTreeVersion, version);
+
+        return table;
+    }
 
     public static IMutableAnnotatable SetVersionedCollapsingMergeTreeTableEngine(
         this IMutableEntityType table,
@@ -274,6 +342,14 @@ public static class ClickHouseEntityTypeExtensions
 
     #region GraphiteMergeTree
 
+    public static T SetGraphiteMergeTreeTableEngine<T>(this T table, string configSection) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.GraphiteMergeTree);
+        table.SetAnnotation(ClickHouseAnnotationNames.GraphiteMergeTreeConfigSection, configSection);
+
+        return table;
+    }
+    
     public static IMutableAnnotatable SetGraphiteMergeTreeTableEngine(this IMutableAnnotatable table, string configSection)
     {
         ArgumentNullException.ThrowIfNull(table);
@@ -298,6 +374,13 @@ public static class ClickHouseEntityTypeExtensions
 
     #region TinyLog
 
+    public static T SetTinyLogTableEngine<T>(this T table) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.TinyLogEngine);
+
+        return table;
+    }
+    
     public static IMutableAnnotatable SetTinyLogTableEngine(this IMutableEntityType table)
     {
         ArgumentNullException.ThrowIfNull(table);
@@ -311,6 +394,13 @@ public static class ClickHouseEntityTypeExtensions
 
     #region StripeLog
 
+    public static T SetStripeLogTableEngine<T>(this T table) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.StripeLogEngine);
+
+        return table;
+    }
+    
     public static IMutableAnnotatable SetStripeLogTableEngine(this IMutableEntityType table)
     {
         ArgumentNullException.ThrowIfNull(table);
@@ -324,6 +414,13 @@ public static class ClickHouseEntityTypeExtensions
 
     #region Log
 
+    public static T SetLogTableEngine<T>(this T table) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.LogEngine);
+
+        return table;
+    }
+    
     public static IMutableAnnotatable SetLogTableEngine(this IMutableEntityType table)
     {
         ArgumentNullException.ThrowIfNull(table);
@@ -334,4 +431,11 @@ public static class ClickHouseEntityTypeExtensions
     }
 
     #endregion
+    
+    public static T SetViewEngine<T>(this T table) where T : AnnotatableBase
+    {
+        table.SetTableEngine(ClickHouseAnnotationNames.ViewEngine);
+
+        return table;
+    }
 }

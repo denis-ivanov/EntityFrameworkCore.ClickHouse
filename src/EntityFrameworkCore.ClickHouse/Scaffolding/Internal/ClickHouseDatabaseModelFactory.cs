@@ -99,8 +99,7 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
                 table.SetSampleBy(samplingKey);
             }
 
-            table.SetTableEngine(reader.GetString("engine"));
-            SetTableEngineArgs(table, reader.GetString("engine_full"));
+            SetTableEngineArgs(table, reader.GetString("engine"), reader.GetString("engine_full"));
 
             result.Add(table);
         }
@@ -367,36 +366,106 @@ public class ClickHouseDatabaseModelFactory : DatabaseModelFactory
         return ParseColumns(args);
     }
 
-    private static void SetTableEngineArgs(DatabaseTable table, string engineFull)
+    private static void SetTableEngineArgs(DatabaseTable table, string engine, string engineFull)
     {
         var args = ParseEngineArgs(engineFull);
 
-        if (args == null || args.Length == 0)
+        switch (engine)
         {
-            return;
-        }
+            // MergeTree
+            case ClickHouseAnnotationNames.MergeTreeEngine:
+                table.SetMergeTreeTableEngine();
+                break;
 
-        var tableEngine = table.GetTableEngine();
+            case ClickHouseAnnotationNames.ReplacingMergeTree when args == null || args.Length == 0:
+                table.SetReplacingMergeTreeTableEngine();
+                break;
 
-        switch (tableEngine)
-        {
-            case ClickHouseAnnotationNames.ReplacingMergeTree:
-                table.SetReplacingMergeTreeTableEngineVersion(args[0]);
+            case ClickHouseAnnotationNames.ReplacingMergeTree when args?.Length == 1:
+                table.SetReplacingMergeTreeTableEngine(args[0]);
+                break;
 
-                if (args.Length == 2)
-                {
-                    table.SetReplacingMergeTreeTableEngineIsDeleted(args[1]);
-                }
-
+            case ClickHouseAnnotationNames.ReplacingMergeTree when args?.Length == 2:
+                table.SetReplacingMergeTreeTableEngine(args[0], args[1]);
                 break;
 
             case ClickHouseAnnotationNames.SummingMergeTree:
-                table.SetSummingMergeTreeTableEngineColumn(args[0]);
+                table.SetSummingMergeTreeTableEngine(args ?? []);
                 break;
 
-            case ClickHouseAnnotationNames.CollapsingMergeTree:
-                table.SetSummingMergeTreeTableEngineColumn(args[0]);
+            case ClickHouseAnnotationNames.AggregatingMergeTree:
+                table.SetAggregatingMergeTreeTableEngine();
                 break;
+
+            case ClickHouseAnnotationNames.CollapsingMergeTree when args?.Length == 1:
+                table.SetCollapsingMergeTreeTableEngine(args[0]);
+                break;
+
+            case ClickHouseAnnotationNames.VersionedCollapsingMergeTree when args?.Length == 2:
+                table.SetVersionedCollapsingMergeTreeTableEngine(args[0], args[1]);
+                break;
+
+            case ClickHouseAnnotationNames.GraphiteMergeTree when args?.Length == 1:
+                table.SetGraphiteMergeTreeTableEngine(args[0]);
+                break;
+
+            case ClickHouseAnnotationNames.CoalescingMergeTree:
+                throw new NotImplementedException();
+
+            // Log
+            case ClickHouseAnnotationNames.TinyLogEngine when args == null || args.Length == 0:
+                table.SetTinyLogTableEngine();
+                break;
+
+            case ClickHouseAnnotationNames.StripeLogEngine when args == null || args.Length == 0:
+                table.SetStripeLogTableEngine();
+                break;
+
+            case ClickHouseAnnotationNames.LogEngine:
+                table.SetLogTableEngine();
+                break;
+
+            // Integration engines
+            case ClickHouseAnnotationNames.OdbcEngine:
+            case ClickHouseAnnotationNames.JdbcEngine:
+            case ClickHouseAnnotationNames.MySqlEngine:
+            case ClickHouseAnnotationNames.MongoDbEngine:
+            case ClickHouseAnnotationNames.RedisEngine:
+            case ClickHouseAnnotationNames.HdfsEngine:
+            case ClickHouseAnnotationNames.S3Engine:
+            case ClickHouseAnnotationNames.Kafka:
+            case ClickHouseAnnotationNames.EmbeddedRocksDb:
+            case ClickHouseAnnotationNames.RabbitMqEngine:
+            case ClickHouseAnnotationNames.PostgreSqlEngine:
+            case ClickHouseAnnotationNames.S3QueueEngine:
+            case ClickHouseAnnotationNames.TimeSeriesEngine:
+                throw new NotImplementedException();
+
+            // Special Engines
+            case ClickHouseAnnotationNames.DistributedEngine:
+            case ClickHouseAnnotationNames.DictionaryEngine:
+            case ClickHouseAnnotationNames.MergeEngine:
+            case ClickHouseAnnotationNames.ExecutableEngine:
+            case ClickHouseAnnotationNames.FileEngine:
+            case ClickHouseAnnotationNames.NullEngine:
+            case ClickHouseAnnotationNames.SetEngine:
+            case ClickHouseAnnotationNames.JoinEngine:
+            case ClickHouseAnnotationNames.UrlEngine:
+                throw new NotImplementedException();
+
+            case ClickHouseAnnotationNames.ViewEngine:
+                table.SetViewEngine();
+                break;
+
+            case ClickHouseAnnotationNames.MemoryEngine:
+            case ClickHouseAnnotationNames.BufferEngine:
+            case ClickHouseAnnotationNames.GenerateRandomEngine:
+            case ClickHouseAnnotationNames.KeeperMap:
+            case ClickHouseAnnotationNames.FileLog:
+                throw new NotImplementedException();
+
+            default:
+                throw new NotImplementedException("Unknown table engine: " + engine + ". Args: " + args + ".");
         }
     }
 }

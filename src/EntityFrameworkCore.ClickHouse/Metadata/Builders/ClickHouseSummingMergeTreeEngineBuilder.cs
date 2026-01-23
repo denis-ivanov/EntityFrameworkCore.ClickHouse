@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace ClickHouse.EntityFrameworkCore.Metadata.Builders;
 
@@ -52,13 +53,8 @@ public class ClickHouseSummingMergeTreeEngineBuilder : ClickHouseEngineBuilder
 
     public override void SpecifyEngine(MigrationCommandListBuilder builder, TableOperation table, ISqlGenerationHelper sql)
     {
-        var column = table.GetSummingMergeTreeColumn();
-        string? engineArg = null;
-
-        if (!string.IsNullOrEmpty(column))
-        {
-            engineArg = IsFunctionCall(column) ? column : sql.DelimitIdentifier(column);
-        }
+        var columns = table.GetSummingMergeTreeColumns();
+        string? engineArg = string.Join(", ", columns.Select(e => sql.DelimitIdentifier(e)));
 
         builder.Append($" ENGINE = SummingMergeTree({engineArg})").AppendLine();
 

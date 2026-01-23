@@ -1647,7 +1647,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<DateTime>("created_at");
 
                 entityTypeBuilder.ToTable("my_table", table => table
-                    .HasSummingMergeTreeEngine("amount")
+                    .HasSummingMergeTreeEngine(["amount"])
                     .WithPartitionBy("toYYYYMM(created_at)")
                     .WithPrimaryKey("id")
                     .WithOrderBy("id", "category", "created_at")
@@ -1662,8 +1662,8 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var engine = table.GetTableEngine();
                 Assert.Equal(ClickHouseAnnotationNames.SummingMergeTree, engine);
 
-                var engineColumn = table.GetSummingMergeTreeColumn();
-                Assert.Equal("amount", engineColumn);
+                var engineColumns = table.GetSummingMergeTreeColumns();
+                Assert.Equal(["amount"], engineColumns);
 
                 var partitionBy = table.GetPartitionBy();
                 Assert.NotNull(partitionBy);
