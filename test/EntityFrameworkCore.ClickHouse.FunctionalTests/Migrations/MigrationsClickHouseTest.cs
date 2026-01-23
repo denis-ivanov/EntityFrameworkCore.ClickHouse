@@ -76,7 +76,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("DriverLicense");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -102,7 +102,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var entityTypeBuilder = builder.Entity("People");
                 entityTypeBuilder.Property<int>("Id");
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => { },
@@ -149,7 +149,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var entityTypeBuilder = builder.Entity("People");
 
                 entityTypeBuilder.ToTable(table => table
-                        .HasMergeTreeEngine()
+                        .UseMergeTreeEngine()
                         .WithPrimaryKey("Id"));
 
                 entityTypeBuilder.Property<int>("Id");
@@ -160,7 +160,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var entityTypeBuilder = builder.Entity("People");
 
                 entityTypeBuilder.ToTable(table => table
-                        .HasMergeTreeEngine()
+                        .UseMergeTreeEngine()
                         .WithPrimaryKey("Id"));
 
                 entityTypeBuilder.Property<string>("FullName").HasComment("My comment");
@@ -188,7 +188,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Y");
 
                 entityTypeBuilder.ToTable("People", tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => { },
@@ -219,7 +219,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(e => e
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             _ => { },
@@ -246,7 +246,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => { },
@@ -271,7 +271,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             _ => { },
@@ -297,7 +297,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             _ => { },
@@ -325,7 +325,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             _ => { },
@@ -352,7 +352,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             _ => { },
@@ -376,7 +376,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => { },
@@ -408,7 +408,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
                 entityTypeBuilder.Property<string>("Name");
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -420,7 +420,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<List<string>>("Numbers");
 
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -471,7 +471,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
                 entityTypeBuilder.Property<string>("Name");
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -482,7 +482,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
                 entityTypeBuilder.Property<List<int>>("Numbers").IsRequired();
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -508,7 +508,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
                 entityTypeBuilder.Property<string>("Name");
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -526,7 +526,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     .IsRequired();
 
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -553,7 +553,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
                 entityTypeBuilder.Property<string>("Name");
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -564,7 +564,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
                 entityTypeBuilder.Property<List<int>>("Numbers").IsRequired().HasDefaultValue(new List<int> { 1, 2, 3 });
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -604,7 +604,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("DriverLicense");
 
                 entityTypeBuilder.ToTable("People", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People")
@@ -626,7 +626,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -655,7 +655,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id").HasComment("Some comment1");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -687,7 +687,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Sum");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People").Property<int>("Sum")
@@ -720,7 +720,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.HasIndex("Sum");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder
@@ -759,7 +759,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Sum");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder
@@ -791,7 +791,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People").Property<int>("SomeColumn"),
@@ -818,7 +818,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Y");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People").Property<int>("Sum"),
@@ -852,7 +852,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Y");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder
@@ -881,7 +881,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("SomeColumn");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             _ => { },
@@ -906,7 +906,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.HasIndex("FirstName", "LastName");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             _ => { },
@@ -935,7 +935,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.HasIndex("SomeColumn");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             _ => { },
@@ -963,7 +963,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.HasData(new Dictionary<string, object?> { { "Id", 1 }, { "SomeColumn", null } });
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => { },
@@ -984,7 +984,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id").HasComment("Some comment");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People").Property<int>("Id"),
@@ -1006,7 +1006,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("SomeColumn").HasComputedColumnSql("42");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => { },
@@ -1117,7 +1117,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -1150,7 +1150,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
                 entityTypeBuilder.Property<List<int>>("Numbers");
                 entityTypeBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -1180,7 +1180,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 tableEntityBuilder.Property<string>("Name");
                 tableEntityBuilder.Property<List<int>>("Numbers").IsRequired();
                 tableEntityBuilder.ToTable("Customers", table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -1221,7 +1221,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 });
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id", "AnotherId"));
             },
             builder => builder.Entity("Person").HasData(
@@ -1246,7 +1246,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.HasData(new Person { Id = 1, Name = "Daenerys Targaryen" });
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("Person").HasData(new Person { Id = 2, Name = "John Snow" }),
@@ -1264,7 +1264,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("DriverLicense");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People")
@@ -1284,7 +1284,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People").Property<int>("SomeColumn"),
@@ -1305,7 +1305,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity(
@@ -1354,7 +1354,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<int>("Id");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People").Property<string>("SomeColumn"),
@@ -1380,7 +1380,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var entityTypeBuilder = builder.Entity("People");
                 entityTypeBuilder.Property<int>("Id");
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("People").ToTable("Persons").Property<int>("Id"),
@@ -1451,7 +1451,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     });
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id", "AnotherId"));
             },
             builder => builder.Entity("Person").HasData(
@@ -1489,7 +1489,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     });
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("Person").HasData(
@@ -1520,7 +1520,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.HasData(new Person { Id = 1, Name = "Daenerys Targaryen" });
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity("Person").HasData(new Person { Id = 2, Name = "John Snow" }),
@@ -1544,7 +1544,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<float>("score");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPartitionBy("toYYYYMM(created_at)")
                     .WithPrimaryKey("id", "age")
                     .WithOrderBy("id", "age", "created_at")
@@ -1593,7 +1593,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<bool>("is_deleted");
 
                 entityTypeBuilder.ToTable(table => table
-                    .HasReplacingMergeTreeEngine("ver", "is_deleted")
+                    .UseReplacingMergeTreeEngine("ver", "is_deleted")
                     .WithPartitionBy("toYYYYMM(created_at)")
                     .WithPrimaryKey("id")
                     .WithOrderBy("id","created_at")
@@ -1647,7 +1647,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<DateTime>("created_at");
 
                 entityTypeBuilder.ToTable("my_table", table => table
-                    .HasSummingMergeTreeEngine(["amount"])
+                    .UseSummingMergeTreeEngine(["amount"])
                     .WithPartitionBy("toYYYYMM(created_at)")
                     .WithPrimaryKey("id")
                     .WithOrderBy("id", "category", "created_at")
@@ -1699,7 +1699,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<float>("quantity_state").HasColumnType("AggregateFunction(sum, UInt32)");
 
                 entityTypeBuilder.ToTable("my_table", table => table
-                    .HasAggregatingMergeTreeEngine()
+                    .UseAggregatingMergeTreeEngine()
                     .WithPartitionBy("toYYYYMM(created_at)")
                     .WithOrderBy("id", "created_at")
                     .WithSampleBy("id"));
@@ -1742,7 +1742,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<sbyte>("sign");
 
                 entityTypeBuilder.ToTable("my_table", table => table
-                    .HasCollapsingMergeTreeEngine("sign")
+                    .UseCollapsingMergeTreeEngine("sign")
                     .WithPartitionBy("toYYYYMM(created_at)")
                     .WithOrderBy("id", "category", "created_at")
                     .WithSampleBy("id"));
@@ -1786,7 +1786,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<uint>("version");
 
                 entityTypeBuilder.ToTable("my_table", table => table
-                    .HasVersionedCollapsingMergeTreeEngine("sign", "version")
+                    .UseVersionedCollapsingMergeTreeEngine("sign", "version")
                     .WithPartitionBy("toYYYYMM(created_at)")
                     .WithOrderBy("id", "category", "created_at")
                     .WithSampleBy("id"));
@@ -1822,7 +1822,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             {
                 var entityTypeBuilder = builder.Entity("my_table");
                 entityTypeBuilder.Property<ulong>("id");
-                entityTypeBuilder.ToTable("my_table", table => table.HasTinyLogEngine());
+                entityTypeBuilder.ToTable("my_table", table => table.UseTinyLogEngine());
             },
             model =>
             {
@@ -1843,7 +1843,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             {
                 var entityTypeBuilder = builder.Entity("my_table");
                 entityTypeBuilder.Property<ulong>("id");
-                entityTypeBuilder.ToTable("my_table", table => table.HasStripeLogEngine());
+                entityTypeBuilder.ToTable("my_table", table => table.UseStripeLogEngine());
             },
             model =>
             {
@@ -1864,7 +1864,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             {
                 var entityTypeBuilder = builder.Entity("my_table");
                 entityTypeBuilder.Property<ulong>("id");
-                entityTypeBuilder.ToTable("my_table", table => table.HasLogEngine());
+                entityTypeBuilder.ToTable("my_table", table => table.UseLogEngine());
             },
             model =>
             {
@@ -1884,7 +1884,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var entityTypeBuilder = builder.Entity("Entity");
                 entityTypeBuilder.Property<int>("Id");
                 entityTypeBuilder.Property<string>("Name");
-                entityTypeBuilder.ToTable("Entity", table => table.HasMergeTreeEngine().WithPrimaryKey("Id"));
+                entityTypeBuilder.ToTable("Entity", table => table.UseMergeTreeEngine().WithPrimaryKey("Id"));
             },
             builder =>
             {
@@ -1996,7 +1996,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
 
                 entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
 
                 entityTypeBuilder.OwnsOne(
@@ -2094,7 +2094,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
 
                 entityTypeBuilder.ToTable(tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
 
                 entityTypeBuilder.OwnsOne(
@@ -2187,7 +2187,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
 
                 entityTypeBuilder.ToTable(tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -2233,7 +2233,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
 
                 entityTypeBuilder.ToTable(tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -2279,7 +2279,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Property<string>("Name");
 
                 entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -2368,7 +2368,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 entityTypeBuilder.Navigation("OwnedRequiredReference").IsRequired();
 
                 entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -2428,7 +2428,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     });
 
                 entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             model =>
@@ -2494,7 +2494,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     });
 
                 entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder => builder.Entity(
@@ -2566,7 +2566,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     });
 
                 entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>
@@ -2662,7 +2662,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     });
 
                 entityTypeBuilder.ToTable("Entity", tableBuilder => tableBuilder
-                    .HasMergeTreeEngine()
+                    .UseMergeTreeEngine()
                     .WithPrimaryKey("Id"));
             },
             builder =>

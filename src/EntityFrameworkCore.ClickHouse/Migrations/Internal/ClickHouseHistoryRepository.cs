@@ -72,7 +72,7 @@ public class ClickHouseHistoryRepository : HistoryRepository
         history.Property<string>(h => h.MigrationId).HasMaxLength(150);
         history.Property<string>(h => h.ProductVersion).HasMaxLength(32).IsRequired();
         history.ToTable("__EFMigrationsHistory", table => table
-            .HasMergeTreeEngine()
+            .UseMergeTreeEngine()
             .WithPrimaryKey("MigrationId"));
     }
 

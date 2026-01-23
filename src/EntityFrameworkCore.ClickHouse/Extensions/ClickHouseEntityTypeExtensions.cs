@@ -219,16 +219,6 @@ public static partial class ClickHouseEntityTypeExtensions
         return table;
     }
 
-    public static void SetSummingMergeTreeTableEngineColumn(this AnnotatableBase table, string[] columns)
-    {
-        ArgumentNullException.ThrowIfNull(table);
-
-        if (columns is { Length: > 0 })
-        {
-            table.SetAnnotation(ClickHouseAnnotationNames.SummingMergeTreeColumns, columns);
-        }
-    }
-
     public static string[]? GetSummingMergeTreeColumns(this IAnnotatable table)
     {
         ArgumentNullException.ThrowIfNull(table);
