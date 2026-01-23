@@ -58,12 +58,12 @@ public static class ClickHouseEntityTypeBuilderExtensions
         return engine;
     }
 
-    public static ClickHouseSummingMergeTreeEngineBuilder HasSummingMergeTreeEngine(this TableBuilder builder, string column)
+    public static ClickHouseSummingMergeTreeEngineBuilder HasSummingMergeTreeEngine(this TableBuilder builder, string[] columns)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
         var engine = new ClickHouseSummingMergeTreeEngineBuilder(builder.Metadata);
-        builder.Metadata.SetSummingMergeTreeTableEngine(column);
+        builder.Metadata.SetSummingMergeTreeTableEngine(columns);
 
         return engine;
     }
