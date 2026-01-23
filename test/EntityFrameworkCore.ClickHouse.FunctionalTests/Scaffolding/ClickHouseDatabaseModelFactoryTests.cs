@@ -839,6 +839,46 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
 
     #endregion
 
+    [Fact]
+    public void ReplacingMergeTree_docs_example()
+    {
+        Test(
+            [
+                """
+                CREATE TABLE myThirdReplacingMT
+                (
+                    `key` Int64,
+                    `someCol` String,
+                    `eventTime` DateTime,
+                    `is_deleted` UInt8
+                )
+                ENGINE = ReplacingMergeTree(eventTime, is_deleted)
+                ORDER BY key
+                SETTINGS allow_experimental_replacing_merge_with_cleanup = 1;
+                """
+            ],
+            tables: [],
+            schemas: [],
+            asserter: dbModel =>
+            {
+                var table = Assert.Single(dbModel.Tables, e => e.Name == "myThirdReplacingMT");
+
+                var engine = table.GetTableEngine();
+                Assert.Equal(ClickHouseAnnotationNames.ReplacingMergeTree, engine);
+
+                var orderBy = table.GetOrderBy();
+                Assert.NotNull(orderBy);
+                Assert.Equal(["key"], orderBy);
+
+                var version = table.GetReplacingMergeTreeVersion();
+                var isDeleted = table.GetReplacingMergeTreeIsDeleted();
+
+                Assert.Equal("eventTime", version);
+                Assert.Equal("is_deleted", isDeleted);
+            },
+            cleanupSql: ["DROP TABLE myThirdReplacingMT"]);
+    }
+    
     public class ClickHouseDatabaseModelFixture : SharedStoreFixtureBase<PoolableDbContext>
     {
         protected override string StoreName
