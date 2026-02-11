@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>ClickHouse.EntityFrameworkCore</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
-    <PackageVersion>3.0.2</PackageVersion>
+    <PackageVersion>3.0.3</PackageVersion>
     <Nullable>enable</Nullable>  
     <Authors>Denis Ivanov</Authors>
     <Description>ClickHouse provider for Entity Framework Core.</Description>
@@ -13,28 +13,11 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <NoWarn>$(NoWarn);EF1001;EF9100</NoWarn>
     <PackageReleaseNotes>
-## v3.0.2
+## v3.0.3
 
-- Updated dependencies to Entity Framework Core 10.0.2
-- Added `TimeSpan` and `TimeOnly` support
-- Functions translation:  
-  `byteSwap`,
-  `divide`,
-  `toBool*`,
-  `toDecimal*`,
-  `toInt8*`,
-  `toInt16*`,
-  `toInt32*`,
-  `toInt64*`,
-  `toInt128*`,
-  `toUInt8*`,
-  `toUInt16*`,
-  `toUInt32*`,
-  `toUInt64*`,
-  `toUInt128*`,
-  `toDate*`
+- Updated dependencies to Entity Framework Core 10.0.3
 
-Full release notes: https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse/releases/tag/v3.0.2
+Full release notes: https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse/releases/tag/v3.0.3
     </PackageReleaseNotes>  
   </PropertyGroup>
 
