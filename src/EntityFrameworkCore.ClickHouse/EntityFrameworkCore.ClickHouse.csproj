@@ -23,9 +23,9 @@ Full release notes: https://github.com/denis-ivanov/EntityFrameworkCore.ClickHou
 
   <ItemGroup>
     <PackageReference Include="ClickHouse.Driver" Version="1.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.4" PrivateAssets="none" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.4" PrivateAssets="none" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5" PrivateAssets="none" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.5" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
