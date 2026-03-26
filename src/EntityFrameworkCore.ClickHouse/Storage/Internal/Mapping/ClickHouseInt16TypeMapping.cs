@@ -39,7 +39,7 @@ public class ClickHouseInt16TypeMapping : ShortTypeMapping
             expression
         );
     }
-    
+
     protected virtual string GetStoreType(bool? isNullable)
     {
         return isNullable == true ? $"Nullable({StoreType})" : StoreType;
