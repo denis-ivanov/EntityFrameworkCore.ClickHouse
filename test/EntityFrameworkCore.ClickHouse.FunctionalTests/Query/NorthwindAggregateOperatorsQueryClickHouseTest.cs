@@ -13,7 +13,7 @@ public class NorthwindAggregateOperatorsQueryClickHouseTest : NorthwindAggregate
         ITestOutputHelper testOutputHelper)
         : base(fixture)
     {
-        ClearLog();
+        Fixture.TestSqlLoggerFactory.Clear();
         Fixture.TestSqlLoggerFactory.SetTestOutputHelper(testOutputHelper);
     }
 
