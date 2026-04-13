@@ -53,6 +53,7 @@ public static class ClickHouseServiceCollectionExtensions
             .TryAdd<IEvaluatableExpressionFilter, ClickHouseEvaluatableExpressionFilter>()
             .TryAdd<IQuerySqlGeneratorFactory, ClickHouseQuerySqlGeneratorFactory>()
             .TryAdd<IQueryableMethodTranslatingExpressionVisitorFactory, ClickHouseQueryableMethodTranslatingExpressionVisitorFactory>()
+            .TryAdd<IQueryTranslationPreprocessorFactory, ClickHouseQueryTranslationPreprocessorFactory>()
             .TryAdd<IRelationalSqlTranslatingExpressionVisitorFactory, ClickHouseSqlTranslatingExpressionVisitorFactory>()
             .TryAdd<ISqlExpressionFactory, ClickHouseSqlExpressionFactory>()
             .TryAdd<IRelationalParameterBasedSqlProcessorFactory, ClickHouseParameterBasedSqlProcessorFactory>()
