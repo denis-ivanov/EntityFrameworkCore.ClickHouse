@@ -1383,7 +1383,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
 
         AssertSql(
             """
-            SELECT toDecimal32OrDefault("t"."Int8AsStringValid", 2, toDecimal32(42, 2)) AS "ToDecimal32OrDefault"
+            SELECT toDecimal32OrDefault("t"."Int8AsStringValid", 2, toDecimal32(42::Decimal(38,19), 2)) AS "ToDecimal32OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }
@@ -1478,7 +1478,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
 
         AssertSql(
             """
-            SELECT toDecimal64OrDefault("t"."Int16AsStringValid", 2, toDecimal64(42, 2)) AS "ToDecimal64OrDefault"
+            SELECT toDecimal64OrDefault("t"."Int16AsStringValid", 2, toDecimal64(42::Decimal(38,19), 2)) AS "ToDecimal64OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }
@@ -1572,10 +1572,10 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
             .ToArrayAsync();
 
         AssertSql(
-            """
-            SELECT toDecimal128OrDefault("t"."Int32AsStringValid", 2, toDecimal128(42, 2)) AS "ToDecimal128OrDefault"
-            FROM "TypeConversions" AS "t"
-            """);
+        """
+        SELECT toDecimal128OrDefault("t"."Int32AsStringValid", 2, toDecimal128(42::Decimal(38,19), 2)) AS "ToDecimal128OrDefault"
+        FROM "TypeConversions" AS "t"
+        """);
     }
 
     [Fact]
@@ -1668,7 +1668,7 @@ public sealed class TypeConversionTest : IClassFixture<TypeConversionQueryFixtur
 
         AssertSql(
             """
-            SELECT toDecimal256OrDefault("t"."Int64AsStringValid", 2, toDecimal256(42, 2)) AS "ToDecimal256OrDefault"
+            SELECT toDecimal256OrDefault("t"."Int64AsStringValid", 2, toDecimal256(42::Decimal(38,19), 2)) AS "ToDecimal256OrDefault"
             FROM "TypeConversions" AS "t"
             """);
     }

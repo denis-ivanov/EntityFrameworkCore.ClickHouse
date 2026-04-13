@@ -217,7 +217,7 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     private RelationalTypeMapping? FindDecimalMapping(in RelationalTypeMappingInfo mappingInfo)
     {
         return mappingInfo.ClrType == typeof(decimal) || mappingInfo.StoreTypeNameBase == "Decimal"
-            ? new ClickHouseDecimalTypeMapping(mappingInfo.Precision, mappingInfo.Scale, mappingInfo.Size)
+            ? new ClickHouseDecimalTypeMapping(mappingInfo.Precision, mappingInfo.Scale)
             : null;
     }
 

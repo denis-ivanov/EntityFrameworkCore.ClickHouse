@@ -39,4 +39,16 @@ public sealed class ClickHouseDecimal256DbFunctionsExtensionsTest
     {
         Assert.Throws<InvalidOperationException>(() => EF.Functions.ToDecimal256OrDefault("123.45", 3, 42m));
     }
+    
+    [Fact]
+    public void DivideDecimal_Decimal_ThrowsException()
+    {
+        Assert.Throws<InvalidOperationException>(() => EF.Functions.DivideDecimal(10.5m, 2.0m));
+    }
+    
+    [Fact]
+    public void DivideDecimal_DecimalWithPrecision_ThrowsException()
+    {
+        Assert.Throws<InvalidOperationException>(() => EF.Functions.DivideDecimal(10.5m, 2.0m, 3));
+    }
 }

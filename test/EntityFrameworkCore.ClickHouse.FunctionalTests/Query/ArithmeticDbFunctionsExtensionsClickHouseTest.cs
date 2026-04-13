@@ -37,6 +37,29 @@ public class ArithmeticDbFunctionsExtensionsClickHouseTest : IClassFixture<North
             """);
     }
 
+    [Fact]
+    public async Task DivideDecimal()
+    {
+        var context = CreateContext();
+
+        await context.OrderDetails
+            .Where(e => e.OrderID == 10285)
+            .Select(e => new
+            {
+                DecimalDivide = decimal.Divide(e.UnitPrice, 10m),
+                DivideDecimal = EF.Functions.DivideDecimal(e.UnitPrice, 10m),
+                DivideDecimalWithPrecision = EF.Functions.DivideDecimal(e.UnitPrice, 10m, 10)
+            })
+            .ToArrayAsync();
+
+        AssertSql(
+            """
+            SELECT divideDecimal("o"."UnitPrice", 10::Decimal(38,19)) AS "DecimalDivide", divideDecimal("o"."UnitPrice", 10::Decimal(38,19), 10) AS "DivideDecimalWithPrecision"
+            FROM "OrderDetails" AS "o"
+            WHERE "o"."OrderID" = 10285
+            """);
+    }
+
     protected NorthwindQueryClickHouseFixture<NoopModelCustomizer> Fixture { get; }
     
     private void AssertSql(params string[] expected)
