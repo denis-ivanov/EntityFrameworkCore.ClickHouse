@@ -11,9 +11,9 @@ public static class ClickHouseArithmeticDbFunctionsExtensions
     /// The result type is always <c>double</c>.
     /// Integer division is provided by the intDiv function.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="x">Dividend.</param>
     /// <param name="y">Divisor</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <typeparam name="TDividend"></typeparam>
     /// <typeparam name="TDivisor"></typeparam>
     /// <returns>The quotient of x and y.</returns>
