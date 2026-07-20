@@ -9,8 +9,8 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// <summary>
     /// Converts an input value to a value of type Float32. Throws an exception in case of an error.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <typeparam name="TNumber"></typeparam>
     /// <returns>32-bit floating point value.</returns>
     /// <exception cref="InvalidOperationException">
@@ -25,8 +25,8 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// <summary>
     /// Converts an input value to a value of type Float32. Throws an exception in case of an error.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">Expression returning a number or a string representation of a number.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>32-bit floating point value.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToFloat32{TNumber}(DbFunctions, TNumber)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -41,8 +41,8 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// Like <see cref="ToFloat32(DbFunctions, string)"/>, this function converts an input value to a value
     /// of type Float32 but returns <c>0</c> in case of an error.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>32-bit Float value if successful, otherwise <c>0</c>.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToFloat32OrZero(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -57,8 +57,8 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// Like <see cref="ToFloat32(DbFunctions, string)"/>, this function converts an input value to a value
     /// of type Float32 but returns <c>null</c> in case of an error.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>32-bit Float value if successful, otherwise <c>null</c>.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToFloat32OrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -74,8 +74,8 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// but returns the default value in case of an error. If no default value is passed
     /// then <c>0</c> is returned in case of an error.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>32-bit Float value if successful, otherwise returns the default value if passed or 0 if not.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToFloat32OrDefault(DbFunctions,string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -91,9 +91,9 @@ public static class ClickHouseFloat32DbFunctionsExtensions
     /// but returns the default value in case of an error. If no default value is passed
     /// then <c>0</c> is returned in case of an error.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">A String representation of a number.</param>
     /// <param name="defaultValue">The default value to return if parsing to type Float32 is unsuccessful.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>32-bit Float value if successful, otherwise returns the default value if passed or 0 if not.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToFloat32OrDefault(DbFunctions,string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
