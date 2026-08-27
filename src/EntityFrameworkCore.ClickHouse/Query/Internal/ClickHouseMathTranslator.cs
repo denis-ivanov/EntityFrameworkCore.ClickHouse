@@ -84,14 +84,20 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
         { typeof(double).GetRuntimeMethod(nameof(double.IsFinite), [typeof(double)])!, "isFinite" }
     };
 
-    private readonly ISqlExpressionFactory _sqlExpressionFactory;
+    private static readonly MethodInfo FloatIsNegativeInfinity = typeof(float).GetRuntimeMethod(nameof(float.IsNegativeInfinity), [typeof(float)]);
+    private static readonly MethodInfo FloatIsPositiveInfinity = typeof(float).GetRuntimeMethod(nameof(float.IsPositiveInfinity), [typeof(float)]);
+    private static readonly MethodInfo DoubleIsNegativeInfinity = typeof(double).GetRuntimeMethod(nameof(double.IsNegativeInfinity), [typeof(double)]);
+    private static readonly MethodInfo DoubleIsPositiveInfinity = typeof(double).GetRuntimeMethod(nameof(double.IsPositiveInfinity), [typeof(double)]);
+    private static readonly MethodInfo DecimalDivide = typeof(decimal).GetRuntimeMethod(nameof(decimal.Divide), [typeof(decimal), typeof(decimal)]);
+
+    private readonly ClickHouseSqlExpressionFactory _sqlExpressionFactory;
     private readonly IRelationalTypeMappingSource _typeMappingSource;
 
     public ClickHouseMathTranslator(
         ISqlExpressionFactory sqlExpressionFactory,
         IRelationalTypeMappingSource typeMappingSource)
     {
-        _sqlExpressionFactory = sqlExpressionFactory;
+        _sqlExpressionFactory = (ClickHouseSqlExpressionFactory)sqlExpressionFactory;
         _typeMappingSource = typeMappingSource;
     }
 
@@ -127,7 +133,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
             );
         }
 
-        if (method.DeclaringType == typeof(float) && method.Name == nameof(float.IsNegativeInfinity))
+        if (FloatIsNegativeInfinity.Equals(method))
         {
             return _sqlExpressionFactory.AndAlso(
                 _sqlExpressionFactory.Function(
@@ -143,7 +149,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
             );
         }
 
-        if (method.DeclaringType == typeof(float) && method.Name == nameof(float.IsPositiveInfinity))
+        if (FloatIsPositiveInfinity.Equals(method))
         {
             return _sqlExpressionFactory.AndAlso(
                 _sqlExpressionFactory.Function(
@@ -159,7 +165,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
             );
         }
 
-        if (method.DeclaringType == typeof(double) && method.Name == nameof(double.IsNegativeInfinity))
+        if (DoubleIsNegativeInfinity.Equals(method))
         {
             return _sqlExpressionFactory.AndAlso(
                 _sqlExpressionFactory.Function(
@@ -175,7 +181,7 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
             );
         }
 
-        if (method.DeclaringType == typeof(double) && method.Name == nameof(double.IsPositiveInfinity))
+        if (DoubleIsPositiveInfinity.Equals(method))
         {
             return _sqlExpressionFactory.AndAlso(
                 _sqlExpressionFactory.Function(
@@ -189,6 +195,11 @@ public class ClickHouseMathTranslator: IMethodCallTranslator, IMemberTranslator
                     arguments[0],
                     _sqlExpressionFactory.Constant(0d, _typeMappingSource.FindMapping(typeof(double))))
             );
+        }
+
+        if (DecimalDivide.Equals(method))
+        {
+            return _sqlExpressionFactory.DivideDecimal(arguments[0], arguments[1]);
         }
 
         return null;

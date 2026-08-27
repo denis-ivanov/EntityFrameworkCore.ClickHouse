@@ -9,8 +9,8 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <summary>
     /// Converts an input value to type DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <typeparam name="TNumber"></typeparam>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
@@ -25,8 +25,8 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <summary>
     /// Converts an input value to type DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -40,8 +40,8 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <summary>
     /// Converts an input value to type DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime(DbFunctions, DateOnly)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -55,9 +55,9 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <summary>
     /// Converts an input value to type DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
     /// <param name="timeZone">Time zone.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime{TNumber}(DbFunctions, TNumber, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -71,9 +71,9 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <summary>
     /// Converts an input value to type DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
     /// <param name="timeZone">Time zone.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime(DbFunctions, string, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -87,9 +87,9 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// <summary>
     /// Converts an input value to type DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
     /// <param name="timeZone">Time zone.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTime(DbFunctions, DateOnly, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -105,8 +105,8 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// if an invalid argument is received.
     /// The same as toDateTime but returns lower boundary of DateTime if an invalid argument is received.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTimeOrZero(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -121,8 +121,8 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// Converts an input value to a value of type DateTime but returns <c>null</c> if an invalid argument is received.
     /// The same as <see cref="ToDateTime(DbFunctions, string)"/> but returns <c></c> if an invalid argument is received.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -137,8 +137,8 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// Like toDateTime but if unsuccessful, returns a default value which is either the third argument (if specified),
     /// or otherwise the lower boundary of DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -153,9 +153,9 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// Like toDateTime but if unsuccessful, returns a default value which is either the third argument (if specified),
     /// or otherwise the lower boundary of DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
     /// <param name="timeZone">Time zone.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
@@ -170,10 +170,10 @@ public static class ClickHouseDateTimeDbFunctionsExtensions
     /// Like toDateTime but if unsuccessful, returns a default value which is either the third argument (if specified),
     /// or otherwise the lower boundary of DateTime.
     /// </summary>
-    /// <param name="_">DbFunctions instance.</param>
     /// <param name="expr">The value.</param>
     /// <param name="timeZone">Time zone.</param>
     /// <param name="defaultValue">The default value to return if parsing is unsuccessful.</param>
+    /// <param name="_">DbFunctions instance.</param>
     /// <returns>Returns a date time.</returns>
     /// <exception cref="InvalidOperationException">
     /// <see cref="ToDateTimeOrNull(DbFunctions, string)"/> is only intended for use via SQL translation as part of an EF Core LINQ query.
