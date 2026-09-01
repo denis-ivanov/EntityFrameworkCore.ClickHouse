@@ -6,6 +6,9 @@ public class ClickHouseAggregateMethodCallTranslatorProvider : RelationalAggrega
 {
     public ClickHouseAggregateMethodCallTranslatorProvider(RelationalAggregateMethodCallTranslatorProviderDependencies dependencies) : base(dependencies)
     {
-        AddTranslators([new ClickHouseQueryableAggregateMethodTranslator(dependencies.SqlExpressionFactory)]);
+        AddTranslators([
+            new ClickHouseAggregateMethodTranslator(dependencies.SqlExpressionFactory),
+            new ClickHouseQueryableAggregateMethodTranslator(dependencies.SqlExpressionFactory)
+        ]);
     }
 }
