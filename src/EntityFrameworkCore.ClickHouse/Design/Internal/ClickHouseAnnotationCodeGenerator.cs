@@ -295,7 +295,7 @@ public class ClickHouseAnnotationCodeGenerator : AnnotationCodeGenerator
         return fragments;
     }
 
-    private static T? GetAndRemove<T>(IDictionary<string, IAnnotation> annotations, string annotationName)
+    private static T GetAndRemove<T>(IDictionary<string, IAnnotation> annotations, string annotationName)
     {
         if (annotations.TryGetValue(annotationName, out var annotation)
             && annotation.Value != null)
