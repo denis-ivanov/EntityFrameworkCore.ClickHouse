@@ -1,3 +1,4 @@
+using ClickHouse.Driver.ADO.Parameters;
 using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -9,18 +10,18 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
 public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
 {
-    private const byte DefaultPrecision = 36;
-    private const byte DefaultScale = 24;
+    private const byte DefaultPrecision = 38;
+    private const byte DefaultScale = 19;
 
-    public ClickHouseDecimalTypeMapping(int? precision, int? scale, int? size) :
+    public ClickHouseDecimalTypeMapping(int? precision, int? scale) :
         base(
             new RelationalTypeMappingParameters(
                 new CoreTypeMappingParameters(typeof(decimal), new ClickHouseDecimalValueConverter()),
-                GetStoreType(precision ?? DefaultPrecision, scale ?? DefaultScale),
-                StoreTypePostfix.None,
+                "Decimal",
+                StoreTypePostfix.PrecisionAndScale,
                 System.Data.DbType.Decimal,
-                false,
-                size))
+                precision: precision ?? DefaultPrecision,
+                scale: scale ?? DefaultScale))
     {
     }
 
@@ -35,14 +36,11 @@ public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
 
     protected override void ConfigureParameter(DbParameter parameter)
     {
-        var clickHouseParameter = (Driver.ADO.Parameters.ClickHouseDbParameter)parameter;
-        clickHouseParameter.Precision = (byte)(Precision ?? DefaultPrecision);
-        clickHouseParameter.Scale = (byte)(Scale ?? DefaultScale);
-        clickHouseParameter.ClickHouseType = GetStoreType(parameter.Value);
+        parameter.Precision = (byte)(Precision ?? DefaultPrecision);
+        parameter.Scale = (byte)(Scale ?? DefaultScale);
+        ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
 
-    private static string GetStoreType(int precision, int scale) => $"Decimal({precision}, {scale})";
-    
     public override MethodInfo GetDataReaderMethod()
     {
         return typeof(DbDataReader).GetRuntimeMethod(nameof(DbDataReader.GetValue), [typeof(int)])!;
@@ -55,7 +53,7 @@ public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
             expression
         );
     }
-    
+
     protected virtual string GetStoreType(bool? isNullable)
     {
         return isNullable == true ? $"Nullable({StoreType})" : StoreType;
@@ -64,5 +62,10 @@ public class ClickHouseDecimalTypeMapping : DecimalTypeMapping
     protected virtual string GetStoreType(object? parameterValue)
     {
         return GetStoreType(parameterValue == null || parameterValue == DBNull.Value);
+    }
+
+    protected override string GenerateNonNullSqlLiteral(object value)
+    {
+        return base.GenerateNonNullSqlLiteral(value) + "::" + StoreType;
     }
 }

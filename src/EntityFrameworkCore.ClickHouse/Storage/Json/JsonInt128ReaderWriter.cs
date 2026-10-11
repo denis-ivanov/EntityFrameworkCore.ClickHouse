@@ -19,7 +19,7 @@ public sealed class JsonInt128ReaderWriter : JsonValueReaderWriter<Int128>
     {
     }
 
-    public override Int128 FromJsonTyped(ref Utf8JsonReaderManager manager, object? existingObject = null)
+    public override Int128 FromJsonTyped(ref Utf8JsonReaderManager manager, object existingObject = null)
     {
         var reader = manager.CurrentReader;
 
