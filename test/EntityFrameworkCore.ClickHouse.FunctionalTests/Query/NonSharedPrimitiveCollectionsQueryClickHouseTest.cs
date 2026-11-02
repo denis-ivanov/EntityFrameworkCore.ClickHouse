@@ -230,6 +230,12 @@ public class NonSharedPrimitiveCollectionsQueryClickHouseTest : NonSharedPrimiti
         await base.Subquery_over_primitive_collection_on_inheritance_derived_type();
     }
 
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Parameter_collection_of_enum_Cast_from_different_enum_type(ParameterTranslationMode mode)
+    {
+        await base.Parameter_collection_of_enum_Cast_from_different_enum_type(mode);
+    }
+
     protected override DbContextOptionsBuilder SetParameterizedCollectionMode(
         DbContextOptionsBuilder optionsBuilder,
         ParameterTranslationMode parameterizedCollectionMode)

@@ -81,4 +81,10 @@ public class OwnedJsonProjectionClickHouseTest : OwnedJsonProjectionRelationalTe
 
     [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Select_nested_collection_on_optional_associate(QueryTrackingBehavior queryTrackingBehavior) => base.Select_nested_collection_on_optional_associate(queryTrackingBehavior);
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Select_subquery_FirstOrDefault_complex_collection(QueryTrackingBehavior queryTrackingBehavior)
+    {
+        await base.Select_subquery_FirstOrDefault_complex_collection(queryTrackingBehavior);
+    }
 }

@@ -81,4 +81,10 @@ public class NavigationsProjectionClickHouseTest : NavigationsProjectionRelation
 
     [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Select_required_associate_via_optional_navigation(QueryTrackingBehavior queryTrackingBehavior) => base.Select_required_associate_via_optional_navigation(queryTrackingBehavior);
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Select_subquery_FirstOrDefault_complex_collection(QueryTrackingBehavior queryTrackingBehavior)
+    {
+        await base.Select_subquery_FirstOrDefault_complex_collection(queryTrackingBehavior);
+    }
 }

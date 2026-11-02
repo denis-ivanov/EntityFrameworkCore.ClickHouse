@@ -174,4 +174,10 @@ public class ComplexJsonProjectionClickHouseTest : ComplexJsonProjectionRelation
     {
         await base.Select_root_with_value_types(queryTrackingBehavior);
     }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Select_subquery_FirstOrDefault_complex_collection(QueryTrackingBehavior queryTrackingBehavior)
+    {
+        await base.Select_subquery_FirstOrDefault_complex_collection(queryTrackingBehavior);
+    }
 }

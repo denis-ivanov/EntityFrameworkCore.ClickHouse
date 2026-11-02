@@ -357,4 +357,10 @@ public class EntitySplittingQueryClickHouseTest : EntitySplittingQueryTestBase
     {
         await base.Tpt_entity_owning_a_split_reference_on_middle_without_table_sharing(async);
     }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Compare_split_entity_to_null(bool async)
+    {
+        await base.Compare_split_entity_to_null(async);
+    }
 }

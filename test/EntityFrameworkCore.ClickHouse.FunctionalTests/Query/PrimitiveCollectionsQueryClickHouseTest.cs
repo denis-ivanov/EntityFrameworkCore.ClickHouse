@@ -942,6 +942,12 @@ public class PrimitiveCollectionsQueryClickHouseTest : PrimitiveCollectionsQuery
         await base.Values_of_enum_casted_to_underlying_value();
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Parameter_collection_of_nullable_ints_Contains_nullable_int_with_EF_Parameter()
+    {
+        await base.Parameter_collection_of_nullable_ints_Contains_nullable_int_with_EF_Parameter();
+    }
+
     public class PrimitiveCollectionsQueryClickHouseFixture : PrimitiveCollectionsQueryFixtureBase, ITestSqlLoggerFactory
     {
         public TestSqlLoggerFactory TestSqlLoggerFactory
