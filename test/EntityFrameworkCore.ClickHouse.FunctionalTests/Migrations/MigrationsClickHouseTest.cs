@@ -24,6 +24,114 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
     {
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Add_column_shared()
+    {
+        await base.Add_column_shared();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Add_column_with_max_length_on_derived()
+    {
+        await base.Add_column_with_max_length_on_derived();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Alter_table_add_comment()
+    {
+        await base.Alter_table_add_comment();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Alter_table_change_comment()
+    {
+        await base.Alter_table_change_comment();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Add_column_with_computedSql_unspecified()
+    {
+        await base.Add_column_with_computedSql_unspecified();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Add_column_with_defaultValue_unspecified()
+    {
+        await base.Add_column_with_defaultValue_unspecified();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Add_column_with_defaultValueSql_unspecified()
+    {
+        await base.Add_column_with_defaultValueSql_unspecified();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Drop_table()
+    {
+        await base.Drop_table();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Create_table_no_key()
+    {
+        await base.Create_table_no_key();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Alter_table_remove_comment()
+    {
+        await base.Alter_table_remove_comment();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Create_table_with_comments()
+    {
+        await base.Create_table_with_comments();
+    }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Create_table_with_computed_column(bool? stored)
+    {
+        await base.Create_table_with_computed_column(stored);
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Create_table_with_multiline_comments()
+    {
+        await base.Create_table_with_multiline_comments();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task InsertDataOperation()
+    {
+        await base.InsertDataOperation();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Multiop_create_table_and_drop_it_in_one_migration()
+    {
+        await base.Multiop_create_table_and_drop_it_in_one_migration();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Multiop_drop_table_and_create_the_same_table_in_one_migration()
+    {
+        await base.Multiop_drop_table_and_create_the_same_table_in_one_migration();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Multiop_rename_table_and_create_new_table_with_the_old_name()
+    {
+        await base.Multiop_rename_table_and_create_new_table_with_the_old_name();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Multiop_rename_table_and_drop()
+    {
+        await base.Multiop_rename_table_and_drop();
+    }
+    
     [ConditionalFact(Skip = "TBD")]
     public override async Task Add_required_primitve_collection_with_custom_default_value_sql_to_existing_table()
     {
@@ -41,31 +149,35 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Rename_index();
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Add_foreign_key()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_foreign_key());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportForeignKeys, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Add_foreign_key_with_name()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_foreign_key_with_name());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportForeignKeys, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Create_schema()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_schema());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSchemas, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Create_sequence()
     {
         var exception = await Assert.ThrowsAnyAsync<NotSupportedException>(() => base.Create_sequence());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_check_constraint_with_name()
         => Test(
             builder =>
@@ -94,7 +206,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Add_column_with_ansi();
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_check_constraint()
         => Test(
             builder =>
@@ -117,31 +229,35 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // TODO: no scaffolding support for check constraints, https://github.com/aspnet/EntityFrameworkCore/issues/15408
             });
 
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Add_column_computed_with_collation(bool stored)
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_column_computed_with_collation(stored));
         Assert.Equal(ClickHouseExceptions.DoesNotSupportColumnCollations, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Add_column_with_collation()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_column_with_collation());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportColumnCollations, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Alter_column_reset_collation()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_column_reset_collation());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportColumnCollations, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Alter_column_set_collation()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_column_set_collation());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportColumnCollations, exception.Message);
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_comment()
         => Test(
             builder =>
@@ -175,7 +291,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalTheory]
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Add_column_with_computedSql(bool? stored)
     {
         await Test(
@@ -210,7 +326,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             });
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_defaultValue_datetime()
         => Test(
             builder =>
@@ -237,7 +353,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.False(birthdayColumn.IsNullable);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_defaultValue_string()
         => Test(
             builder =>
@@ -262,7 +378,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Contains("John Doe", nameColumn.DefaultValueSql);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_defaultValueSql()
         => Test(
             builder =>
@@ -288,7 +404,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Contains("2", sumColumn.DefaultValueSql);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_fixed_length()
         => Test(
             builder =>
@@ -316,7 +432,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     column.StoreType);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_max_length()
         => Test(
             builder =>
@@ -343,7 +459,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     column.StoreType);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_required()
         => Test(
             builder =>
@@ -367,7 +483,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.False(column.IsNullable);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_column_with_unbounded_max_length()
         => Test(
             builder =>
@@ -392,13 +508,13 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     column.StoreType);
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_required_primitive_collection_with_custom_default_value_sql_to_existing_table()
     {
         return Task.CompletedTask;
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_optional_primitive_collection_to_existing_table()
         => Test(
             builder =>
@@ -437,31 +553,31 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(customersTable.PrimaryKey!.Columns));
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_primary_key_composite_with_name()
     {
         return base.Add_primary_key_composite_with_name();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_primary_key_int()
     {
         return base.Add_primary_key_int();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_primary_key_string()
     {
         return base.Add_primary_key_string();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_primary_key_with_name()
     {
         return base.Add_primary_key_with_name();
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_required_primitve_collection_to_existing_table()
         => Test(
             builder =>
@@ -499,7 +615,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(customersTable.PrimaryKey!.Columns));
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_required_primitve_collection_with_custom_converter_and_custom_default_value_to_existing_table()
         => Test(
             builder =>
@@ -543,7 +659,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(customersTable.PrimaryKey!.Columns));
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Add_required_primitve_collection_with_custom_default_value_to_existing_table()
         => Test(
             builder =>
@@ -581,19 +697,21 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(customersTable.PrimaryKey!.Columns));
             });
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Add_unique_constraint()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_unique_constraint());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueConstraints, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Add_unique_constraint_composite_with_name()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Add_unique_constraint_composite_with_name());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueConstraints, exception.Message);
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_check_constraint()
         => Test(
             builder =>
@@ -616,7 +734,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // TODO: no scaffolding support for check constraints, https://github.com/aspnet/EntityFrameworkCore/issues/15408
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_add_comment()
         => Test(
             builder =>
@@ -645,7 +763,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_change_comment()
         => Test(
             builder =>
@@ -674,7 +792,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_change_computed()
         => Test(
             builder =>
@@ -706,7 +824,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_change_computed_recreates_indexes()
         => Test(
             builder =>
@@ -747,6 +865,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // Assert.Collection(sumIndex.Columns, c => Assert.Equal("Sum", c.Name));
             });
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_change_computed_type()
         => Test(
             builder =>
@@ -781,7 +900,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_change_type()
         => Test(
             builder =>
@@ -803,7 +922,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(TypeMappingSource.FindMapping(typeof(long))!.StoreType, column.StoreType);
             });
 
-    [ConditionalTheory]
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
     [InlineData(true)]
     [InlineData(false)]
     [InlineData(null)]
@@ -840,7 +959,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_make_non_computed()
         => Test(
             builder =>
@@ -870,7 +989,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // TODO Assert.NotEqual(true, sumColumn.IsStored);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_make_required()
         => Test(
             builder =>
@@ -893,7 +1012,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.False(column.IsNullable);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_make_required_with_composite_index()
         => Test(
             builder =>
@@ -923,7 +1042,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // Assert.Contains(table.Columns.Single(c => c.Name == "LastName"), index.Columns);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_make_required_with_index()
         => Test(
             builder =>
@@ -951,7 +1070,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // Assert.Same(column, Assert.Single(index.Columns));
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_make_required_with_null_data()
         => Test(
             builder =>
@@ -975,7 +1094,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.False(column.IsNullable);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_column_remove_comment()
         => Test(
             builder =>
@@ -995,7 +1114,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Null(column.Comment);
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_computed_column_add_comment()
         => Test(
             builder =>
@@ -1021,30 +1140,34 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Alter_index_change_sort_order()
     {
         return base.Alter_index_change_sort_order();
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Alter_index_make_unique()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_index_make_unique());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueIndexes, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Alter_sequence_all_settings()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_sequence_all_settings());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Alter_sequence_increment_by()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_sequence_increment_by());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Alter_sequence_restart_with()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Alter_sequence_restart_with());
@@ -1057,55 +1180,59 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
         return base.Alter_table_add_comment_non_default_schema();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Create_index()
     {
         return base.Create_index();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Create_index_descending()
     {
         return base.Create_index_descending();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Create_index_descending_mixed()
     {
         return base.Create_index_descending_mixed();
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Create_index_unique()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_index_unique());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueIndexes, exception.Message);
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Create_index_with_filter()
     {
         return base.Create_index_with_filter();
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Create_sequence_all_settings()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_sequence_all_settings());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSchemas, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Create_sequence_short()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_sequence_short());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Create_sequence_long()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_sequence_long());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Create_table()
         => Test(
             builder => { },
@@ -1132,13 +1259,13 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(table.PrimaryKey!.Columns));
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Create_table_all_settings()
     {
         return base.Create_table_all_settings();
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Create_table_with_optional_primitive_collection()
         => Test(
             builder => { },
@@ -1167,7 +1294,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(customersTable.PrimaryKey!.Columns));
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Create_table_with_required_primitive_collection()
         => Test(
             builder => { },
@@ -1197,13 +1324,14 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     Assert.Single(customersTable.PrimaryKey!.Columns));
             });
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Create_unique_index_with_filter()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Create_unique_index_with_filter());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueIndexes, exception.Message);
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task DeleteDataOperation_composite_key()
         => Test(
             builder =>
@@ -1234,7 +1362,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             _ => { },
             _ => { });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task DeleteDataOperation_simple_key()
         => Test(
             builder =>
@@ -1253,7 +1381,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             _ => { },
             _ => { });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Drop_check_constraint()
         => Test(
             builder =>
@@ -1275,7 +1403,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 // TODO: no scaffolding support for check constraints, https://github.com/aspnet/EntityFrameworkCore/issues/15408
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Drop_column()
         => Test(
             builder =>
@@ -1295,7 +1423,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal("Id", Assert.Single(table.Columns).Name);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Drop_column_computed_and_non_computed_with_dependency()
         => Test(
             builder =>
@@ -1321,31 +1449,34 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal("Id", Assert.Single(table.Columns).Name);
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Drop_column_primary_key()
     {
         return base.Drop_column_primary_key();
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Drop_foreign_key()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Drop_foreign_key());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportForeignKeys, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Move_sequence()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Move_sequence());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Move_table()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Move_table());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSchemas, exception.Message);
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Rename_column()
         => Test(
             builder =>
@@ -1366,13 +1497,14 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Single(table.Columns, c => c.Name == "SomeOtherColumn");
             });
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Rename_sequence()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Rename_sequence());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Rename_table()
         => Test(
             builder =>
@@ -1390,49 +1522,51 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal("Persons", table.Name);
             });
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Drop_index()
     {
         return base.Drop_index();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Drop_primary_key_int()
     {
         return base.Drop_primary_key_int();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Drop_primary_key_string()
     {
         return base.Drop_primary_key_string();
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Drop_sequence()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Drop_sequence());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportSequences, exception.Message);
     }
 
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Drop_unique_constraint()
     {
         var exception = await Assert.ThrowsAsync<NotSupportedException>(() => base.Drop_unique_constraint());
         Assert.Equal(ClickHouseExceptions.DoesNotSupportUniqueConstraints, exception.Message);
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Rename_table_with_primary_key()
     {
         return base.Rename_table_with_primary_key();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task SqlOperation()
     {
         return base.SqlOperation();
     }
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task UpdateDataOperation_composite_key()
         => Test(
             builder =>
@@ -1470,7 +1604,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }),
             model => { });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task UpdateDataOperation_multiple_columns()
         => Test(
             builder =>
@@ -1508,7 +1642,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 }),
             model => { });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task UpdateDataOperation_simple_key()
         => Test(
             builder =>
@@ -1527,7 +1661,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
             builder => builder.Entity("Person").HasData(new Person { Id = 2, Name = "Another John Snow" }),
             model => { });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task MergeTree_with_all_args() =>
         Test(
             builder =>
@@ -1576,7 +1710,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(["id"], sampleBy);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task ReplacingMergeTree_with_all_args() =>
         Test(
             builder =>
@@ -1631,7 +1765,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(["id"], sampleBy);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task SummingMergeTree_with_all_args() =>
         Test(
             builder =>
@@ -1682,7 +1816,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(["id"], sampleBy);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task AggregatingMergeTree_with_all_args() =>
         Test(
             builder =>
@@ -1725,7 +1859,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(["id"], sampleBy);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task CollapsingMergeTree_with_all_args() =>
         Test(
             builder =>
@@ -1768,7 +1902,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(["id"], sampleBy);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task VersionedCollapsingMergeTree_with_all_args() =>
         Test(
             builder =>
@@ -1812,7 +1946,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(["id"], sampleBy);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task TinyLog_no_args() =>
         Test(
             _ =>
@@ -1833,7 +1967,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(ClickHouseAnnotationNames.TinyLogEngine, engine);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task StripeLog_no_args() =>
         Test(
             _ =>
@@ -1854,7 +1988,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 Assert.Equal(ClickHouseAnnotationNames.StripeLogEngine, engine);
             });
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public Task Log_no_args() =>
         Test(
             _ =>

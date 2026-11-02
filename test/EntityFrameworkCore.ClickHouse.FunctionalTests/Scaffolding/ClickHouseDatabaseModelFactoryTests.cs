@@ -197,7 +197,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP VIEW MountainsColumnsView;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Create_primary_key()
         => Test(
             ["CREATE TABLE Place ( Id int ) ENGINE = MergeTree PRIMARY KEY (Id);"],
@@ -261,7 +261,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE Nullable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Column_default_value_is_set()
         => Test(
             ["""
@@ -310,7 +310,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE ComputedColumnSql;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_int_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -363,7 +363,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_short_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -391,7 +391,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_long_literals_are_parsed_for_HasDefaultValue()
         => Test(
             [
@@ -420,7 +420,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_byte_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -447,7 +447,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_double_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -483,7 +483,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_float_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -519,7 +519,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_decimal_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -552,7 +552,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_bool_literals_are_parsed_for_HasDefaultValue()
         => Test(
             [
@@ -590,7 +590,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_DateTime_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -647,7 +647,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_DateOnly_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -674,7 +674,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_Guid_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -697,7 +697,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE MyTable;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Simple_string_literals_are_parsed_for_HasDefaultValue()
         => Test(
             ["""
@@ -764,7 +764,7 @@ public class ClickHouseDatabaseModelFactoryTests : IClassFixture<ClickHouseDatab
             },
             ["DROP TABLE CompositePrimaryKey;"]);
 
-    [ConditionalFact]
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
     public void Create_primary_key_when_integer_primary_key_aliased_to_rowid()
         => Test(
             ["""

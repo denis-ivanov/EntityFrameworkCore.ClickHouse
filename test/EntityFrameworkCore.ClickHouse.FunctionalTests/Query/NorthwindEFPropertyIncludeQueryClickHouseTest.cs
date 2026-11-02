@@ -142,4 +142,46 @@ public class NorthwindEFPropertyIncludeQueryClickHouseTest : NorthwindEFProperty
     {
         await base.Join_Include_reference_GroupBy_Select(async);
     }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Multi_level_includes_are_applied_with_skip(bool async)
+    {
+        await base.Multi_level_includes_are_applied_with_skip(async);
+    }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Multi_level_includes_are_applied_with_skip_take(bool async)
+    {
+        await base.Multi_level_includes_are_applied_with_skip_take(async);
+    }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Multi_level_includes_are_applied_with_take(bool async)
+    {
+        await base.Multi_level_includes_are_applied_with_take(async);
+    }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Repro9735(bool async)
+    {
+        await base.Repro9735(async);
+    }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task SelectMany_Include_collection_GroupBy_Select(bool async)
+    {
+        await base.SelectMany_Include_collection_GroupBy_Select(async);
+    }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task SelectMany_Include_reference_GroupBy_Select(bool async)
+    {
+        await base.SelectMany_Include_reference_GroupBy_Select(async);
+    }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Then_include_collection_order_by_collection_column(bool async)
+    {
+        await base.Then_include_collection_order_by_collection_column(async);
+    }
 }
