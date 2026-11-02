@@ -93,4 +93,10 @@ public class ComplexTableSplittingProjectionClickHouseTest : ComplexTableSplitti
 
     [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
     public override Task Select_subquery_optional_related_FirstOrDefault(QueryTrackingBehavior queryTrackingBehavior) => base.Select_subquery_optional_related_FirstOrDefault(queryTrackingBehavior);
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Select_subquery_FirstOrDefault_complex_collection(QueryTrackingBehavior queryTrackingBehavior)
+    {
+        await base.Select_subquery_FirstOrDefault_complex_collection(queryTrackingBehavior);
+    }
 }

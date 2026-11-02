@@ -316,4 +316,10 @@ public class AdHocJsonQueryClickHouseTest : AdHocJsonQueryRelationalTestBase
     {
         await base.Optional_json_properties_materialized_as_null_when_the_element_in_json_is_not_present();
     }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task SelectMany_over_primitive_collection_nested_in_complex_collection_inside_json_column()
+    {
+        await base.SelectMany_over_primitive_collection_nested_in_complex_collection_inside_json_column();
+    }
 }

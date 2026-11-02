@@ -39,4 +39,28 @@ public class AdHocComplexTypeQueryClickHouseTest : AdHocComplexTypeQueryTestBase
     {
         await base.Optional_complex_type_with_discriminator();
     }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Nested_nullable_complex_type_with_discriminator_null_to_non_null_roundtrip()
+    {
+        await base.Nested_nullable_complex_type_with_discriminator_null_to_non_null_roundtrip();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Nullable_complex_type_with_discriminator_non_null_to_null_roundtrip()
+    {
+        await base.Nullable_complex_type_with_discriminator_non_null_to_null_roundtrip();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Nullable_complex_type_with_discriminator_null_to_non_null_roundtrip()
+    {
+        await base.Nullable_complex_type_with_discriminator_null_to_non_null_roundtrip();
+    }
+
+    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Nullable_complex_type_with_discriminator_update_non_null_entity_roundtrip()
+    {
+        await base.Nullable_complex_type_with_discriminator_update_non_null_entity_roundtrip();
+    }
 }

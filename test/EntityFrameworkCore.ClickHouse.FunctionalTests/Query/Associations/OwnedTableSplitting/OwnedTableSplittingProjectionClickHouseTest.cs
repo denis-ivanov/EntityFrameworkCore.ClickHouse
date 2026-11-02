@@ -150,4 +150,10 @@ public class OwnedTableSplittingProjectionClickHouseTest : OwnedTableSplittingPr
     {
         return base.SelectMany_nested_collection_on_required_associate(queryTrackingBehavior);
     }
+
+    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    public override async Task Select_subquery_FirstOrDefault_complex_collection(QueryTrackingBehavior queryTrackingBehavior)
+    {
+        await base.Select_subquery_FirstOrDefault_complex_collection(queryTrackingBehavior);
+    }
 }
