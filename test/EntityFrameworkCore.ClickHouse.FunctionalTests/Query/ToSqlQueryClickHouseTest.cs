@@ -13,12 +13,16 @@ public class ToSqlQueryClickHouseTest : ToSqlQueryTestBase
     {
     }
 
-    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Entity_type_with_navigation_mapped_to_SqlQuery(bool async)
     {
         await base.Entity_type_with_navigation_mapped_to_SqlQuery(async);
     }
 
+#if NET10_0
     protected override ITestStoreFactory TestStoreFactory
+#else
+    protected override ITestStoreFactory NonSharedTestStoreFactory
+#endif
         => ClickHouseTestStoreFactory.Instance;
 }

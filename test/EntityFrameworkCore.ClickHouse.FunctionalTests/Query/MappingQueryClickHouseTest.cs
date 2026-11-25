@@ -12,25 +12,25 @@ public class MappingQueryClickHouseTest : MappingQueryTestBase<MappingQueryClick
     {
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override void All_customers()
     {
         base.All_customers();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override void All_employees()
     {
         base.All_employees();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override void All_orders()
     {
         base.All_orders();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override void Project_nullable_enum()
     {
         base.Project_nullable_enum();

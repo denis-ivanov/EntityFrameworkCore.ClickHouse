@@ -39,8 +39,10 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    - name: Test .NET 10
+      run: dotnet test --no-build --framework net10.0 --verbosity normal
+    - name: Test .NET 11
+      run: dotnet test --no-build --framework net11.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v7
       with:

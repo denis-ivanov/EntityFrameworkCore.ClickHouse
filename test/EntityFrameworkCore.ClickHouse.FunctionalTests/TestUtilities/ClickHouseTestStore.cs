@@ -29,9 +29,17 @@ public class ClickHouseTestStore : RelationalTestStore
         return command.ExecuteNonQuery();
     }
 
+#if NET10_0
     public override Task CleanAsync(DbContext context)
+#else
+    public override Task CleanAsync(DbContext context, bool createTables = true)
+#endif
     {
+#if NET10_0
         context.Database.EnsureClean();
+#else
+        context.Database.EnsureClean(createTables);
+#endif
         return Task.CompletedTask;
     }
 
