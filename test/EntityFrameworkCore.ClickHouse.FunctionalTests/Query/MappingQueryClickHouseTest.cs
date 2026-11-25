@@ -38,8 +38,11 @@ public class MappingQueryClickHouseTest : MappingQueryTestBase<MappingQueryClick
 
     public class MappingQueryClickHouseFixture : MappingQueryFixtureBase
     {
+        // This fixture maps a different set of columns from the shared Northwind model.
+        protected override string StoreName => "NorthwindMapping";
+
         protected override ITestStoreFactory TestStoreFactory
-            => ClickHouseNorthwindTestStoreFactory.Instance;
+            => ClickHouseTestStoreFactory.Instance;
 
         protected override string DatabaseSchema { get; } = null;
 
