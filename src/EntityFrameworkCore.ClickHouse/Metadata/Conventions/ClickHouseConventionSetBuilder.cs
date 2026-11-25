@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
@@ -37,34 +35,4 @@ public class ClickHouseConventionSetBuilder : RelationalConventionSetBuilder
 
         return conventionSet;
     }
-
-#if NET11_0_OR_GREATER
-    private sealed class ClickHouseForeignKeyConvention : IModelFinalizingConvention
-    {
-        public void ProcessModelFinalizing(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
-        {
-            foreach (var entityType in modelBuilder.Metadata.GetEntityTypes())
-            {
-                foreach (var foreignKey in entityType.GetDeclaredForeignKeys())
-                {
-                    foreignKey.Builder.ExcludeForeignKeyFromMigrations(true);
-                }
-            }
-        }
-    }
-#else
-    private sealed class ClickHouseJsonOwnershipConvention : IModelFinalizingConvention
-    {
-        public void ProcessModelFinalizing(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
-        {
-            foreach (var entityType in modelBuilder.Metadata.GetEntityTypes())
-            {
-                if (entityType.IsMappedToJson())
-                {
-                    entityType.FindOwnership()?.PrincipalToDependent?.Builder.AutoInclude(true);
-                }
-            }
-        }
-    }
-#endif
 }

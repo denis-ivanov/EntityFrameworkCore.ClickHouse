@@ -110,7 +110,7 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                     sumSqlExpression = CombineTerms(source, sumSqlExpression);
 
                     var sumInputType = sumSqlExpression.Type;
-                   
+
                     var sum = _sqlExpressionFactory.Function(
                         "SUM",
                         [sumSqlExpression],

@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
-public class ClickHouseDateTimeOffsetTranslator: IMemberTranslator, IMethodCallTranslator
+public class ClickHouseDateTimeOffsetTranslator : IMemberTranslator, IMethodCallTranslator
 {
     private readonly ISqlExpressionFactory _sql;
     private readonly IRelationalTypeMappingSource _typeMappings;
