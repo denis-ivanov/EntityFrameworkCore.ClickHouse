@@ -20,11 +20,11 @@ namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 public class ClickHouseJsonTypeMapping : JsonTypeMappingBase
 {
     private static readonly MethodInfo s_openJsonStreamMethod = typeof(ClickHouseJsonTypeMapping)
-        .GetMethod(nameof(OpenJsonStream), BindingFlags.NonPublic | BindingFlags.Static)!;
+        .GetMethod(nameof(OpenJsonStream), BindingFlags.Public | BindingFlags.Static)!;
     private static readonly MethodInfo s_openJsonTextStreamMethod = typeof(ClickHouseJsonTypeMapping)
-        .GetMethod(nameof(OpenJsonTextStream), BindingFlags.NonPublic | BindingFlags.Static)!;
+        .GetMethod(nameof(OpenJsonTextStream), BindingFlags.Public | BindingFlags.Static)!;
     private static readonly MethodInfo s_readJsonElementMethod = typeof(ClickHouseJsonTypeMapping)
-        .GetMethod(nameof(ReadJsonElement), BindingFlags.NonPublic | BindingFlags.Static)!;
+        .GetMethod(nameof(ReadJsonElement), BindingFlags.Public | BindingFlags.Static)!;
 
     public ClickHouseJsonTypeMapping() : this(typeof(JsonElement))
     {
@@ -56,16 +56,16 @@ public class ClickHouseJsonTypeMapping : JsonTypeMappingBase
         return Expression.Call(reader, expression);
     }
 
-    private static MemoryStream OpenJsonStream(JsonNode value)
+    public static MemoryStream OpenJsonStream(JsonNode value)
         => OpenUtf8Stream(JsonSerializer.SerializeToUtf8Bytes(value));
 
-    private static MemoryStream OpenJsonTextStream(string value)
+    public static MemoryStream OpenJsonTextStream(string value)
         => OpenUtf8Stream(Encoding.UTF8.GetBytes(value));
 
     private static MemoryStream OpenUtf8Stream(byte[] bytes)
         => new(bytes, 0, bytes.Length, writable: false, publiclyVisible: true);
 
-    private static JsonElement ReadJsonElement(JsonNode value)
+    public static JsonElement ReadJsonElement(JsonNode value)
         => JsonSerializer.SerializeToElement(value);
 
     protected override void ConfigureParameter(DbParameter parameter)
