@@ -1,5 +1,6 @@
-﻿using ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
+using ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -28,6 +29,8 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
     private static readonly RelationalTypeMapping Float32TypeMapping = new ClickHouseFloat32TypeMapping();
     private static readonly RelationalTypeMapping UuidTypeMapping = new ClickHouseUuidTypeMapping();
     private static readonly RelationalTypeMapping JsonTypeMapping = new ClickHouseJsonTypeMapping();
+    private static readonly RelationalTypeMapping StructuralJsonMapping = new ClickHouseJsonTypeMapping(typeof(JsonTypePlaceholder));
+    private static readonly RelationalTypeMapping s_structuralJsonTextMapping = new ClickHouseJsonTypeMapping(typeof(JsonTypePlaceholder), "String");
 
     private static readonly Dictionary<Type, RelationalTypeMapping> ClrTypeMappings = new()
     {
@@ -146,13 +149,41 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
         return FindMapping(new RelationalTypeMappingInfo(type)) ?? base.FindMapping(type);
     }
 
-    protected override RelationalTypeMapping? FindMapping(in RelationalTypeMappingInfo mappingInfo) =>
-        FindExistingMapping(mappingInfo) ??
-        FindFixedStringTypeMapping(mappingInfo) ??
-        FindArrayMapping(mappingInfo) ??
-        FindTupleMapping(mappingInfo) ??
-        FindDecimalMapping(mappingInfo) ??
-        base.FindMapping(in mappingInfo);
+    protected override RelationalTypeMapping? FindMapping(in RelationalTypeMappingInfo mappingInfo)
+    {
+        if (mappingInfo.ClrType == typeof(JsonTypePlaceholder))
+        {
+            if (string.Equals(mappingInfo.StoreTypeName, s_structuralJsonTextMapping.StoreType, StringComparison.OrdinalIgnoreCase))
+            {
+                return s_structuralJsonTextMapping;
+            }
+
+            return string.IsNullOrEmpty(mappingInfo.StoreTypeName)
+                || string.Equals(mappingInfo.StoreTypeName, StructuralJsonMapping.StoreType, StringComparison.OrdinalIgnoreCase)
+                    ? StructuralJsonMapping
+                    : null;
+        }
+
+        RelationalTypeMapping? mapping = FindExistingMapping(mappingInfo)
+            ?? FindFixedStringTypeMapping(mappingInfo)
+            ?? FindArrayMapping(mappingInfo)
+            ?? FindTupleMapping(mappingInfo)
+            ?? FindDecimalMapping(mappingInfo)
+            ?? base.FindMapping(in mappingInfo);
+
+        return mapping == null ? null : WithJsonReaderWriter(mapping);
+    }
+
+    private RelationalTypeMapping WithJsonReaderWriter(RelationalTypeMapping mapping)
+    {
+        if (mapping.JsonValueReaderWriter == null
+            && Dependencies.JsonValueReaderWriterSource.FindReaderWriter(mapping.ClrType) is JsonValueReaderWriter readerWriter)
+        {
+            return (RelationalTypeMapping)mapping.WithComposedConverter(null, jsonValueReaderWriter: readerWriter);
+        }
+
+        return mapping;
+    }
 
     private RelationalTypeMapping? FindExistingMapping(in RelationalTypeMappingInfo mappingInfo)
     {
@@ -195,23 +226,70 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
 
     private RelationalTypeMapping? FindArrayMapping(in RelationalTypeMappingInfo mappingInfo)
     {
-        if (mappingInfo.StoreTypeName != null &&
-            mappingInfo.StoreTypeName.StartsWith("Array(") &&
-            mappingInfo.StoreTypeName.EndsWith(')'))
+        if (mappingInfo.StoreTypeName is string storeType
+            && storeType.StartsWith("Array(", StringComparison.OrdinalIgnoreCase)
+            && storeType.EndsWith(')'))
         {
-            var elementTypeName = mappingInfo.StoreTypeName.Substring(6, mappingInfo.StoreTypeName.Length - 7).Trim();
-            var elementTypeMapping = AliasTypeMapping[elementTypeName];
-            return new ClickHouseArrayTypeMapping(mappingInfo.StoreTypeName, elementTypeMapping);
+            string elementStoreType = storeType[6..^1].Trim();
+            bool nullableElement = elementStoreType.StartsWith("Nullable(", StringComparison.OrdinalIgnoreCase)
+                && elementStoreType.EndsWith(')');
+
+            if (nullableElement)
+            {
+                elementStoreType = elementStoreType[9..^1].Trim();
+            }
+
+            if (!AliasTypeMapping.TryGetValue(elementStoreType, out RelationalTypeMapping? elementMapping))
+            {
+                return null;
+            }
+
+            Type elementClrType = elementMapping.ClrType;
+
+            if (nullableElement && elementClrType.IsValueType)
+            {
+                elementClrType = typeof(Nullable<>).MakeGenericType(elementClrType);
+            }
+
+            return CreateArrayMapping(mappingInfo, storeType, elementMapping, elementClrType.MakeArrayType());
         }
 
-        if (mappingInfo.ClrType is { IsArray: true })
+        if (mappingInfo.ClrType is not { IsArray: true } arrayType || arrayType.GetArrayRank() != 1)
         {
-            var elementType = mappingInfo.ClrType.GetElementType();
-            var elementTypeMapping = ClrTypeMappings[elementType!];
-            return new ClickHouseArrayTypeMapping($"Array({elementTypeMapping.StoreType})", elementTypeMapping);
+            return null;
         }
 
-        return null;
+        Type arrayElementType = arrayType.GetElementType()!;
+        Type? underlyingType = Nullable.GetUnderlyingType(arrayElementType);
+
+        if (!ClrTypeMappings.TryGetValue(underlyingType ?? arrayElementType, out RelationalTypeMapping? clrElementMapping))
+        {
+            return null;
+        }
+
+        string clrElementStoreType = underlyingType == null
+            ? clrElementMapping.StoreType
+            : $"Nullable({clrElementMapping.StoreType})";
+
+        return CreateArrayMapping(mappingInfo, $"Array({clrElementStoreType})", clrElementMapping, arrayType);
+    }
+
+    private RelationalTypeMapping CreateArrayMapping(
+        in RelationalTypeMappingInfo mappingInfo,
+        string storeType,
+        RelationalTypeMapping elementMapping,
+        Type arrayType)
+    {
+        elementMapping = WithJsonReaderWriter(elementMapping);
+        ClickHouseArrayTypeMapping mapping = new(storeType, elementMapping, arrayType);
+        CoreTypeMapping? jsonElementMapping = elementMapping;
+        if (!TryFindJsonCollectionMapping(mappingInfo.CoreTypeMappingInfo, arrayType, null,
+                ref jsonElementMapping, out _, out JsonValueReaderWriter? readerWriter))
+        {
+            return mapping;
+        }
+
+        return (RelationalTypeMapping)mapping.WithComposedConverter(null, jsonValueReaderWriter: readerWriter);
     }
 
     private RelationalTypeMapping? FindDecimalMapping(in RelationalTypeMappingInfo mappingInfo)

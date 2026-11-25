@@ -1,6 +1,7 @@
 ﻿using ClickHouse.EntityFrameworkCore.Metadata;
 using ClickHouse.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using System;
 
 namespace ClickHouse.EntityFrameworkCore.Extensions;
 
@@ -22,6 +23,9 @@ public static class ClickHouseTableOperationExtensions
             ClickHouseAnnotationNames.TinyLogEngine => new ClickHouseTinyLogEngineBuilder(operation),
             ClickHouseAnnotationNames.StripeLogEngine => new ClickHouseStripeLogEngineBuilder(operation),
             ClickHouseAnnotationNames.LogEngine => new ClickHouseLogEngineBuilder(operation),
+            null when operation is CreateTableOperation createTable && createTable.Columns.Exists(
+                column => string.Equals(column.ColumnType, "Json", StringComparison.OrdinalIgnoreCase))
+                => new ClickHouseMergeTreeEngineBuilder(operation).WithOrderBy("tuple()"),
             _ => new ClickHouseStripeLogEngineBuilder(operation)
         };
     }

@@ -1,6 +1,8 @@
 ﻿using ClickHouse.EntityFrameworkCore.Query.Expressions.Internal;
+using ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -77,6 +79,44 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
         }
 
         return base.VisitBinary(binaryExpression);
+    }
+
+    protected override Expression VisitMethodCall(MethodCallExpression methodCallExpression)
+    {
+        Type? declaringType = methodCallExpression.Method.DeclaringType;
+        string methodName = methodCallExpression.Method.Name;
+        bool isAny = methodName == nameof(Enumerable.Any) && methodCallExpression.Arguments.Count == 1;
+        bool isContains = methodName == nameof(Enumerable.Contains) && methodCallExpression.Arguments.Count == 2;
+
+        if ((declaringType == typeof(Enumerable) || declaringType == typeof(Queryable)) && (isAny || isContains))
+        {
+            Expression source = methodCallExpression.Arguments[0];
+            if (source is MethodCallExpression asQueryable
+                && asQueryable.Method.DeclaringType == typeof(Queryable)
+                && asQueryable.Method.Name == nameof(Queryable.AsQueryable))
+            {
+                source = asQueryable.Arguments[0];
+            }
+
+            if (source.Type.IsArray && Visit(source) is ColumnExpression { TypeMapping: ClickHouseArrayTypeMapping arrayMapping } column)
+            {
+                if (isAny)
+                {
+                    return Dependencies.SqlExpressionFactory.Function(
+                        "notEmpty", [column], nullable: true, [true], typeof(bool));
+                }
+
+                if (Visit(methodCallExpression.Arguments[1]) is SqlExpression item)
+                {
+                    SqlExpression mappedItem = Dependencies.SqlExpressionFactory.ApplyTypeMapping(
+                        item, (RelationalTypeMapping?)arrayMapping.ElementTypeMapping);
+                    return Dependencies.SqlExpressionFactory.Function(
+                        "has", [column, mappedItem], nullable: true, [true, false], typeof(bool));
+                }
+            }
+        }
+
+        return base.VisitMethodCall(methodCallExpression);
     }
 
     protected override Expression VisitNew(NewExpression newExpression)

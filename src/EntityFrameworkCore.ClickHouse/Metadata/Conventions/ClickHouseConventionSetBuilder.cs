@@ -16,6 +16,7 @@ public class ClickHouseConventionSetBuilder : RelationalConventionSetBuilder
     {
         var conventionSet = base.CreateConventionSet();
         conventionSet.Remove(typeof(ForeignKeyIndexConvention));
+        conventionSet.ModelFinalizingConventions.Add(new ClickHouseJsonStorageConvention());
 #if NET11_0_OR_GREATER
         conventionSet.ModelFinalizingConventions.Add(new ClickHouseForeignKeyConvention());
 #else
