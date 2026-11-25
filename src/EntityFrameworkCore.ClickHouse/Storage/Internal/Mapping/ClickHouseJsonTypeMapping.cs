@@ -4,9 +4,15 @@ using System;
 using System.Data.Common;
 using System.Text.Json;
 
+#if NET11_0_OR_GREATER
+using JsonTypeMappingBase = Microsoft.EntityFrameworkCore.Storage.StructuralJsonTypeMapping;
+#else
+using JsonTypeMappingBase = Microsoft.EntityFrameworkCore.Storage.JsonTypeMapping;
+#endif
+
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
-public class ClickHouseJsonTypeMapping : JsonTypeMapping
+public class ClickHouseJsonTypeMapping : JsonTypeMappingBase
 {
     public ClickHouseJsonTypeMapping()
         : base("Json", typeof(JsonElement), System.Data.DbType.String)
