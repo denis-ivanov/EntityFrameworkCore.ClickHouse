@@ -7,6 +7,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -426,7 +427,7 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
                     Uint = b.TestUnsignedInt32.ToString(),
                     Long = b.TestInt64.ToString(),
                     Ulong = b.TestUnsignedInt64.ToString(),
-                    Decimal = b.TestDecimal.ToString("F2"),
+                    Decimal = b.TestDecimal.ToString("F2", CultureInfo.InvariantCulture),
                     Char = b.TestCharacter.ToString()
                 })
             .First();
