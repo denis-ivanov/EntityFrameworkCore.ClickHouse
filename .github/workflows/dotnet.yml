@@ -39,13 +39,17 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    - name: Test with coverage
+      run: >-
+        dotnet test --no-build --verbosity normal
+        --results-directory "${{ runner.temp }}/coverage"
+        --collect "XPlat Code Coverage"
+        -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./**/coverage.opencover.xml
+        directory: ${{ runner.temp }}/coverage
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
