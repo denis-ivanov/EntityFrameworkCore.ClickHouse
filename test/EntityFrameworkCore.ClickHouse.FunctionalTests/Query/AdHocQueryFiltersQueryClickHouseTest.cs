@@ -15,10 +15,11 @@ public class AdHocQueryFiltersQueryClickHouseTest : AdHocQueryFiltersQueryRelati
     
 #if NET10_0
     protected override ITestStoreFactory TestStoreFactory
+        => ClickHouseTestStoreFactory.Instance;
 #else
     protected override ITestStoreFactory NonSharedTestStoreFactory
+        => ClickHouseTestStoreFactory.WithClientKeys;
 #endif
-        => ClickHouseTestStoreFactory.Instance;
 
     [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Named_query_filters_anonymous()

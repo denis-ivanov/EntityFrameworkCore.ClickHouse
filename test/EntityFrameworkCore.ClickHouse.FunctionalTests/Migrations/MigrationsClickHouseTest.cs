@@ -6,6 +6,7 @@ using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Scaffolding;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.TestUtilities;
@@ -23,6 +24,39 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
     public MigrationsClickHouseTest(MigrationsClickHouseFixture fixture) : base(fixture)
     {
     }
+
+#if NET11_0_OR_GREATER
+    [Fact]
+    public override Task Convert_owned_entity_with_no_schema_to_regular_entity()
+        => Test(
+            buildCommonAction: common => common.Entity("Entity", entity =>
+            {
+                entity.Property<int>("Id").ValueGeneratedOnAdd();
+                entity.HasKey("Id");
+                entity.Property<string>("Name");
+                entity.ToTable("Entity");
+            }),
+            buildSourceAction: source => source.Entity("Entity", entity => entity.OwnsOne("Owned", "OwnedReference", owned =>
+            {
+                owned.Property<DateTime>("Date");
+                owned.ToTable("Owned");
+            })),
+            buildTargetAction: target => target.Entity("Owned", entity =>
+            {
+                entity.Property<int>("EntityId").ValueGeneratedNever();
+                entity.HasKey("EntityId");
+                entity.Property<DateTime>("Date");
+                entity.ToTable("Owned");
+            }),
+            asserter: model =>
+            {
+                Assert.Equal(2, model.Tables.Count);
+                DatabaseTable owned = Assert.Single(model.Tables, static table => table.Name == "Owned");
+                Assert.Single(model.Tables, static table => table.Name == "Entity");
+                Assert.Contains(owned.Columns, static column => column.Name == "Date");
+                Assert.Contains(owned.Columns, static column => column.Name == "EntityId");
+            });
+#endif
 
     [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Add_column_shared()

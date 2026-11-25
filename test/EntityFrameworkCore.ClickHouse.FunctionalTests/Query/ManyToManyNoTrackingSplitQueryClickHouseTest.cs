@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
+﻿using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -6,6 +8,14 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 
 public class ManyToManyNoTrackingSplitQueryClickHouseTest : ManyToManyNoTrackingQueryRelationalTestBase<ManyToManySplitQueryClickHouseFixture>
 {
+#if NET11_0_OR_GREATER
+    protected override ITestStoreFactory NonSharedTestStoreFactory
+        => ClickHouseTestStoreFactory.WithClientKeys;
+
+    protected override string NonSharedStoreName
+        => GetType().Name + "_NonShared";
+#endif
+
     public ManyToManyNoTrackingSplitQueryClickHouseTest(ManyToManySplitQueryClickHouseFixture fixture) : base(fixture)
     {
     }

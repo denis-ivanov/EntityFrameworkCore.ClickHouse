@@ -9,6 +9,11 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 public class ComplexTypeQueryClickHouseTest : ComplexTypeQueryRelationalTestBase<ComplexTypeQueryClickHouseTest.ComplexTypeQueryClickHouseFixture>
 {
 #if NET11_0_OR_GREATER
+    protected override ITestStoreFactory NonSharedTestStoreFactory
+        => ClickHouseTestStoreFactory.WithClientKeysAndMutations;
+#endif
+
+#if NET11_0_OR_GREATER
     [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Non_optional_complex_type_with_all_nullable_properties()
     {

@@ -1,4 +1,6 @@
-﻿using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
+﻿using ClickHouse.EntityFrameworkCore.Extensions;
+using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Threading.Tasks;
@@ -418,5 +420,8 @@ public class InheritanceRelationshipsQueryClickHouseTest : InheritanceRelationsh
     {
         protected override ITestStoreFactory TestStoreFactory
             => ClickHouseTestStoreFactory.Instance;
+
+        public override DbContextOptionsBuilder AddOptions(DbContextOptionsBuilder builder)
+            => base.AddOptions(builder.UseClickHouse(static options => options.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
     }
 }

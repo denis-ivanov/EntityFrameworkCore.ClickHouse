@@ -22,10 +22,11 @@ public class AdHocQuerySplittingQueryClickHouseTest : AdHocQuerySplittingQueryTe
     
 #if NET10_0
     protected override ITestStoreFactory TestStoreFactory
+        => ClickHouseTestStoreFactory.Instance;
 #else
     protected override ITestStoreFactory NonSharedTestStoreFactory
+        => ClickHouseTestStoreFactory.WithClientKeysAndMutations;
 #endif
-        => ClickHouseTestStoreFactory.Instance;
 
     protected override DbContextOptionsBuilder SetQuerySplittingBehavior(DbContextOptionsBuilder optionsBuilder,
         QuerySplittingBehavior splittingBehavior)

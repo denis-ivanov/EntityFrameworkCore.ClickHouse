@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
+﻿using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
+using Microsoft.EntityFrameworkCore.Query;
 #if NET11_0_OR_GREATER
 using Microsoft.EntityFrameworkCore.Query.Inheritance;
 #endif
+using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -9,6 +11,14 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 
 public class TPCManyToManyQueryClickHouseTest : TPCManyToManyQueryRelationalTestBase<TPCManyToManyQueryClickHouseFixture>
 {
+#if NET11_0_OR_GREATER
+    protected override ITestStoreFactory NonSharedTestStoreFactory
+        => ClickHouseTestStoreFactory.WithClientKeys;
+
+    protected override string NonSharedStoreName
+        => GetType().Name + "_NonShared";
+#endif
+
     public TPCManyToManyQueryClickHouseTest(TPCManyToManyQueryClickHouseFixture fixture, ITestOutputHelper testOutputHelper)
         : base(fixture)
     {

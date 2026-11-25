@@ -2,6 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.TestUtilities;
+#if NET11_0_OR_GREATER
+using ClickHouse.Driver.ADO.Parameters;
+using ClickHouse.EntityFrameworkCore.Extensions;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
+using System;
+#endif
 using System.Threading.Tasks;
 using Xunit;
 
@@ -12,6 +19,44 @@ public class OwnedEntityQueryClickHouseTest : OwnedEntityQueryRelationalTestBase
     public OwnedEntityQueryClickHouseTest(NonSharedFixture fixture) : base(fixture)
     {
     }
+
+#if NET11_0_OR_GREATER
+    [Fact]
+    public override async Task Inconsistent_owned_entity_data_logs_warning_and_does_not_cause_identity_conflict()
+    {
+        var contextFactory = await InitializeNonSharedTest<Context38223>(
+            onModelCreating: static model => model.Entity<Context38223.RootEntity>().Metadata
+                .SetMergeTreeTableEngine().SetOrderBy(["tuple()"]),
+            shouldLogCategory: static category => category == DbLoggerCategory.Query.Name,
+            onConfiguring: static options => options.ConfigureWarnings(
+                static warnings => warnings.Log(CoreEventId.InconsistentOwnedDataWarning)),
+            seed: static async context =>
+            {
+                Context38223.RootEntity root = new()
+                {
+                    Id = Guid.NewGuid(),
+                    Outer = new Context38223.Outer { RequiredProperty = 1, Inner = new Context38223.Inner { InnerProperty = 42 } }
+                };
+                context.Add(root);
+                await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+                ClickHouseDbParameter id = new() { ParameterName = "id", ClickHouseType = "UUID", Value = root.Id };
+                await context.Database.ExecuteSqlRawAsync(
+                    "ALTER TABLE \"RootEntity\" UPDATE \"Outer_RequiredProperty\" = NULL WHERE \"Id\" = {{id:UUID}} SETTINGS mutations_sync = 1",
+                    [id],
+                    TestContext.Current.CancellationToken);
+            });
+
+        await using Context38223 context = contextFactory.CreateDbContext();
+        ListLoggerFactory.Clear();
+
+        Context38223.RootEntity root = await context.Set<Context38223.RootEntity>().SingleAsync(TestContext.Current.CancellationToken);
+        Assert.Null(root.Outer);
+        Assert.Contains(ListLoggerFactory.Log, static entry => entry.Id == CoreEventId.InconsistentOwnedDataWarning && entry.Level == LogLevel.Warning);
+
+        root.Outer = new Context38223.Outer { RequiredProperty = 1, Inner = new Context38223.Inner { InnerProperty = 2 } };
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+    }
+#endif
 
     [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Join_selects_with_duplicating_aliases_and_owned_expansion_uniquifies_correctly(bool async)

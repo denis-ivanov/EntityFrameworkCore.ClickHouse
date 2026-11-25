@@ -1,7 +1,10 @@
-﻿#if NET11_0_OR_GREATER
+﻿using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
+#if NET11_0_OR_GREATER
 using Microsoft.EntityFrameworkCore;
+using System;
 #endif
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -9,6 +12,11 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 
 public class JsonQueryClickHouseTest : JsonQueryRelationalTestBase<JsonQueryClickHouseFixture>
 {
+#if NET11_0_OR_GREATER
+    protected override ITestStoreFactory NonSharedTestStoreFactory
+        => ClickHouseTestStoreFactory.WithClientKeys;
+#endif
+
 #if NET11_0_OR_GREATER
     protected override Task Seed30028(DbContext ctx)
     {
@@ -38,6 +46,62 @@ public class JsonQueryClickHouseTest : JsonQueryRelationalTestBase<JsonQueryClic
     protected override Task SeedNotICollection(DbContext ctx)
     {
         return Task.CompletedTask;
+    }
+
+    protected override async Task Seed21006(Context21006 context)
+    {
+        await base.Seed21006(context);
+
+        // JSON written through EF includes the scalar properties. Insert documents with absent members directly.
+        const string sql =
+            """
+            INSERT INTO "Entities" ("Id", "Name", "Collection", "OptionalReference", "RequiredReference")
+            VALUES
+                (2, 'e2',
+                 '[{"Text":"collection","NestedRequiredReference":{"Text":"required","DoB":"2000-01-01T00:00:00"}}]',
+                 '{"Text":"optional","NestedRequiredReference":{"Text":"required","DoB":"2000-01-01T00:00:00"}}',
+                 '{"Text":"required","NestedRequiredReference":{"Text":"required","DoB":"2000-01-01T00:00:00"}}'),
+                (3, 'e3',
+                 '[{"Number":7,"Text":"collection","NestedRequiredReference":{"Text":"required"},"NestedCollection":[{"Text":"nested"}]}]',
+                 '{"Number":7,"Text":"optional","NestedOptionalReference":{"Text":"optional"},"NestedRequiredReference":{"Text":"required"}}',
+                 '{"Number":7,"Text":"required","NestedOptionalReference":{"Text":"optional"},"NestedRequiredReference":{"Text":"required"}}')
+            """;
+        await context.Database.ExecuteSqlRawAsync(
+            sql.Replace("{", "{{", StringComparison.Ordinal).Replace("}", "}}", StringComparison.Ordinal),
+            TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public override async Task Value_converter_equality_null_scalar()
+    {
+        var contextFactory = await InitializeNonSharedTest<Context37983>(
+            onConfiguring: builder => builder.ConfigureWarnings(ConfigureWarnings),
+            onModelCreating: static model =>
+            {
+                var entity = model.Entity<Context37983.Entity>();
+                entity.Property(item => item.Id).ValueGeneratedNever();
+                entity.ComplexProperty(item => item.Json, json =>
+                {
+                    json.ToJson();
+                    json.Property(item => item.IntToString).HasConversion(new Context37983_StringToIntConverter());
+                });
+            },
+            seed: static context =>
+            {
+                context.Entities.Add(new Context37983.Entity
+                {
+                    Id = 1,
+                    Json = new Context37983.JsonComplexType { IntToString = null }
+                });
+                return context.SaveChangesAsync(TestContext.Current.CancellationToken);
+            });
+
+        await using var context = contextFactory.CreateDbContext();
+        var expected = new Context37983.JsonComplexType { IntToString = null };
+
+        Assert.Equal(1, await context.Entities.CountAsync(
+            entity => entity.Json == expected,
+            TestContext.Current.CancellationToken));
     }
 
     [Fact(Skip = ClickHouseSkipReasons.Tbd)]

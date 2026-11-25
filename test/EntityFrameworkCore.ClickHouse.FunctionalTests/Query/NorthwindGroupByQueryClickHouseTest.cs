@@ -1,5 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
+#if NET11_0_OR_GREATER
+using Microsoft.EntityFrameworkCore.TestModels.Northwind;
+#endif
 using Microsoft.EntityFrameworkCore.TestUtilities;
+#if NET11_0_OR_GREATER
+using System.Linq;
+#endif
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,6 +19,50 @@ public class NorthwindGroupByQueryClickHouseTest : NorthwindGroupByQueryRelation
         Fixture.TestSqlLoggerFactory.Clear();
         Fixture.TestSqlLoggerFactory.SetTestOutputHelper(testOutputHelper);
     }
+
+#if NET11_0_OR_GREATER
+    [Theory]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task GroupBy_Select_Entire_Entity_Where(bool async)
+        => AssertQuery(
+            async,
+            static source => source.Set<Order>().GroupBy(static order => order.CustomerID)
+                .Select(static orders => orders.OrderBy(static order => order.OrderID).First())
+                .Where(static order => order.EmployeeID == 6u));
+
+    [Theory]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task GroupBy_Select_Entire_Entity_Order(bool async)
+        => AssertQuery(
+            async,
+            static source => source.Set<Order>().GroupBy(static order => order.CustomerID)
+                .Select(static orders => orders.OrderBy(static order => order.OrderID).First())
+                .OrderBy(static order => order.EmployeeID)
+                .ThenBy(static order => order.OrderID),
+            assertOrder: true);
+
+    [Theory]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task GroupBy_Select_Entire_Entity_composite_key_Select(bool async)
+        => AssertQuery(
+            async,
+            static source => source.Set<Order>().GroupBy(static order => new { order.CustomerID, order.EmployeeID })
+                .Select(static orders => orders.OrderBy(static order => order.OrderID).First())
+                .Select(static order => order.OrderID));
+
+    [Theory]
+    [MemberData(nameof(IsAsyncData))]
+    public override Task GroupBy_ResultSelector_Entire_Entity_Where(bool async)
+        => AssertQuery(
+            async,
+            static source => source.Set<Order>()
+                .GroupBy(
+                    static order => order.CustomerID,
+                    static (_, orders) => orders.OrderByDescending(static order => order.OrderDate)
+                        .ThenBy(static order => order.OrderID)
+                        .First())
+                .Where(static order => order.EmployeeID == 6u));
+#endif
 
     [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task AsEnumerable_in_subquery_for_GroupBy(bool async)

@@ -1,5 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.TestUtilities;
+#if NET11_0_OR_GREATER
+using Microsoft.EntityFrameworkCore.TestModels.Northwind;
+using System;
+using System.Linq;
+#endif
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,6 +18,23 @@ public class NorthwindJoinQueryClickHouseTest : NorthwindJoinQueryRelationalTest
         Fixture.TestSqlLoggerFactory.Clear();
         Fixture.TestSqlLoggerFactory.SetTestOutputHelper(testOutputHelper);
     }
+
+#if NET11_0_OR_GREATER
+    [Theory]
+    [MemberData(nameof(IsAsyncData))]
+    public override async Task Join_local_bytes_closure_is_cached_correctly(bool async)
+    {
+        byte[] ids = [1, 2];
+        Func<ISetSource, IQueryable<uint>> query = source =>
+            from employee in source.Set<Employee>()
+            join id in ids on employee.EmployeeID equals id
+            select employee.EmployeeID;
+
+        await AssertQueryScalar(async, query);
+        ids = [3];
+        await AssertQueryScalar(async, query);
+    }
+#endif
 
     [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Condition_on_entity_with_include(bool async)

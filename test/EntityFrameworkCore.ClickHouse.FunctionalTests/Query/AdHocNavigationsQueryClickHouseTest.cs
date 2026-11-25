@@ -15,10 +15,11 @@ public class AdHocNavigationsQueryClickHouseTest : AdHocNavigationsQueryRelation
     
 #if NET10_0
     protected override ITestStoreFactory TestStoreFactory
+        => ClickHouseTestStoreFactory.Instance;
 #else
     protected override ITestStoreFactory NonSharedTestStoreFactory
+        => ClickHouseTestStoreFactory.WithClientKeys;
 #endif
-        => ClickHouseTestStoreFactory.Instance;
 
     [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Select_enumerable_navigation_backed_by_collection(bool async, bool split)

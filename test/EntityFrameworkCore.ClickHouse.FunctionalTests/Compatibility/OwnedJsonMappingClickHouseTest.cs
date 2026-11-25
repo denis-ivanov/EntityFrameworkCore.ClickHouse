@@ -29,6 +29,7 @@ public class OwnedJsonMappingClickHouseTest
             .UseClickHouse(connection.ToString())
             .Options;
         await using var context = new JsonContext(options);
+        const string name = "ClickHouse: C:\\data\t'quoted'";
 
         try
         {
@@ -36,7 +37,7 @@ public class OwnedJsonMappingClickHouseTest
             context.Add(new Document
             {
                 Id = 1,
-                Details = new Details { Name = "ClickHouse" },
+                Details = new Details { Name = name },
                 RelatedDetails = [new Details { Name = "First" }, new Details { Name = "Second" }]
             });
 
@@ -46,7 +47,7 @@ public class OwnedJsonMappingClickHouseTest
 
             var document = await context.Set<Document>().SingleAsync(cancellationToken);
 
-            Assert.Equal("ClickHouse", document.Details.Name);
+            Assert.Equal(name, document.Details.Name);
             Assert.Null(document.OptionalDetails);
             Assert.Collection(
                 document.RelatedDetails,
@@ -56,7 +57,7 @@ public class OwnedJsonMappingClickHouseTest
             string projectedName = await context.Set<Document>()
                 .Select(static item => item.Details.Name)
                 .SingleAsync(cancellationToken);
-            Assert.Equal("ClickHouse", projectedName);
+            Assert.Equal(name, projectedName);
         }
         finally
         {
@@ -72,6 +73,7 @@ public class OwnedJsonMappingClickHouseTest
             {
                 builder.Property(document => document.Id).ValueGeneratedNever();
                 builder.OwnsOne(document => document.Details, details => details.ToJson());
+                builder.Navigation(document => document.Details).IsRequired();
                 builder.OwnsOne(document => document.OptionalDetails, details => details.ToJson());
                 builder.OwnsMany(document => document.RelatedDetails, details => details.ToJson());
             });
