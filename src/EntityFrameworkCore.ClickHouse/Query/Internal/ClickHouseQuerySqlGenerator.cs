@@ -19,6 +19,7 @@ public partial class ClickHouseQuerySqlGenerator : QuerySqlGenerator
     private static readonly ClickHouseStringTypeMapping s_stringTypeMapping = new();
     private bool _hasOuterJoin;
     private bool _aliasJoinedProjection;
+    private string? _deleteAlias;
     private readonly Stack<SelectExpression> _selectScopes = new();
 
     public ClickHouseQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies)
@@ -279,6 +280,55 @@ public partial class ClickHouseQuerySqlGenerator : QuerySqlGenerator
         static bool IsNull(SqlExpression expression, ColumnExpression column)
             => expression is SqlUnaryExpression { OperatorType: ExpressionType.Equal, Operand: ColumnExpression operand }
                 && SameColumn(operand, column);
+    }
+
+    protected override Expression VisitDelete(DeleteExpression deleteExpression)
+    {
+        SelectExpression select = deleteExpression.SelectExpression;
+        if (select.Tables.Count != 1
+            || select.Offset != null
+            || select.Limit != null
+            || select.GroupBy.Count != 0
+            || select.Having != null)
+        {
+            return base.VisitDelete(deleteExpression);
+        }
+
+        TableExpression table = deleteExpression.Table;
+        Sql.Append("ALTER TABLE ")
+            .Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(table.Name, table.Schema))
+            .Append(" DELETE WHERE ");
+
+        if (select.Predicate != null)
+        {
+            _deleteAlias = table.Alias;
+            try
+            {
+                Visit(select.Predicate);
+            }
+            finally
+            {
+                _deleteAlias = null;
+            }
+        }
+        else
+        {
+            Sql.Append("1");
+        }
+
+        Sql.Append(" SETTINGS mutations_sync = 1");
+        return deleteExpression;
+    }
+
+    protected override Expression VisitColumn(ColumnExpression columnExpression)
+    {
+        if (_deleteAlias != null && columnExpression.TableAlias == _deleteAlias)
+        {
+            Sql.Append(Dependencies.SqlGenerationHelper.DelimitIdentifier(columnExpression.Name));
+            return columnExpression;
+        }
+
+        return base.VisitColumn(columnExpression);
     }
 
     protected override Expression VisitProjection(ProjectionExpression projectionExpression)
