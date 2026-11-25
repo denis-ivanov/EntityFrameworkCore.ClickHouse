@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
@@ -108,8 +108,10 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                         || QueryableMethods.IsSumWithSelector(methodInfo))
                     && source.Selector is SqlExpression sumSqlExpression:
                     sumSqlExpression = CombineTerms(source, sumSqlExpression);
-                    Type sumInputType = sumSqlExpression.Type;
-                    SqlExpression sum = _sqlExpressionFactory.Function(
+
+                    var sumInputType = sumSqlExpression.Type;
+                   
+                    var sum = _sqlExpressionFactory.Function(
                         "SUM",
                         [sumSqlExpression],
                         nullable: true,

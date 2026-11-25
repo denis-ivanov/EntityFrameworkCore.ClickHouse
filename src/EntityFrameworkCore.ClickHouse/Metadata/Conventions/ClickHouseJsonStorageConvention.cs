@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace ClickHouse.EntityFrameworkCore.Metadata.Conventions;
 
-internal sealed class ClickHouseJsonStorageConvention : IModelFinalizingConvention
+public class ClickHouseJsonStorageConvention : IModelFinalizingConvention
 {
     public void ProcessModelFinalizing(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
     {

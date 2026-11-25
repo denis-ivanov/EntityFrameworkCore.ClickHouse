@@ -2,15 +2,24 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
-internal sealed class ClickHouseQueryCompilationContextFactory(
-    QueryCompilationContextDependencies dependencies,
-    RelationalQueryCompilationContextDependencies relationalDependencies) : IQueryCompilationContextFactory
+public class ClickHouseQueryCompilationContextFactory: IQueryCompilationContextFactory
 {
+    private readonly QueryCompilationContextDependencies _dependencies;
+    private readonly RelationalQueryCompilationContextDependencies _relationalDependencies;
+
+    public ClickHouseQueryCompilationContextFactory(
+        QueryCompilationContextDependencies dependencies,
+        RelationalQueryCompilationContextDependencies relationalDependencies)
+    {
+        _dependencies = dependencies;
+        _relationalDependencies = relationalDependencies;
+    }
+
     public QueryCompilationContext Create(bool async)
-        => new ClickHouseQueryCompilationContext(dependencies, relationalDependencies, async, precompiling: false);
+        => new ClickHouseQueryCompilationContext(_dependencies, _relationalDependencies, async, precompiling: false);
 
     public QueryCompilationContext CreatePrecompiled(bool async)
-        => new ClickHouseQueryCompilationContext(dependencies, relationalDependencies, async, precompiling: true);
+        => new ClickHouseQueryCompilationContext(_dependencies, _relationalDependencies, async, precompiling: true);
 
     private sealed class ClickHouseQueryCompilationContext(
         QueryCompilationContextDependencies dependencies,
