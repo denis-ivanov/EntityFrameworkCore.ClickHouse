@@ -15,6 +15,16 @@ public class ClickHouseTestStoreFactory : RelationalTestStoreFactory
 #if NET11_0_OR_GREATER
     public static readonly ClickHouseTestStoreFactory WithClientKeys = new QueryTestStoreFactory();
     public static readonly ClickHouseTestStoreFactory WithClientKeysAndMutations = new MutationTestStoreFactory();
+    public static readonly ClickHouseTestStoreFactory WithSynchronousMutations = new SynchronousMutationTestStoreFactory();
+
+    private sealed class SynchronousMutationTestStoreFactory : ClickHouseTestStoreFactory
+    {
+        public override TestStore Create(string storeName)
+            => new ClickHouseTestStore(storeName, shared: false, synchronousMutations: true);
+
+        public override TestStore GetOrCreate(string storeName)
+            => new ClickHouseTestStore(storeName, shared: true, synchronousMutations: true);
+    }
 
     private class QueryTestStoreFactory : ClickHouseTestStoreFactory
     {

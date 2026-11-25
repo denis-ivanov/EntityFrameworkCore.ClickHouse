@@ -12,9 +12,9 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 
 public class ComplexNavigationsSharedTypeQueryClickHouseFixture : ComplexNavigationsSharedTypeQueryRelationalFixtureBase
 {
-    protected override ITestStoreFactory TestStoreFactory
-        => ClickHouseTestStoreFactory.Instance;
 #if NET11_0_OR_GREATER
+    protected override ITestStoreFactory TestStoreFactory
+        => ClickHouseTestStoreFactory.WithSynchronousMutations;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder, DbContext context)
     {
@@ -26,5 +26,8 @@ public class ComplexNavigationsSharedTypeQueryClickHouseFixture : ComplexNavigat
             entityType.SetMergeTreeTableEngine().SetOrderBy(["tuple()"]);
         }
     }
+#else
+    protected override ITestStoreFactory TestStoreFactory
+        => ClickHouseTestStoreFactory.Instance;
 #endif
 }
