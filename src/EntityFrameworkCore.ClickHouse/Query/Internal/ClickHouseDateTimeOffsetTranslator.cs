@@ -11,10 +11,19 @@ using System.Reflection;
 
 namespace ClickHouse.EntityFrameworkCore.Query.Internal;
 
-internal sealed class ClickHouseDateTimeOffsetTranslator(
-    ISqlExpressionFactory sql,
-    IRelationalTypeMappingSource typeMappings) : IMemberTranslator, IMethodCallTranslator
+public class ClickHouseDateTimeOffsetTranslator: IMemberTranslator, IMethodCallTranslator
 {
+    private readonly ISqlExpressionFactory _sql;
+    private readonly IRelationalTypeMappingSource _typeMappings;
+
+    public ClickHouseDateTimeOffsetTranslator(
+        ISqlExpressionFactory sql,
+        IRelationalTypeMappingSource typeMappings)
+    {
+        _sql = sql;
+        _typeMappings = typeMappings;
+    }
+
     public SqlExpression? Translate(
         SqlExpression? instance,
         MemberInfo member,
@@ -32,15 +41,16 @@ internal sealed class ClickHouseDateTimeOffsetTranslator(
         if (member.Name == nameof(DateTimeOffset.DateTime))
         {
             // Remove the fixed-width signed UTC offset to preserve the wall-clock date.
-            SqlExpression length = sql.Function("length", [instance], nullable: true, [true], typeof(long));
-            text = sql.Function(
-                "substring", [instance, sql.Constant(1), sql.Subtract(length, sql.Constant(6L))],
-                nullable: true, [true, false, true], typeof(string), typeMappings.FindMapping(typeof(string)));
+            SqlExpression length = _sql.Function("length", [instance], nullable: true, [true], typeof(long));
+            text = _sql.Function(
+                "substring", [instance, _sql.Constant(1), _sql.Subtract(length, _sql.Constant(6L))],
+                nullable: true, [true, false, true], typeof(string), _typeMappings.FindMapping(typeof(string)));
         }
 
-        RelationalTypeMapping? dateTimeMapping = typeMappings.FindMapping(typeof(DateTime), "DateTime64(7)");
-        SqlExpression dateTime = sql.Function(
-            "parseDateTime64BestEffortOrNull", [text, sql.Constant(7), sql.Constant("UTC")],
+        RelationalTypeMapping? dateTimeMapping = _typeMappings.FindMapping(typeof(DateTime), "DateTime64(7)");
+
+        SqlExpression dateTime = _sql.Function(
+            "parseDateTime64BestEffortOrNull", [text, _sql.Constant(7), _sql.Constant("UTC")],
             nullable: true, [true, false, false], typeof(DateTime), dateTimeMapping);
 
         if (member.Name != nameof(DateTimeOffset.LocalDateTime))
@@ -48,8 +58,8 @@ internal sealed class ClickHouseDateTimeOffsetTranslator(
             return dateTime;
         }
 
-        return sql.Function(
-            "toTimeZone", [dateTime, sql.Constant(GetLocalZone())], nullable: true, [true, false],
+        return _sql.Function(
+            "toTimeZone", [dateTime, _sql.Constant(GetLocalZone())], nullable: true, [true, false],
             typeof(DateTime), dateTimeMapping);
     }
 
@@ -68,41 +78,44 @@ internal sealed class ClickHouseDateTimeOffsetTranslator(
             return null;
         }
 
-        RelationalTypeMapping? mapping = typeMappings.FindMapping(typeof(DateTime), "DateTime64(7)");
-        SqlExpression instant = sql.Function(
-            "parseDateTime64BestEffortOrNull", [instance, sql.Constant(7), sql.Constant("UTC")],
+        RelationalTypeMapping? mapping = _typeMappings.FindMapping(typeof(DateTime), "DateTime64(7)");
+
+        SqlExpression instant = _sql.Function(
+            "parseDateTime64BestEffortOrNull", [instance, _sql.Constant(7), _sql.Constant("UTC")],
             nullable: true, [true, false, false], typeof(DateTime), mapping);
-        SqlExpression wallClock = sql.Function(
-            "addMinutes", [instant, sql.Constant((int)offset.TotalMinutes)],
+
+        SqlExpression wallClock = _sql.Function(
+            "addMinutes", [instant, _sql.Constant((int)offset.TotalMinutes)],
             nullable: true, [true, false], typeof(DateTime), mapping);
 
-        return ToStoredValue(wallClock, sql.Constant(FormatOffset(offset)), instance.TypeMapping);
+        return ToStoredValue(wallClock, _sql.Constant(FormatOffset(offset)), instance.TypeMapping);
     }
 
     internal SqlExpression? FromDateTime(SqlExpression dateTime, TimeSpan? offset)
     {
-        if (typeMappings.FindMapping(typeof(DateTimeOffset)) is not { Converter: DateTimeOffsetToStringConverter } mapping
+        if (_typeMappings.FindMapping(typeof(DateTimeOffset)) is not { Converter: DateTimeOffsetToStringConverter } mapping
             || (offset is TimeSpan explicitOffset && !IsValidOffset(explicitOffset)))
         {
             return null;
         }
 
-        RelationalTypeMapping? temporalMapping = typeMappings.FindMapping(typeof(DateTime), "DateTime64(7)");
-        SqlExpression wallClock = sql.Function(
-            "toDateTime64", [dateTime, sql.Constant(7)], nullable: true, [true, false], typeof(DateTime), temporalMapping);
+        RelationalTypeMapping? temporalMapping = _typeMappings.FindMapping(typeof(DateTime), "DateTime64(7)");
+
+        SqlExpression wallClock = _sql.Function(
+            "toDateTime64", [dateTime, _sql.Constant(7)], nullable: true, [true, false], typeof(DateTime), temporalMapping);
 
         // ClickHouse columns have no CLR DateTimeKind. The constructor treats an unspecified offset as UTC.
-        return ToStoredValue(wallClock, sql.Constant(FormatOffset(offset ?? TimeSpan.Zero)), mapping);
+        return ToStoredValue(wallClock, _sql.Constant(FormatOffset(offset ?? TimeSpan.Zero)), mapping);
     }
 
     private SqlExpression ToStoredValue(SqlExpression clock, SqlExpression offset, RelationalTypeMapping mapping)
-        => sql.Function("concat", [FormatClock(clock), offset], nullable: true, [true, true], typeof(DateTimeOffset), mapping);
+        => _sql.Function("concat", [FormatClock(clock), offset], nullable: true, [true, true], typeof(DateTimeOffset), mapping);
 
     private SqlExpression FormatClock(SqlExpression clock)
-        => sql.Function(
+        => _sql.Function(
             "replaceRegexpOne",
-            [sql.Function("toString", [clock], nullable: true, [true], typeof(string)), sql.Constant(@"\\.?0+$"), sql.Constant("")],
-            nullable: true, [true, false, false], typeof(string), typeMappings.FindMapping(typeof(string)));
+            [_sql.Function("toString", [clock], nullable: true, [true], typeof(string)), _sql.Constant(@"\\.?0+$"), _sql.Constant("")],
+            nullable: true, [true, false, false], typeof(string), _typeMappings.FindMapping(typeof(string)));
 
     private static bool IsValidOffset(TimeSpan offset)
         => offset.Ticks % TimeSpan.TicksPerMinute == 0 && Math.Abs(offset.TotalHours) <= 14;
