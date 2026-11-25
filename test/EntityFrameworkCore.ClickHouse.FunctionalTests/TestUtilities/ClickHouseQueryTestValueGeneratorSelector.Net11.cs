@@ -8,9 +8,13 @@ using System.Threading;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 
-internal sealed class ClickHouseQueryTestValueGeneratorSelector(ValueGeneratorSelectorDependencies dependencies)
-    : RelationalValueGeneratorSelector(dependencies)
+internal sealed class ClickHouseQueryTestValueGeneratorSelector : RelationalValueGeneratorSelector
 {
+    public ClickHouseQueryTestValueGeneratorSelector(ValueGeneratorSelectorDependencies dependencies)
+        : base(dependencies)
+    {
+    }
+
     protected override ValueGenerator? FindForType(IProperty property, ITypeBase typeBase, Type clrType)
     {
         if (property.IsPrimaryKey()

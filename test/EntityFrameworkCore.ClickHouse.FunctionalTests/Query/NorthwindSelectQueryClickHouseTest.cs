@@ -21,7 +21,18 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
     {
         await base.Select_datetime_year_component(async);
 
-        AssertOrderDatePartSql("""toYear("o"."OrderDate")""");
+        AssertSql(
+#if NET10_0
+            """
+            SELECT CAST(toYear("o"."OrderDate") AS Int32)
+            FROM "Orders" AS "o"
+            """);
+#else
+            """
+            SELECT toYear("o"."OrderDate")
+            FROM "Orders" AS "o"
+            """);
+#endif
     }
 
     [Theory(Skip = "TBD")]
@@ -85,49 +96,126 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
             async,
             ss => ss.Set<Order>().Select(o => o.OrderDate!.Value.AddYears(1).Year));
 
-        AssertOrderDatePartSql("""toYear(addYears("o"."OrderDate", 1))""");
+        AssertSql(
+#if NET10_0
+            """
+            SELECT CAST(toYear(addYears("o"."OrderDate", 1)) AS Int32)
+            FROM "Orders" AS "o"
+            """);
+#else
+            """
+            SELECT toYear(addYears("o"."OrderDate", 1))
+            FROM "Orders" AS "o"
+            """);
+#endif
     }
 
     public override async Task Select_datetime_month_component(bool async)
     {
         await base.Select_datetime_month_component(async);
 
-        AssertOrderDatePartSql("""toMonth("o"."OrderDate")""");
+        AssertSql(
+#if NET10_0
+            """
+            SELECT CAST(toMonth("o"."OrderDate") AS Int32)
+            FROM "Orders" AS "o"
+            """);
+#else
+            """
+            SELECT toMonth("o"."OrderDate")
+            FROM "Orders" AS "o"
+            """);
+#endif
     }
 
     public override async Task Select_datetime_day_of_year_component(bool async)
     {
         await base.Select_datetime_day_of_year_component(async);
 
-        AssertOrderDatePartSql("""toDayOfYear("o"."OrderDate")""");
+        AssertSql(
+#if NET10_0
+            """
+            SELECT CAST(toDayOfYear("o"."OrderDate") AS Int32)
+            FROM "Orders" AS "o"
+            """);
+#else
+            """
+            SELECT toDayOfYear("o"."OrderDate")
+            FROM "Orders" AS "o"
+            """);
+#endif
     }
 
     public override async Task Select_datetime_day_component(bool async)
     {
         await base.Select_datetime_day_component(async);
 
-        AssertOrderDatePartSql("""toDayOfMonth("o"."OrderDate")""");
+        AssertSql(
+#if NET10_0
+            """
+            SELECT CAST(toDayOfMonth("o"."OrderDate") AS Int32)
+            FROM "Orders" AS "o"
+            """);
+#else
+            """
+            SELECT toDayOfMonth("o"."OrderDate")
+            FROM "Orders" AS "o"
+            """);
+#endif
     }
 
     public override async Task Select_datetime_hour_component(bool async)
     {
         await base.Select_datetime_hour_component(async);
 
-        AssertOrderDatePartSql("""toHour("o"."OrderDate")""");
+        AssertSql(
+#if NET10_0
+            """
+            SELECT CAST(toHour("o"."OrderDate") AS Int32)
+            FROM "Orders" AS "o"
+            """);
+#else
+            """
+            SELECT toHour("o"."OrderDate")
+            FROM "Orders" AS "o"
+            """);
+#endif
     }
 
     public override async Task Select_datetime_minute_component(bool async)
     {
         await base.Select_datetime_minute_component(async);
 
-        AssertOrderDatePartSql("""toMinute("o"."OrderDate")""");
+        AssertSql(
+#if NET10_0
+            """
+            SELECT CAST(toMinute("o"."OrderDate") AS Int32)
+            FROM "Orders" AS "o"
+            """);
+#else
+            """
+            SELECT toMinute("o"."OrderDate")
+            FROM "Orders" AS "o"
+            """);
+#endif
     }
 
     public override async Task Select_datetime_second_component(bool async)
     {
         await base.Select_datetime_second_component(async);
 
-        AssertOrderDatePartSql("""toSecond("o"."OrderDate")""");
+        AssertSql(
+#if NET10_0
+            """
+            SELECT CAST(toSecond("o"."OrderDate") AS Int32)
+            FROM "Orders" AS "o"
+            """);
+#else
+            """
+            SELECT toSecond("o"."OrderDate")
+            FROM "Orders" AS "o"
+            """);
+#endif
     }
 
     [Theory(Skip = "TBD")]
@@ -770,18 +858,6 @@ public class NorthwindSelectQueryClickHouseTest : NorthwindSelectQueryRelational
     public override Task SelectMany_with_nested_DefaultIfEmpty(bool async)
     {
         return base.SelectMany_with_nested_DefaultIfEmpty(async);
-    }
-
-    private void AssertOrderDatePartSql(string expression)
-    {
-#if NET10_0
-        expression = $"CAST({expression} AS Int32)";
-#endif
-        AssertSql(
-            $"""
-            SELECT {expression}
-            FROM "Orders" AS "o"
-            """);
     }
 
     private void AssertSql(params string[] expected)
