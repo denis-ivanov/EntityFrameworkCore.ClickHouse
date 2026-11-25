@@ -132,4 +132,46 @@ public class ClickHouseQueryableMethodTranslatingExpressionVisitor
 
         return null;
     }
+
+    protected override ShapedQueryExpression? TranslateOrderBy(ShapedQueryExpression source, LambdaExpression keySelector, bool ascending)
+        => ProjectSubqueryOrdering(base.TranslateOrderBy(source, keySelector, ascending));
+
+    protected override ShapedQueryExpression? TranslateThenBy(ShapedQueryExpression source, LambdaExpression keySelector, bool ascending)
+        => ProjectSubqueryOrdering(base.TranslateThenBy(source, keySelector, ascending));
+
+    private static ShapedQueryExpression? ProjectSubqueryOrdering(ShapedQueryExpression? query)
+    {
+        if (query?.QueryExpression is SelectExpression { Orderings.Count: > 0 } select
+            && ScalarSubqueryFinder.ContainsSubquery(select.Orderings[^1].Expression))
+        {
+            // ClickHouse can evaluate a correlated scalar in a projection and order by its result.
+            select.PushdownIntoSubquery();
+        }
+
+        return query;
+    }
+
+    private sealed class ScalarSubqueryFinder : ExpressionVisitor
+    {
+        private bool _found;
+
+        public static bool ContainsSubquery(SqlExpression expression)
+        {
+            ScalarSubqueryFinder finder = new();
+            finder.Visit(expression);
+
+            return finder._found;
+        }
+
+        protected override Expression VisitExtension(Expression node)
+        {
+            if (node is ScalarSubqueryExpression)
+            {
+                _found = true;
+                return node;
+            }
+
+            return base.VisitExtension(node);
+        }
+    }
 }
