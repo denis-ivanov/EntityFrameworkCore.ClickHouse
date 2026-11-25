@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.TestModels.Northwind;
 using Microsoft.EntityFrameworkCore.TestUtilities;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,6 +15,30 @@ public class NorthwindMiscellaneousQueryClickHouseTest : NorthwindMiscellaneousQ
     {
         Fixture.TestSqlLoggerFactory.Clear();
         Fixture.TestSqlLoggerFactory.SetTestOutputHelper(testOutputHelper);
+    }
+
+    [Theory]
+    public override Task Projection_skip_take_collection_projection(bool async)
+    {
+        return AssertQuery(
+            async,
+            static source => source.Set<Order>()
+                .Where(order => order.OrderID < 10300)
+                .OrderBy(order => order.OrderID)
+                .Select(order => new { Item = order })
+                .Skip(5)
+                .Take(10)
+                .Select(entry => new
+                {
+                    entry.Item.OrderID,
+                    ProductIds = entry.Item.OrderDetails.Select(detail => detail.ProductID).ToList()
+                }),
+            assertOrder: true,
+            elementAsserter: (expected, actual) =>
+            {
+                Assert.Equal(expected.OrderID, actual.OrderID);
+                AssertCollection(expected.ProductIds, actual.ProductIds, elementSorter: static id => id);
+            });
     }
 
     [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
