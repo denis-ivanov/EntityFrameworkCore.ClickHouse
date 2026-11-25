@@ -15,7 +15,7 @@ public class ClickHouseTestStoreFactory : RelationalTestStoreFactory
 
     public override TestStore GetOrCreate(string storeName)
     {
-        return new ClickHouseTestStore(storeName, false);
+        return ClickHouseTestStore.GetExisting(storeName);
     }
 
     public override IServiceCollection AddProviderServices(IServiceCollection serviceCollection)
