@@ -2,6 +2,7 @@ using ClickHouse.Driver.ADO.Parameters;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data.Common;
+using System.Globalization;
 
 namespace ClickHouse.EntityFrameworkCore.Storage.Internal.Mapping;
 
@@ -27,17 +28,17 @@ public class ClickHouseDateTimeTypeMapping : DateTimeTypeMapping
         ((ClickHouseDbParameter)parameter).ClickHouseType = GetStoreType(parameter.Value);
     }
 
-    public override string GenerateSqlLiteral(object? value)
+    protected override string GenerateNonNullSqlLiteral(object value)
     {
-        var dateTime = (DateTime)value!;
-        var format = Format;
+        DateTime dateTime = (DateTime)value;
+        string format = Format;
 
         if (Precision is > 0 and <= 7)
         {
-            format = format + '.' + new string('s', Precision.Value);
+            format = format + '.' + new string('f', Precision.Value);
         }
 
-        return $"'{dateTime.ToString(format)}'";
+        return $"'{dateTime.ToString(format, CultureInfo.InvariantCulture)}'";
     }
     
     protected virtual string GetStoreType(bool? isNullable)

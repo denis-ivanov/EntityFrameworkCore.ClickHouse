@@ -187,6 +187,16 @@ public class ClickHouseTypeMappingSource : RelationalTypeMappingSource
 
     private RelationalTypeMapping? FindExistingMapping(in RelationalTypeMappingInfo mappingInfo)
     {
+        if (string.Equals(mappingInfo.StoreTypeNameBase, "DateTime64", StringComparison.OrdinalIgnoreCase))
+        {
+            return DateTimeTypeMapping.WithTypeMappingInfo(mappingInfo);
+        }
+
+        if (string.Equals(mappingInfo.StoreTypeNameBase, "Date32", StringComparison.OrdinalIgnoreCase))
+        {
+            return DateTypeMapping.WithTypeMappingInfo(mappingInfo);
+        }
+
         if (!string.IsNullOrWhiteSpace(mappingInfo.StoreTypeNameBase) &&
             AliasTypeMapping.TryGetValue(mappingInfo.StoreTypeNameBase, out var mapAsAlias1))
         {

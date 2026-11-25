@@ -121,6 +121,23 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
 
     protected override Expression VisitNew(NewExpression newExpression)
     {
+        if (newExpression.Type == typeof(DateTimeOffset)
+            && newExpression.Arguments.Count is 1 or 2
+            && newExpression.Arguments[0].Type == typeof(DateTime)
+            && Visit(newExpression.Arguments[0]) is SqlExpression dateTime)
+        {
+            Expression? offset = newExpression.Arguments.Count == 2 ? Visit(newExpression.Arguments[1]) : null;
+            if (offset is null or SqlConstantExpression { Value: TimeSpan })
+            {
+                TimeSpan? value = offset is SqlConstantExpression { Value: TimeSpan span } ? span : null;
+                ClickHouseDateTimeOffsetTranslator translator = new(Dependencies.SqlExpressionFactory, Dependencies.TypeMappingSource);
+                if (translator.FromDateTime(dateTime, value) is SqlExpression result)
+                {
+                    return result;
+                }
+            }
+        }
+
         var visitedNewExpression = base.VisitNew(newExpression);
 
         if (visitedNewExpression != QueryCompilationContext.NotTranslatedExpression)
