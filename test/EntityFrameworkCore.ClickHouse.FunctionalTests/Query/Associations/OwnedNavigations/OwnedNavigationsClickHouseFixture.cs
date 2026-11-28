@@ -1,4 +1,6 @@
-﻿using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
+﻿using ClickHouse.EntityFrameworkCore.Extensions;
+using EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Associations.OwnedNavigations;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 
@@ -8,4 +10,7 @@ public class OwnedNavigationsClickHouseFixture : OwnedNavigationsRelationalFixtu
 {
     protected override ITestStoreFactory TestStoreFactory
         => ClickHouseTestStoreFactory.Instance;
+
+    public override DbContextOptionsBuilder AddOptions(DbContextOptionsBuilder builder)
+        => base.AddOptions(builder.UseClickHouse(static options => options.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
 }

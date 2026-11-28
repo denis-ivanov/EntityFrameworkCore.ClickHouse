@@ -7,6 +7,17 @@
 [![Issues Open](https://img.shields.io/github/issues/denis-ivanov/EntityFrameworkCore.ClickHouse.svg?style=flat-square)](https://github.com/denis-ivanov/EntityFrameworkCore.ClickHouse/issues)
 [![Code Coverage](https://codecov.io/gh/denis-ivanov/EntityFrameworkCore.ClickHouse/graph/badge.svg)](https://app.codecov.io/gh/denis-ivanov/EntityFrameworkCore.ClickHouse)
 
+## Framework compatibility
+
+| Application target | Entity Framework Core |
+| --- | --- |
+| .NET 10 (net10.0) | 10.x |
+| .NET 11 (net11.0) | 11.x |
+
+Use the EF Core major version that matches your application's target framework.
+
+Building the solution requires the .NET 11 SDK. Running tests for both targets also requires the .NET 10 runtime.
+
 # Quick start
 
 1. Create console app

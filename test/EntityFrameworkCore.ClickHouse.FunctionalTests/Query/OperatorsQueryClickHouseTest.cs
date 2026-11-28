@@ -13,36 +13,40 @@ public class OperatorsQueryClickHouseTest : OperatorsQueryTestBase
     {
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Complex_predicate_with_bitwise_and_arithmetic_operations()
     {
         await base.Complex_predicate_with_bitwise_and_arithmetic_operations();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Complex_predicate_with_bitwise_and_modulo_and_negation()
     {
         await base.Complex_predicate_with_bitwise_and_modulo_and_negation();
     }
 
-    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Concat_and_json_scalar(bool async)
     {
         await base.Concat_and_json_scalar(async);
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Projection_with_not_and_negation_on_integer()
     {
         await base.Projection_with_not_and_negation_on_integer();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Double_negate_on_column()
     {
         await base.Double_negate_on_column();
     }
 
+#if NET10_0
     protected override ITestStoreFactory TestStoreFactory
+#else
+    protected override ITestStoreFactory NonSharedTestStoreFactory
+#endif
         => ClickHouseTestStoreFactory.Instance;
 }

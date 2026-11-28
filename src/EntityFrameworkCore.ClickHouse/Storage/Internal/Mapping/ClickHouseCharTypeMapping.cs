@@ -1,6 +1,7 @@
 using ClickHouse.Driver.ADO.Parameters;
 using ClickHouse.EntityFrameworkCore.Storage.ValueConversation;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 using System;
 using System.Data.Common;
 using System.Reflection;
@@ -14,7 +15,8 @@ public class ClickHouseCharTypeMapping : CharTypeMapping
             new RelationalTypeMappingParameters(
                 new CoreTypeMappingParameters(
                     typeof(char),
-                    new ClickHouseCharValueConverter()),
+                    new ClickHouseCharValueConverter(),
+                    jsonValueReaderWriter: JsonCharReaderWriter.Instance),
                 "String",
                 StoreTypePostfix.None,
                 System.Data.DbType.StringFixedLength,

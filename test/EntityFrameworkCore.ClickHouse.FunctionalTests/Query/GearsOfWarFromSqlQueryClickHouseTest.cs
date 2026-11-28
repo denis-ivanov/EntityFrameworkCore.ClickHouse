@@ -9,7 +9,7 @@ public class GearsOfWarFromSqlQueryClickHouseTest : GearsOfWarFromSqlQueryTestBa
     {
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override void From_sql_queryable_simple_columns_out_of_order()
     {
         base.From_sql_queryable_simple_columns_out_of_order();

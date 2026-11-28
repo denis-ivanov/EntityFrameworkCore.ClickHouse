@@ -11,6 +11,10 @@ public class OperatorsProceduralClickHouseTest : OperatorsProceduralQueryTestBas
     {
     }
 
+#if NET10_0
     protected override ITestStoreFactory TestStoreFactory
+#else
+    protected override ITestStoreFactory NonSharedTestStoreFactory
+#endif
         => ClickHouseTestStoreFactory.Instance;
 }

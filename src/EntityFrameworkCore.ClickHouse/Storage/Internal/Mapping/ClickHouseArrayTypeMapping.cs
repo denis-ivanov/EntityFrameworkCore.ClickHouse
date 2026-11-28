@@ -1,5 +1,6 @@
 ﻿using ClickHouse.Driver.ADO.Parameters;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data.Common;
@@ -15,7 +16,7 @@ public class ClickHouseArrayTypeMapping : RelationalTypeMapping
     {
     }
 
-    ClickHouseArrayTypeMapping(string storeType, RelationalTypeMapping elementMapping, Type arrayType)
+    internal ClickHouseArrayTypeMapping(string storeType, RelationalTypeMapping elementMapping, Type arrayType)
         : this(
             new RelationalTypeMappingParameters(
                 new CoreTypeMappingParameters(
@@ -81,25 +82,31 @@ public class ClickHouseArrayTypeMapping : RelationalTypeMapping
     
     #region Value Comparison
 
-    static ValueComparer? CreateComparer(RelationalTypeMapping elementMapping, Type arrayType)
+    private static ValueComparer? CreateComparer(RelationalTypeMapping elementMapping, Type arrayType)
     {
         Debug.Assert(arrayType.IsArray);
-        var elementType = arrayType.GetElementType();
+        Type elementType = arrayType.GetElementType()!;
 
         if (arrayType.GetArrayRank() != 1)
         {
             return null;
         }
 
-        return (ValueComparer)Activator.CreateInstance(typeof(SingleDimComparerWithComparer<>).MakeGenericType(elementType!), elementMapping)!;
+        ValueComparer elementComparer = elementMapping.Comparer.ToNullableComparer(elementType)!;
+
+        return (ValueComparer)Activator.CreateInstance(
+            typeof(SingleDimComparerWithComparer<>).MakeGenericType(elementType),
+            elementComparer)!;
     }
 
-    class SingleDimComparerWithComparer<TElem> : ValueComparer<TElem[]?>
+    private sealed class SingleDimComparerWithComparer<TElem> : ValueComparer<TElem[]?>
     {
-        public SingleDimComparerWithComparer(RelationalTypeMapping elementMapping) : base(
-            (a, b) => Compare(a, b, (ValueComparer<TElem>)elementMapping.Comparer),
+        public SingleDimComparerWithComparer(ValueComparer<TElem> elementComparer) : base(
+            (a, b) => Compare(a, b, elementComparer),
             o => o!.GetHashCode(), // TODO: Need to get hash code of elements...
-            source => Snapshot(source, (ValueComparer<TElem>)elementMapping.Comparer)) {}
+            source => Snapshot(source, elementComparer))
+        {
+        }
 
         public override Type Type => typeof(TElem[]);
 

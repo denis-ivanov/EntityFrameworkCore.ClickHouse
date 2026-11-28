@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 
@@ -17,7 +16,7 @@ public class NorthwindSqlQueryClickHouseTest : NorthwindSqlQueryTestBase<Northwi
         Fixture.TestSqlLoggerFactory.SetTestOutputHelper(testOutputHelper);
     }
 
-    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task SqlQuery_over_int_with_parameter(bool async)
     {
         await base.SqlQuery_over_int_with_parameter(async);

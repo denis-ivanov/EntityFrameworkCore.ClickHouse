@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>ClickHouse.EntityFrameworkCore</RootNamespace>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <PackageVersion>3.0.3</PackageVersion>
     <Nullable>enable</Nullable>  
     <Authors>Denis Ivanov</Authors>
@@ -21,11 +21,19 @@ Full release notes: https://github.com/denis-ivanov/EntityFrameworkCore.ClickHou
     </PackageReleaseNotes>  
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <EntityFrameworkCoreVersion>10.0.14</EntityFrameworkCoreVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <EntityFrameworkCoreVersion>11.0.0</EntityFrameworkCoreVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="ClickHouse.Driver" Version="1.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.14" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.14" PrivateAssets="none" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.14" PrivateAssets="none" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCoreVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkCoreVersion)" PrivateAssets="none" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="$(EntityFrameworkCoreVersion)" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup>

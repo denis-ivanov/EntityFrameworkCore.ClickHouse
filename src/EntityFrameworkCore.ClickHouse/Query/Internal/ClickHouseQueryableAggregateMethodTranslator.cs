@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -107,14 +108,20 @@ public class ClickHouseQueryableAggregateMethodTranslator : IAggregateMethodCall
                         || QueryableMethods.IsSumWithSelector(methodInfo))
                     && source.Selector is SqlExpression sumSqlExpression:
                     sumSqlExpression = CombineTerms(source, sumSqlExpression);
+
                     var sumInputType = sumSqlExpression.Type;
-                    return _sqlExpressionFactory.Function(
+
+                    var sum = _sqlExpressionFactory.Function(
                         "SUM",
                         [sumSqlExpression],
                         nullable: true,
                         argumentsPropagateNullability: [false],
                         sumInputType,
                         sumSqlExpression.TypeMapping);
+
+                    // LINQ Sum returns zero when the input contains no non-null values.
+                    object zero = Activator.CreateInstance(Nullable.GetUnderlyingType(sumInputType) ?? sumInputType)!;
+                    return _sqlExpressionFactory.Coalesce(sum, _sqlExpressionFactory.Constant(zero, sum.TypeMapping));
             }
         }
 

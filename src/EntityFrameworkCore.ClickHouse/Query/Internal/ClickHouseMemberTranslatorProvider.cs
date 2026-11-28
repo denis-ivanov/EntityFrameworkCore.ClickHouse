@@ -13,7 +13,8 @@ public sealed class ClickHouseMemberTranslatorProvider : RelationalMemberTransla
             new ClickHouseArrayTranslator(dependencies.SqlExpressionFactory),
             new ClickHouseMathTranslator(dependencies.SqlExpressionFactory, typeMappingSource),
             new ClickHouseConvertTranslator(dependencies.SqlExpressionFactory),
-            new ClickHouseDateTimeMemberTranslator(dependencies.SqlExpressionFactory)
+            new ClickHouseDateTimeMemberTranslator(dependencies.SqlExpressionFactory),
+            new ClickHouseDateTimeOffsetTranslator(dependencies.SqlExpressionFactory, typeMappingSource)
         ]);
     }
 }

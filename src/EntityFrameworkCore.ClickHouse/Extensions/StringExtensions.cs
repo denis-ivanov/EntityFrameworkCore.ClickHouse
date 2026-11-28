@@ -8,7 +8,9 @@ internal static class StringExtensions
 
     internal static string? GetNullableType(this string? type)
     {
-        return type.IsJson() ? type : $"Nullable({type})";
+        return type.IsJson() || type?.StartsWith("Array(", StringComparison.OrdinalIgnoreCase) == true
+            ? type
+            : $"Nullable({type})";
     }
 
     private static bool IsJson(this string? type) => Json.Equals(type, StringComparison.InvariantCultureIgnoreCase);

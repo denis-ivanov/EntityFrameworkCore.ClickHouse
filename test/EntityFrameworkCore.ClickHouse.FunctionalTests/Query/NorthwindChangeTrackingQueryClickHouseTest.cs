@@ -20,7 +20,7 @@ public class NorthwindChangeTrackingQueryClickHouseTest : NorthwindChangeTrackin
             new DbContextOptionsBuilder(Fixture.CreateOptions())
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options);
 
-    [ConditionalFact(Skip = "TBD")]
+    [Fact(Skip = "TBD")]
     public override void Multiple_entities_can_revert()
     {
         base.Multiple_entities_can_revert();

@@ -15,35 +15,35 @@ public class NorthwindFunctionsQueryClickHouseTest : NorthwindFunctionsQueryRela
     {
     }
 
-    [ConditionalTheory(Skip = "TBD")]
+    [Theory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
     public override Task Order_by_length_twice_followed_by_projection_of_naked_collection_navigation(bool async)
     {
         return base.Order_by_length_twice_followed_by_projection_of_naked_collection_navigation(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
+    [Theory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
     public override Task Sum_over_round_works_correctly_in_projection(bool async)
     {
         return base.Sum_over_round_works_correctly_in_projection(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
+    [Theory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
     public override Task Sum_over_round_works_correctly_in_projection_2(bool async)
     {
         return base.Sum_over_round_works_correctly_in_projection_2(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
+    [Theory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
     public override Task Sum_over_truncate_works_correctly_in_projection(bool async)
     {
         return base.Sum_over_truncate_works_correctly_in_projection(async);
     }
 
-    [ConditionalTheory(Skip = "TBD")]
+    [Theory(Skip = "TBD")]
     [MemberData(nameof(IsAsyncData))]
     public override Task Sum_over_truncate_works_correctly_in_projection_2(bool async)
     {

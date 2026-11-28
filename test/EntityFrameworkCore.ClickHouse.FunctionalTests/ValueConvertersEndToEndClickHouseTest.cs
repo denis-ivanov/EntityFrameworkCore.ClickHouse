@@ -18,13 +18,17 @@ public class ValueConvertersEndToEndClickHouseTest
     {
     }
 
-    [ConditionalTheory(Skip = "TBD")]
+    [Theory(Skip = "TBD")]
     public override Task Can_insert_and_read_back_with_conversions(int[] valueOrder)
     {
         return base.Can_insert_and_read_back_with_conversions(valueOrder);
     }
 
+#if NET10_0
     [ConditionalTheory]
+#else
+    [Theory]
+#endif
     [InlineData(nameof(ConvertingEntity.BoolAsChar), "String", false)]
     [InlineData(nameof(ConvertingEntity.BoolAsNullableChar), "String", false)]
     [InlineData(nameof(ConvertingEntity.BoolAsString), "String", false)]

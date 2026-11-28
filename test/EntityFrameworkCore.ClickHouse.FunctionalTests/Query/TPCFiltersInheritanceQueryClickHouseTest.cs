@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
+#if NET11_0_OR_GREATER
+using Microsoft.EntityFrameworkCore.Query.Inheritance;
+#endif
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 

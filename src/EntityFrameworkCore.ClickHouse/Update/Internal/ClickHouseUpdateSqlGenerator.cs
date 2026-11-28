@@ -14,6 +14,23 @@ public class ClickHouseUpdateSqlGenerator : UpdateSqlGenerator
     {
     }
 
+    public override ResultSetMapping AppendDeleteOperation(
+        StringBuilder commandStringBuilder,
+        IReadOnlyModificationCommand command,
+        int commandPosition,
+        out bool requiresTransaction)
+    {
+        requiresTransaction = false;
+        AppendDeleteCommand(
+            commandStringBuilder,
+            command.TableName,
+            command.Schema,
+            [],
+            command.ColumnModifications.Where(static operation => operation.IsCondition).ToList());
+
+        return ResultSetMapping.NoResults;
+    }
+
     protected override void AppendDeleteCommand(
         StringBuilder commandStringBuilder,
         string name,

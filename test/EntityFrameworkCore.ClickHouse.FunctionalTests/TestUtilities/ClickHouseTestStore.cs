@@ -2,6 +2,9 @@ using ClickHouse.Driver.ADO;
 using ClickHouse.Driver.Utility;
 using ClickHouse.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
+#if NET11_0_OR_GREATER
+using Microsoft.EntityFrameworkCore.Infrastructure;
+#endif
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Data.Common;
 using System.Diagnostics;
@@ -13,14 +16,17 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 
 public class ClickHouseTestStore : RelationalTestStore
 {
-    public ClickHouseTestStore(string name, bool shared) : base(name, shared, CreateConnection(name, shared))
+    public ClickHouseTestStore(string name, bool shared, bool synchronousMutations = false)
+        : base(name, shared, CreateConnection(name, synchronousMutations))
     {
     }
 
     public override DbContextOptionsBuilder AddProviderOptions(DbContextOptionsBuilder builder)
     {
         builder.LogTo(s => Debug.WriteLine(s));
-        return builder.UseClickHouse(Connection);
+        return UseConnectionString
+            ? builder.UseClickHouse(Connection.ConnectionString)
+            : builder.UseClickHouse(Connection);
     }
 
     public int ExecuteNonQuery(string sql, params object[] parameters)
@@ -29,11 +35,23 @@ public class ClickHouseTestStore : RelationalTestStore
         return command.ExecuteNonQuery();
     }
 
+#if NET10_0
     public override Task CleanAsync(DbContext context)
     {
         context.Database.EnsureClean();
         return Task.CompletedTask;
     }
+#else
+    public override async Task CleanAsync(DbContext context, bool createTables = true)
+    {
+        context.Database.EnsureClean(createTables);
+
+        if (createTables && context.GetService<IDbContextOptions>().FindExtension<CoreOptionsExtension>()?.AsyncSeeder is { } seed)
+        {
+            await seed(context, true, TestContext.Current.CancellationToken);
+        }
+    }
+#endif
 
     public static ClickHouseTestStore GetExisting(string name)
         => new(name, true);
@@ -41,7 +59,7 @@ public class ClickHouseTestStore : RelationalTestStore
     public static ClickHouseTestStore Create(string name)
         => new(name, shared: false);
 
-    private static ClickHouseDbConnection CreateConnection(string name, bool sharedCache)
+    private static ClickHouseDbConnection CreateConnection(string name, bool synchronousMutations)
     {
         var connectionString = new ClickHouseConnectionStringBuilder(TestEnvironment.DefaultConnection)
         {
@@ -51,6 +69,10 @@ public class ClickHouseTestStore : RelationalTestStore
         var connection = new ClickHouseDbConnection(connectionString);
         connection.CustomSettings.Add("allow_create_index_without_type", "1");
         connection.CustomSettings.Add("enable_time_time64_type", "1");
+        if (synchronousMutations)
+        {
+            connection.CustomSettings.Add("mutations_sync", "1");
+        }
         //connection.CustomSettings.Add("enable_json_type", "1");
         return connection;
     }

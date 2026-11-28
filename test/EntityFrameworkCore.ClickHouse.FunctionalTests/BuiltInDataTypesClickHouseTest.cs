@@ -14,14 +14,23 @@ using Xunit;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests;
 
+#if NET10_0
 public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDataTypesClickHouseTest.BuiltInDataTypesClickHouseFixture>
+#else
+public partial class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDataTypesClickHouseTest.BuiltInDataTypesClickHouseFixture>
+#endif
 {
     public BuiltInDataTypesClickHouseTest(BuiltInDataTypesClickHouseFixture fixture) : base(fixture)
     {
     }
 
+#if NET10_0
     [ConditionalFact]
     public override Task Can_insert_and_read_back_all_non_nullable_data_types()
+#else
+    [Fact]
+    public Task Can_insert_and_read_back_all_non_nullable_data_types()
+#endif
     {
         using (var context = CreateContext())
         {
@@ -93,8 +102,13 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         return Task.CompletedTask;
     }
 
+#if NET10_0
     [ConditionalFact]
     public override Task Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_non_null()
+#else
+    [Fact]
+    public Task Can_insert_and_read_back_all_nullable_data_types_with_values_set_to_non_null()
+#endif
     {
         using (var context = CreateContext())
         {
@@ -168,8 +182,13 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         return Task.CompletedTask;
     }
 
+#if NET10_0
     [ConditionalFact]
     public override Task Can_insert_and_read_back_non_nullable_backed_data_types()
+#else
+    [Fact]
+    public Task Can_insert_and_read_back_non_nullable_backed_data_types()
+#endif
     {
         using (var context = CreateContext())
         {
@@ -241,8 +260,13 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         return Task.CompletedTask;
     }
 
+#if NET10_0
     [ConditionalFact]
     public override Task Can_insert_and_read_back_nullable_backed_data_types()
+#else
+    [Fact]
+    public Task Can_insert_and_read_back_nullable_backed_data_types()
+#endif
     {
         using (var context = CreateContext())
         {
@@ -313,7 +337,11 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         return Task.CompletedTask;
     }
 
+#if NET10_0
     [ConditionalFact]
+#else
+    [Fact]
+#endif
     public override Task Can_insert_and_read_back_object_backed_data_types()
     {
         using (var context = CreateContext())
@@ -389,7 +417,11 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         return Task.CompletedTask;
     }
 
+#if NET10_0
     [ConditionalFact]
+#else
+    [Fact]
+#endif
     public override async Task Optional_datetime_reading_null_from_database()
     {
         await using var context = CreateContext();
@@ -409,7 +441,11 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         }
     }
 
+#if NET10_0
     [ConditionalFact]
+#else
+    [Fact]
+#endif
     public override async Task Object_to_string_conversion()
     {
         await using var context = CreateContext();
@@ -472,25 +508,26 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         Assert.Equal(expected.Char, actual.Char);
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
+    [Fact(Skip = "ClickHouse does not support foreign keys")]
     public override Task Can_insert_and_read_back_with_null_binary_foreign_key()
     {
         return base.Can_insert_and_read_back_with_null_binary_foreign_key();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+#if NET10_0
+    [Fact(Skip = "TBD")]
     public override Task Can_query_using_any_data_type()
     {
         return base.Can_query_using_any_data_type();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [Fact(Skip = "TBD")]
     public override Task Can_query_using_any_data_type_nullable_shadow()
     {
         return base.Can_query_using_any_data_type_nullable_shadow();
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [Fact(Skip = "TBD")]
     public override Task Can_query_using_any_nullable_data_type()
     {
         return base.Can_query_using_any_nullable_data_type();
@@ -498,9 +535,48 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
 
     [ConditionalFact]
     public override Task Can_query_using_any_data_type_shadow()
+#else
+    [Fact]
+    public Task Can_query_using_any_data_type_shadow()
+#endif
     {
         using var context = CreateContext();
+#if NET10_0
         var source = AddTestBuiltInDataTypes(context.Set<BuiltInDataTypesShadow>());
+#else
+        var source = context.Add(new BuiltInDataTypesShadow { Id = 11 });
+        source.CurrentValues.SetValues(new BuiltInDataTypes
+        {
+            Id = 11,
+            PartitionId = 1,
+            TestInt16 = -1234,
+            TestInt32 = -123456789,
+            TestInt64 = -1234567890123456789L,
+            TestDouble = -1.23456789,
+            TestDecimal = -1234567890.01M,
+            TestDateTime = Fixture.DefaultDateTime,
+            TestDateTimeOffset = new DateTimeOffset(new DateTime(), TimeSpan.FromHours(-8)),
+            TestTimeSpan = new TimeSpan(0, 10, 9, 8, 7),
+            TestDateOnly = new DateOnly(2020, 3, 1),
+            TestTimeOnly = new TimeOnly(12, 30, 45, 123),
+            TestSingle = -1.234F,
+            TestBoolean = true,
+            TestByte = 255,
+            TestUnsignedInt16 = 1234,
+            TestUnsignedInt32 = 1234565789U,
+            TestUnsignedInt64 = 1234567890123456789UL,
+            TestCharacter = 'a',
+            TestSignedByte = -128,
+            Enum64 = Enum64.SomeValue,
+            Enum32 = Enum32.SomeValue,
+            Enum16 = Enum16.SomeValue,
+            Enum8 = Enum8.SomeValue,
+            EnumU64 = EnumU64.SomeValue,
+            EnumU32 = EnumU32.SomeValue,
+            EnumU16 = EnumU16.SomeValue,
+            EnumS8 = EnumS8.SomeValue
+        });
+#endif
 
         Assert.Equal(1, context.SaveChanges());
 
@@ -509,19 +585,23 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
         return Task.CompletedTask;
     }
 
-    [ConditionalFact(Skip = "TBD")]
+    [Fact(Skip = "TBD")]
     public override Task Can_read_back_mapped_enum_from_collection_first_or_default()
     {
         return base.Can_read_back_mapped_enum_from_collection_first_or_default();
     }
 
-    [ConditionalFact(Skip = "ClickHouse does not support foreign keys")]
+    [Fact(Skip = "ClickHouse does not support foreign keys")]
     public override Task Can_insert_and_read_back_with_null_string_foreign_key()
     {
         return base.Can_insert_and_read_back_with_null_string_foreign_key();
     }
 
+#if NET10_0
     [ConditionalFact]
+#else
+    [Fact]
+#endif
     public async Task ByteSwap()
     {
         var entity = new BuiltInDataTypes
@@ -910,10 +990,28 @@ public class BuiltInDataTypesClickHouseTest : BuiltInDataTypesTestBase<BuiltInDa
             modelBuilder.Entity<BuiltInNullableDataTypes>().Property(e => e.TestNullableDecimal).HasPrecision(18, 4);
             modelBuilder.Entity<NonNullableBackedDataTypes>().Property(e => e.Decimal).HasPrecision(18, 4);
             modelBuilder.Entity<NullableBackedDataTypes>().Property(e => e.Decimal).HasPrecision(18, 4);
+#if NET10_0
             modelBuilder.Entity<BuiltInNullableDataTypes>().Ignore(e => e.TestByteArray);
+#endif
             modelBuilder.Entity<ObjectBackedDataTypes>().Property(e => e.Bytes).IsRequired();
             modelBuilder.Entity<ObjectBackedDataTypes>().Property(e => e.Decimal).HasPrecision(18, 4);
+#if NET10_0
             modelBuilder.Entity<BuiltInDataTypesShadow>().Property("TestDecimal").HasPrecision(18, 4);
+#else
+            modelBuilder.Entity<BuiltInDataTypesShadow>(builder =>
+            {
+                foreach (var property in modelBuilder.Entity<BuiltInDataTypes>().Metadata.GetProperties())
+                {
+                    if (property.Name != nameof(BuiltInDataTypes.Id))
+                    {
+                        builder.Property(property.ClrType, property.Name);
+                    }
+                }
+
+                builder.Property(e => e.Id).ValueGeneratedNever();
+                builder.Property<decimal>(nameof(BuiltInDataTypes.TestDecimal)).HasPrecision(18, 4);
+            });
+#endif
         }
 
         public override DbContextOptionsBuilder AddOptions(DbContextOptionsBuilder builder)

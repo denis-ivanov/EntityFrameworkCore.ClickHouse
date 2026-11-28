@@ -11,31 +11,31 @@ public class NorthwindDbFunctionsQueryClickHouseTest : NorthwindDbFunctionsQuery
     {
     }
 
-    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Collate_case_insensitive(bool async)
     {
         await base.Collate_case_insensitive(async);
     }
 
-    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Collate_case_sensitive(bool async)
     {
         await base.Collate_case_sensitive(async);
     }
 
-    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Collate_case_sensitive_constant(bool async)
     {
         await base.Collate_case_sensitive_constant(async);
     }
 
-    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Collate_is_null(bool async)
     {
         await base.Collate_is_null(async);
     }
 
-    [ConditionalTheory(Skip = ClickHouseSkipReasons.Tbd)]
+    [Theory(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Like_literal(bool async)
     {
         await base.Like_literal(async);

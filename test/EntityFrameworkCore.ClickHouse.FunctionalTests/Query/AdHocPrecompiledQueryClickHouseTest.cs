@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.TestUtilities;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace EntityFrameworkCore.ClickHouse.FunctionalTests.Query;
 
@@ -17,37 +16,41 @@ public class AdHocPrecompiledQueryClickHouseTest : AdHocPrecompiledQueryRelation
     protected override bool AlwaysPrintGeneratedSources
         => false;
 
+#if NET10_0
     protected override ITestStoreFactory TestStoreFactory
+#else
+    protected override ITestStoreFactory NonSharedTestStoreFactory
+#endif
         => ClickHouseTestStoreFactory.Instance;
 
     protected override PrecompiledQueryTestHelpers PrecompiledQueryTestHelpers
         => ClickHousePrecompiledQueryTestHelpers.Instance;
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Index_no_evaluatability()
     {
         await base.Index_no_evaluatability();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task JsonScalar()
     {
         await base.JsonScalar();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Projecting_entity_with_property_requiring_converter_with_closure_works()
     {
         await base.Projecting_entity_with_property_requiring_converter_with_closure_works();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Index_with_captured_variable()
     {
         await base.Index_with_captured_variable();
     }
 
-    [ConditionalFact(Skip = ClickHouseSkipReasons.Tbd)]
+    [Fact(Skip = ClickHouseSkipReasons.Tbd)]
     public override async Task Materialize_non_public()
     {
         await base.Materialize_non_public();
