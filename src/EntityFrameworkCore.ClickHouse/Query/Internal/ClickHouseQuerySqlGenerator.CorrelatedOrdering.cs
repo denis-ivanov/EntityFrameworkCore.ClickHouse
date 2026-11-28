@@ -23,7 +23,7 @@ public partial class ClickHouseQuerySqlGenerator
             return;
         }
 
-        foreach (CorrelatedOrderingJoin join in joins.Values)
+        foreach ((ScalarSubqueryExpression scalar, CorrelatedOrderingJoin join) in joins)
         {
             _hasOuterJoin = true;
             Sql.AppendLine().Append("LEFT JOIN (SELECT ");
@@ -39,6 +39,12 @@ public partial class ClickHouseQuerySqlGenerator
             Sql.Append(" ORDER BY ");
             DelimitIdentifier(CorrelatedOrderColumn);
             Sql.Append(join.Ascending ? " ASC" : " DESC");
+            if (join.Ascending
+                && scalar.Subquery.Orderings[0].Expression is ColumnExpression { IsNullable: true }
+                && join.Ordering is ScalarSubqueryExpression)
+            {
+                Sql.Append(" NULLS FIRST");
+            }
             Sql.Append(") AS ");
             DelimitIdentifier(CorrelatedRowColumn);
             Sql.Append(" FROM (SELECT ");
